@@ -50,7 +50,7 @@ int add(int a, int b)
 
 
 
-long sum(int numbers[], int numbers_siz)
+int sum(int numbers[], int numbers_siz)
 {
   return foldl_int_int(numbers, numbers_siz, add);
 }

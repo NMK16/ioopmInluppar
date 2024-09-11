@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "utils.h"
-typedef bool is_numberf(char);
 
 int read_string(char *buf, int buf_siz)
 {
@@ -40,51 +39,72 @@ bool is_number(char *str)
     return true;
 }
 
+bool is_float(char *str)
+{
+    int pointCount = 0;
+    for(int i = 0; i < strlen(str); i++){
+        if(!(isdigit(str[i])) || ((strlen(str) <= 1) && str[0] == '-')){
+            if (i == '.' && pointCount == 0){
+                pointCount++;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool not_empty(char *str)
+{
+  return strlen(str) > 0;
+}
+
+char *ask_question_string(char *question)
+{
+  return ask_question(question, not_empty, (convert_func *) strdup).string_value;
+}
+
 int ask_question_int(char *question)
 {
+  answer_t answer = ask_question(question, is_number, (convert_func *) atoi);
+  return answer.int_value; // svaret som ett heltal
+}
 
-  int result = 0;
-  int conversions = 0;
-  do
-    {
-      printf("%s\n", question);
-      conversions = scanf("%d", &result);
-      int c;
-      do
-        {
-          c = getchar();
+answer_t make_float(char *str)
+{
+  return (answer_t) { .float_value = atof(str) };
+}
+
+double ask_question_float(char *question)
+{
+  return ask_question(question, is_float, make_float).float_value;
+}
+
+answer_t make_number(char *str)
+{
+    answer_t answ;
+    answ.int_value = atoi(str);
+    answ.string_value = str;
+    return answ;
+}
+
+answer_t ask_question(char *question, check_func *check, convert_func *convert){
+    int read = 0;
+    int buf_siz = 255;
+    char buf[buf_siz];
+    printf("%s", question);
+    read = read_string(buf, buf_siz);
+    if (read == 0){
+        printf("Du svarade inte, testa igen\n");
+        return ask_question(question, is_number, convert);
+    }
+    else{
+        if (check(buf)){
+            return convert(buf);
         }
-      while (c != '\n' && c != EOF);
-      putchar('\n');
+        else{
+            return ask_question(question, is_number, convert);
+        }
     }
-  while (conversions < 1);
-  return result;
-}
-
-char *ask_question_string(char *question, char *buf, int buf_siz){
-    int read = 0;
-    printf("%s", question);
-    read = read_string(buf, buf_siz);
-    if (read == 0){
-        printf("Du svarade inte, testa igen\n");
-        ask_question_string(question, buf, buf_siz);
-    }
-    else{
-        return strdup(buf);
-    }
-    return 0;
-}
-
-char *ask_question_string(char *question, is_numberf *f, int buf_siz){
-    int read = 0;
-    printf("%s", question);
-    read = read_string(buf, buf_siz);
-    if (read == 0){
-        printf("Du svarade inte, testa igen\n");
-        ask_question_string(question, buf, buf_siz);
-    }
-    else{
-        return strdup(buf);
-    }
-    return 0;
 }

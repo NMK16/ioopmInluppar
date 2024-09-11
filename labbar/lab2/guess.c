@@ -11,13 +11,11 @@ int main(void)
     srandom(time(NULL));
     int tal = random()%1000+1;
     printf("%d\n", tal);
-    int buf_siz = 255;
-    char namn[buf_siz];
     int answerN;
-    ask_question_string("Skriv in ditt namn: ", namn, buf_siz);
-    printf("Du %s, jag tänker på ett tal ... ", namn);
-    answerN = ask_question_int("kan du gissa vilket?");
+    char* namn = ask_question_string("Skriv in ditt namn: ");
+    printf("Du %s, jag tänker på ett tal ... kan du gissa vilket?\n", namn);
     for(int i = 1; i <= 15; i++){
+        answerN = ask_question_int("");
         if (i == 15){
             printf("Nu har du slut på gissningar! Jag tänkte på %d!\n", tal);
             break;
@@ -28,10 +26,10 @@ int main(void)
             break;
         }
         else if (answerN < tal){
-            answerN = ask_question_int("För litet!");
+            printf("%s", "För litet!\n");
         }
         else if (answerN > tal){
-            answerN = ask_question_int("För stort!");
+            printf("%s", "För stort!\n");
         }
     }
 

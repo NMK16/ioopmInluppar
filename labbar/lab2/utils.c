@@ -97,14 +97,14 @@ answer_t ask_question(char *question, check_func *check, convert_func *convert){
     read = read_string(buf, buf_siz);
     if (read == 0){
         printf("Du svarade inte, testa igen\n");
-        return ask_question(question, is_number, convert);
+        return ask_question(question, check, convert);
     }
     else{
         if (check(buf)){
             return convert(buf);
         }
         else{
-            return ask_question(question, is_number, convert);
+            return ask_question(question, check, convert);
         }
     }
 }

@@ -61,12 +61,17 @@ bool intersects_rect(rectangle_t *rect1, rectangle_t *rect2){
     int leftX2 = rect2->x.x;
     int rightX2 = rect2->y.x;
 
-    int leftY1 = rect1->x.y;
-    int rightY1 = rect1->y.y;
-    int leftY2 = rect2->x.y;
-    int rightY2 = rect2->y.y;
+    int topY1 = rect1->x.y;
+    int bottomY1 = rect1->y.y;
+    int topY2 = rect2->x.y;
+    int bottomY2 = rect2->y.y;
 
-    if (){
+    // printf("%d\n", topY1);
+    // printf("%d\n", bottomY2);
+    // printf("%d\n", bottomY1);
+    // printf("%d\n", topY2);
+
+    if ((topY1 >= bottomY2) && (bottomY1 <= topY2) && (rightX1 >= leftX2) && (leftX1 <= rightX2)){
       return true;
     }
     return false;
@@ -78,9 +83,9 @@ int main(int argc, char *argv[])
     point_t test2 = make_point(5, 5);
     print_point(&test2);
     rectangle_t testrec = {.x = make_point(5,5), .y = make_point(3,3)}; */
-    rectangle_t testrec2 = make_rectangle(0, 0, 5, 5);
-    rectangle_t testrec3 = make_rectangle(0, 0, 3, 3);
+    rectangle_t testrec2 = make_rectangle(5, 6, 8, 4);
+    rectangle_t testrec3 = make_rectangle(4, 5, 9, 3);
     //print_rect(&testrec2);
-    printf("%d", intersects_rect(&testrec2, &testrec3));
+    printf("%d\n", intersects_rect(&testrec2, &testrec3));
     return 0;
 }

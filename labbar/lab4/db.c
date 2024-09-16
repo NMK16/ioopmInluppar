@@ -44,25 +44,16 @@ bool is_validShelf(char *str)
 }
 
 char *magick(char *ary1[], char *ary2[], char *ary3[], int size){
-  srandom(time(NULL));
-  int tal = random()%2;
   char buf[255];
-  char *first = ary1[random()%2];
-  char *second = ary2[random()%2];
-  char *third = ary3[random()%2];
-  int i = 0;
-  while(i < )
-  buf[strlen(first)] = '-';
-  char *second = ary2[random()%2];
-  for (int i = strlen(first)+1; i < strlen(second) + strlen(first)+1; i++){
-    buf[i] = first[i];
-  }
-  buf[strlen(second)] = ' ';
-  char *third = ary3[random()%2];
-  for (int i = strlen(second)+1; i < strlen(third)+ strlen(second)+1; i++){
-    buf[i] = first[i];
-  }
-  buf[strlen(third)] = '\0';
+  char *first = ary1[rand()%2];
+  strcpy(buf, first);
+  char *second = ary2[rand()%2];
+  strcat(buf, "-");
+  strcat(buf, second);
+  char *third = ary3[rand()%2];
+  strcat(buf, " ");
+  strcat(buf, third);
+  strcat(buf, "\0");
   return strdup(buf);
 }
 
@@ -85,8 +76,54 @@ int main(int argc, char *argv[])
   char *array2[] = { "förnicklad",   "smakande", "ordinär" };
   char *array3[] = { "skruvdragare", "kola",     "uppgift" };
 
-  char *str = magick(array1, array2, array3, 3); // 3 = längden på arrayerna
+  if (argc < 2)
+  {
+    printf("Usage: %s number\n", argv[0]);
+  }
+  else
+  {
+    item_t db[16]; // Array med plats för 16 varor
+    int db_siz = 0; // Antalet varor i arrayen just nu
 
-  puts(str); // Polka-ordinär skruvdragare
+    int items = atoi(argv[1]); // Antalet varor som skall skapas
+
+    if (items > 0 && items <= 16)
+    {
+      for (int i = 0; i < items; ++i)
+      {
+        // Läs in en vara, lägg till den i arrayen, öka storleksräknaren
+        item_t item = input_item();
+        db[db_siz] = item;
+        ++db_siz;
+      }
+    }
+    else
+    {
+      puts("Sorry, must have [1-16] items in database.");
+      return 1; // Avslutar programmet!
+    }
+
+    for (int i = db_siz; i < 16; ++i)
+      {
+        char *name = magick(array1, array2, array3, 3); // TODO: Lägg till storlek
+        char *desc = magick(array1, array2, array3, 3); // TODO: Lägg till storlek
+        int price = rand() % 200000;
+        char shelf[] = { rand() % ('Z'-'A') + 'A',
+                         rand() % 10 + '0',
+                         rand() % 10 + '0',
+                         '\0' };
+        item_t item = make_item(name, desc, price, shelf);
+
+        db[db_siz] = item;
+        ++db_siz;
+      }
+
+     // Skriv ut innehållet
+     for (int i = 0; i < db_siz; ++i)
+     {
+       print_item(&db[i]);
+     }
+
+  }
   return 0;
 }

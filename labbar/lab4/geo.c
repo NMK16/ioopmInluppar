@@ -49,14 +49,27 @@ rectangle_t make_rectangle(int a, int b, int c, int d)
 }
 
 int area_rect(rectangle_t *rect){
-    int base = rect->x.x - rect->y.x;
+    int width = rect->x.x - rect->y.x;
     int length = rect->x.y - rect->y.y;
-    int area = base * length;
+    int area = width * length;
     return area;
 }
 
 bool intersects_rect(rectangle_t *rect1, rectangle_t *rect2){
-    
+    int leftX1 = rect1->x.x;
+    int rightX1 = rect1->y.x;
+    int leftX2 = rect2->x.x;
+    int rightX2 = rect2->y.x;
+
+    int leftY1 = rect1->x.y;
+    int rightY1 = rect1->y.y;
+    int leftY2 = rect2->x.y;
+    int rightY2 = rect2->y.y;
+
+    if (){
+      return true;
+    }
+    return false;
 }
 
 int main(int argc, char *argv[])
@@ -66,7 +79,8 @@ int main(int argc, char *argv[])
     print_point(&test2);
     rectangle_t testrec = {.x = make_point(5,5), .y = make_point(3,3)}; */
     rectangle_t testrec2 = make_rectangle(0, 0, 5, 5);
-    print_rect(&testrec2);
-    printf("%d", area_rect(&testrec2));
+    rectangle_t testrec3 = make_rectangle(0, 0, 3, 3);
+    //print_rect(&testrec2);
+    printf("%d", intersects_rect(&testrec2, &testrec3));
     return 0;
 }

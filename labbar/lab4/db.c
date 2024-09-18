@@ -80,19 +80,20 @@ void list_db(item_t *items, int no_items){
 }
 
 void edit_db(item_t *items){
-  int num = ask_question_int("What number do you want to edit?");
+  int num = ask_question_int("Which item do you want to edit?");
   print_item(&items[num-1]);
   items[num-1] = input_item();
 }
 
 void print_menu(){
-    printf("[L]ägga till en vara\n[T]a bort en vara\n[R]edigera en vara\nÅn[g]ra senaste ändringen\nLista [h]ela varukatalogen\n[A]vsluta\n");
+    printf("\n[L]ägga till en vara\n[T]a bort en vara\n[R]edigera en vara\nÅn[g]ra senaste ändringen\nLista [h]ela varukatalogen\n[A]vsluta\n");
 }
 
 
 char ask_question_menu(){
   print_menu();
   char *choice = ask_question_string("Choice: ");
+  printf("\n");
   char *valid = "LlTtRrGgHhAa";
   for (int i = 0; i < strlen(valid); i++){
     if (*choice == valid[i] && strlen(choice) == 1){
@@ -106,12 +107,49 @@ char ask_question_menu(){
   return toupper(*choice);
 }
 
+item_t *add_item_to_db(item_t *items, int *no_items){
+  items[*no_items] = input_item();
+  (*no_items)++;
+  return items;
+}
+
+item_t *remove_item_from_db(item_t *items, int *no_items){
+  list_db(items, *no_items);
+  int num = ask_question_int("Which item do you want to remove?");
+  print_item(&items[num-1]);
+  for (int i = num; i < *no_items; i++){
+    items[i-1] = items[i];
+  }
+  (*no_items)--;
+  return items;
+}
+
+void event_loop(item_t *items, int *no_items){
+  char choice = ask_question_menu();
+  if (choice == 'L' || choice == 'l'){
+    add_item_to_db(items, no_items);
+  }
+  else if(choice == 'T' || choice == 't'){
+    remove_item_from_db(items, no_items);
+  }
+  else if(choice == 'R' || choice == 'r'){
+    edit_db(items);
+  }
+  else if(choice == 'G' || choice == 'g'){
+    printf("Not yet implemented!\n");
+  }
+  else if(choice == 'H' || choice == 'h'){
+    list_db(items, *no_items);
+  }
+  else if(choice == 'A' || choice == 'a'){
+    exit(1);
+  }
+  event_loop(items, no_items);
+}
+
+
 int main(int argc, char *argv[])
 {
-  ask_question_menu();
-  /* char *array1[] = { "Laser",        "Polka",    "Extra" };
-  char *array2[] = { "förnicklad",   "smakande", "ordinär" };
-  char *array3[] = { "skruvdragare", "kola",     "uppgift" };
 
   if (argc < 2)
   {
@@ -140,28 +178,8 @@ int main(int argc, char *argv[])
       puts("Sorry, must have [1-16] items in database.");
       return 1; // Avslutar programmet!
     }
-      
-    for (int i = db_siz; i < 16; ++i)
-      {
-        char *name = magick(array1, array2, array3, 3); // TODO: Lägg till storlek
-        char *desc = magick(array1, array2, array3, 3); // TODO: Lägg till storlek
-        
-        int price = rand() % 200000;
-        char shelf[] = { rand() % ('Z'-'A') + 'A',
-                         rand() % 10 + '0',
-                         rand() % 10 + '0',
-                         '\0' };
-        item_t item = make_item(name, desc, price, strdup(shelf));
 
-        db[db_siz] = item;
-        ++db_siz;
-      }
-
-     // Skriv ut innehållet
-    list_db(db, db_siz);
-    edit_db(db);
-    list_db(db, db_siz);
-
-  } */
+    event_loop(db, &db_siz);
+  }
   return 0;
 }

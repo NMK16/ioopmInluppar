@@ -18,7 +18,7 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
   free(ht);
 }
 
-int hash_function(int key) {
+static int hash_function(int key) {
   return key % No_Buckets;
 }
 
@@ -95,13 +95,26 @@ static void *recursive_lookup(entry_t *searching_entry, int key) {
 	return recursive_lookup(searching_entry->next, key); // Recursive call
 }
 
+// Helper function for iterative lookup
+static void *iterative_lookup(entry_t *searching_entry, int key) {
+    if (searching_entry == NULL) {
+        return NULL; // Base case: key not found
+    }
+    while(searching_entry->key != key) {
+    	searching_entry->next, key;// Key found, return the value
+    }
+    
+	
+	return searching_entry->value;
+}
+
 /// @brief Lookup the value for a key in the hash table
 /// @param ht the hash table being used
 /// @param key the key to lookup
 /// @return the value mapped to by key, or NULL if not found
 void *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key) {
     int bucket = hash_function(key);
-    return recursive_lookup(ht->buckets[bucket], key);
+    return iterative_lookup(ht->buckets[bucket], key);
 }
 
 //helper functions for removing hashtable elements

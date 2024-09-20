@@ -14,8 +14,8 @@ ioopm_hash_table_t *ioopm_hash_table_create() {
 /// @brief Destroy the hash table and free the allocated memory
 /// @param ht the hash table to destroy
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
-  /// Free the memory allocated for the hash table
-  free(ht);
+  ioopm_hash_table_clear(ht); // Clear all entries first
+  free(ht); // Free the hash table itself
 }
 
 static int hash_function(int key) {
@@ -49,7 +49,7 @@ entry_t *find_previous_entry_for_key(entry_t **bucket_head, int key) {
         current = current->next;
     }
 
-    return prev; // Return the previous entry (or return value NULL if the bucket is empty)
+    return prev; // Return the previous entry (or return NULL if the bucket is empty)
 }
 
 /// @brief Inserting entry into the hash table 
@@ -62,28 +62,27 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 	int bucket = hash_function(key);
 	/// Search for an existing entry for a key
 	entry_t *entry = find_previous_entry_for_key(&ht->buckets[bucket], key);
-	entry_t *next = entry ? entry->next : ht ->buckets[bucket];
+	entry_t *next = entry ? entry->next : ht->buckets[bucket];
 
 	/// Check if the next entry should be updated or not
 	if (next != NULL && next->key == key)
-    	{
+    {
     	free(next->value);  // Free the old value
-    	next->value = strdup(value);
-    	}
+    	next->value = strdup(value); // Replace with a new value
+    }
   	else
     {
     	entry_t *new_entry = entry_create(key, value, next);
     	if (entry) {
-        	entry -> next = new_entry;
+        	entry->next = new_entry;
       	}
-     	else{
-        	ht -> buckets[bucket] = new_entry;
+     	else {
+        	ht->buckets[bucket] = new_entry;
       	}
     }
 }
 
-
-// Helper function for recursive lookup
+/// Helper function for recursive lookup
 static void *recursive_lookup(entry_t *searching_entry, int key) {
     if (searching_entry == NULL) {
         return NULL; // Base case: key not found
@@ -95,19 +94,6 @@ static void *recursive_lookup(entry_t *searching_entry, int key) {
 	return recursive_lookup(searching_entry->next, key); // Recursive call
 }
 
-// Helper function for iterative lookup
-// static void *iterative_lookup(entry_t *searching_entry, int key) {
-//     if (searching_entry == NULL) {
-//         return NULL; // Base case: key not found
-//     }
-//     while(searching_entry->key != key) {
-//     	searching_entry = searching_entry->next;
-//     }
-    
-	
-// 	return searching_entry->value;
-// }
-
 /// @brief Lookup the value for a key in the hash table
 /// @param ht the hash table being used
 /// @param key the key to lookup
@@ -117,11 +103,10 @@ void *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key) {
     return recursive_lookup(ht->buckets[bucket], key);
 }
 
-/// @brief remove any mapping from key to a value
+/// @brief Remove any mapping from key to a value
 /// @param ht hash table operated upon
 /// @param key key to remove
 /// @return the value mapped to by key
-
 char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key) {
     int bucket = hash_function(key);
     entry_t *prev_entry = find_previous_entry_for_key(&ht->buckets[bucket], key);
@@ -130,17 +115,16 @@ char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key) {
     if (!entry_to_remove || entry_to_remove->key != key) 
         return NULL;
 
-    char *removed_val = strdup(entry_to_remove->value);
+    char *removed_val = strdup(entry_to_remove->value); // Copy the value to return it
     if (prev_entry) prev_entry->next = entry_to_remove->next;
     else ht->buckets[bucket] = entry_to_remove->next;
 
-    free(entry_to_remove->value);
-    free(entry_to_remove);
+    free(entry_to_remove->value); // Free the value
+    free(entry_to_remove);        // Free the entry itself
     return removed_val;
 }
-/// TODO: Implement functions for inserting, looking up, and removing entries. DONE
 
-/// @brief returns the number of key => value entries in the hash table
+/// @brief Returns the number of key => value entries in the hash table
 /// @param ht hash table operated upon
 /// @return the number of key => value entries in the hash table
 int ioopm_hash_table_size(ioopm_hash_table_t *ht) {
@@ -151,29 +135,29 @@ int ioopm_hash_table_size(ioopm_hash_table_t *ht) {
 		{
 			size++;
         	entry = entry->next;
-			
 		}	
     }
     return size;
 }
 
-/// @brief checks if the hash table is empty
+/// @brief Checks if the hash table is empty
 /// @param ht hash table operated upon
 /// @return true if size == 0, else false
 bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht) {
-    // Simply return the result of comparing the size to 0
     return ioopm_hash_table_size(ht) == 0;
 }
 
-/// @brief clear all the entries in a hash table
+/// @brief Clear all the entries in a hash table
 /// @param ht hash table operated upon
 void ioopm_hash_table_clear(ioopm_hash_table_t *ht) {
-    if (ioopm_hash_table_is_empty(ht)) {
-        return; //Nothing if hashtable has size 0 or is NULL
-    }
-
-    // Go through every bucket
-    for (int i = 0; i < No_Buckets; i++) {  // Repeat for amount of entries
-        ht->buckets[i] = NULL;   // Change (or keep) each bucket's entry to NULL, clearing the table
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
+        while (entry != NULL) {
+            entry_t *next = entry->next;
+            free(entry->value); 
+            free(entry);        
+            entry = next;
+        }
+        ht->buckets[i] = NULL; // Set bucket to NULL after clearing the memory 
     }
 }

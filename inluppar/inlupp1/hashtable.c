@@ -168,7 +168,7 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht) {
 int *ioopm_hash_table_keys(ioopm_hash_table_t *ht) {
     int size = ioopm_hash_table_size(ht);
     
-    int *keys = malloc(size * sizeof(int));
+    int *keys = calloc(size, sizeof(ioopm_hash_table_t));;
     int counter = 0;
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];

@@ -211,20 +211,9 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht){
     return values;
 }
 
-bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key){
-    // int size = ioopm_hash_table_size(ht);
-    for (int i = 0; i < No_Buckets; i++) {
-        entry_t *entry = ht->buckets[i];
-        if (entry != NULL){
-            int entry_key = ht->buckets[i]->key;
-            if(key == entry_key){
-                return true;
-            }
-        }
-    }
-    return false;
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key) {
+    return ioopm_hash_table_lookup(ht, key) != NULL;
 }
-
 
 // bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key){
 //     bool found = false;

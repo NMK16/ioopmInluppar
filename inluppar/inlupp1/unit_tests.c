@@ -139,9 +139,9 @@ void test_keys() {
         ioopm_hash_table_insert(ht, keys[i], "Value not needed");
     }
 
-    // Get all the keys from the hash table
+    // Get all the keys back from the hash table
     int *hash_table_keys = ioopm_hash_table_keys(ht);
-    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);  // Ensure that we got keys back
+    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);  // Ensures that we got keys back
 
     // Iterate over the returned keys from the hash table
     for (int i = 0; i < num_keys; i++) {
@@ -158,7 +158,7 @@ void test_keys() {
         }
     }
 
-    // Assert that all elements in 'found' are now true
+    // Asserts that all elements are found
     for (int i = 0; i < num_keys; i++) {
         CU_ASSERT_TRUE(found[i]);
     }
@@ -167,6 +167,98 @@ void test_keys() {
     free(hash_table_keys);
     ioopm_hash_table_destroy(ht);
 }
+
+void test_values() {
+    // Create an empty hashtable
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+
+    int keys[5] = {3, 10, 42, 0, 99};
+    char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+    bool found[5] = {false, false, false, false, false};
+    int num_keys = 5;  // Number of keys
+
+    // Adding entries to the hashtable with the keys-value pairs from above
+    for (int i = 0; i < num_keys; i++) {
+        ioopm_hash_table_insert(ht, keys[i], values[i]);  
+    }
+
+    // Get all keys and values from the hashtable
+    int *hash_table_keys = ioopm_hash_table_keys(ht);
+    char **hash_table_values = ioopm_hash_table_values(ht);  
+    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);   // Ensures we got keys from the hashtable
+    CU_ASSERT_PTR_NOT_NULL(hash_table_values); // Ensures we got values from the hashtable
+
+    // Goes through each key in the hashtables
+    for (int i = 0; i < num_keys; i++) {
+        bool key_found = false;
+        for (int j = 0; j < num_keys; j++) {
+            if (hash_table_keys[i] == keys[j]) {
+                // Checks that values in the hashtables are the same as the given array of values
+                CU_ASSERT_STRING_EQUAL(hash_table_values[i], values[j]);
+                found[j] = true;  
+                key_found = true;
+                break;
+            }
+        }
+        if (!key_found) {
+            CU_FAIL("Found a key/value that was never inserted!");
+        }
+    }
+
+    // Asserts that all elements are found
+    for (int i = 0; i < num_keys; i++) {
+        CU_ASSERT_TRUE(found[i]);
+    }
+
+    // Cleanup
+    free(hash_table_keys);
+    free(hash_table_values); 
+    ioopm_hash_table_destroy(ht);
+}
+
+void test_has_keys(){
+	
+	// Create an empty hashtable
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+	
+	// Asserts that it's false that an empty hashtable hashtable has a key
+	CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 1));
+
+	// Adds an entry to the hashtable
+	ioopm_hash_table_insert(ht, 1, "Filler");
+
+	// Asserts that it's now true that the hashtable has a key
+	CU_ASSERT_TRUE(ioopm_hash_table_has_key(ht, 1));
+	
+	// Cleanup
+	ioopm_hash_table_destroy(ht);
+}
+
+void test_has_values(){
+
+	// Create an empty hashtable
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+	
+	// Asserts that it's false that an empty hashtable hashtable has a value
+	CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, "Filler"));
+
+	// Adds an entry to the hashtable
+	ioopm_hash_table_insert(ht, 1, "Filler");
+
+	// Lookup the inserted value
+	char *value = ioopm_hash_table_lookup(ht, 1);
+	CU_ASSERT_STRING_EQUAL(value, "Filler");
+	
+	// Asserts that it's now true that the hashtable has a value	
+	CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "Filler"));
+	
+	// Cleanup
+	ioopm_hash_table_destroy(ht);
+}
+
 
 
 int main() {
@@ -180,20 +272,23 @@ int main() {
   }
 
   // Adding all our tests to the suite
-  CU_add_test(my_test_suite, "test_create_destroy", test_create_destroy);
-  CU_add_test(my_test_suite, "test_insert_lookup", test_insert_once);
-  CU_add_test(my_test_suite, "test_insert_remove", test_insert_remove);
-  CU_add_test(my_test_suite, "test_size", test_size);
-  CU_add_test(my_test_suite, "test_is_empty_clear", test_is_empty_clear);
-  CU_add_test(my_test_suite, "test_keys", test_keys);
+  	CU_add_test(my_test_suite, "test_create_destroy", test_create_destroy);
+  	CU_add_test(my_test_suite, "test_insert_lookup", test_insert_once);
+  	CU_add_test(my_test_suite, "test_insert_remove", test_insert_remove);
+  	CU_add_test(my_test_suite, "test_size", test_size);
+  	CU_add_test(my_test_suite, "test_is_empty_clear", test_is_empty_clear);
+  	CU_add_test(my_test_suite, "test_keys", test_keys);
+  	CU_add_test(my_test_suite, "test_values", test_values);
+	CU_add_test(my_test_suite, "test_has_key", test_has_keys);
+	CU_add_test(my_test_suite, "test_has_val", test_has_values);
 
-  // Set the running mode to verbose for detailed output
-  CU_basic_set_mode(CU_BRM_VERBOSE);
+  	// Set the running mode to verbose for detailed output
+  	CU_basic_set_mode(CU_BRM_VERBOSE);
 
-  // Run all the tests
-  CU_basic_run_tests();
+  	// Run all the tests
+  	CU_basic_run_tests();
 
-  // Tear down CUnit before exiting
-  CU_cleanup_registry();
-  return CU_get_error();
+  	// Tear down CUnit before exiting
+  	CU_cleanup_registry();
+  	return CU_get_error();
 }

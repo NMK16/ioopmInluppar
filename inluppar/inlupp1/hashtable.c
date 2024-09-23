@@ -212,12 +212,12 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht){
 }
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key){
-    int size = ioopm_hash_table_size(ht);
+    // int size = ioopm_hash_table_size(ht);
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         if (entry != NULL){
-            int keyE = ht->buckets[i]->key;
-            if(key == keyE){
+            int entry_key = ht->buckets[i]->key;
+            if(key == entry_key){
                 return true;
             }
         }
@@ -226,16 +226,32 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key){
 }
 
 
-bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key){
-    bool found = false;
-    int *allKeys = ioopm_hash_table_keys(ht);
-    for (int i = 0; i < 5; i++){
-        if (key == allKeys[i]){
-            found = true;
+// bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key){
+//     bool found = false;
+//     int *allKeys = ioopm_hash_table_keys(ht);
+//     for (int i = 0; i < 5; i++){
+//         if (key == allKeys[i]){
+//             found = true;
+//         }
+//     }
+
+//     return found;
+    
+// }
+
+
+/// @brief check if a hash table has an entry with a given value
+/// @param h hash table operated upon
+/// @param value the value sought
+bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value){
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
+        if (entry != NULL){
+            char *entry_val = ht->buckets[i]->value;
+            if(strcmp(value, entry_val) == 0){ //strcmp return 0 if strings are equal
+                return true;
+            }
         }
     }
-
-    return found;
-    
-}
-
+    return false;
+}    

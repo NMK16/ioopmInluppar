@@ -3,6 +3,16 @@
 #include <string.h>
 #define No_Buckets 17
 
+typedef struct entry {
+    int key;          // Holds the key
+    char *value;      // Holds the value
+    struct entry *next; // Points to the next entry (possibly NULL)
+} entry_t;
+
+typedef struct hash_table {
+    entry_t *buckets[No_Buckets]; // Fixed number of buckets
+} ioopm_hash_table_t;
+
 /// @brief Create a new empty hash table
 /// @return Pointer to the created hash table
 ioopm_hash_table_t *ioopm_hash_table_create() {
@@ -98,7 +108,7 @@ static void *recursive_lookup(entry_t *searching_entry, int key) {
 /// @param ht the hash table being used
 /// @param key the key to lookup
 /// @return the value mapped to by key, or NULL if not found
-void *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key) {
+char *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key) {
     int bucket = hash_function(key);
     return recursive_lookup(ht->buckets[bucket], key);
 }
@@ -180,3 +190,52 @@ int *ioopm_hash_table_keys(ioopm_hash_table_t *ht) {
     }
     return keys;
 }
+
+
+/// @brief return the values for all entries in a hash map (in no particular order, but same as ioopm_hash_table_keys)
+/// @param h hash table operated upon
+/// @return an array of values for hash table h
+char **ioopm_hash_table_values(ioopm_hash_table_t *ht){
+    int size = ioopm_hash_table_size(ht);
+    
+    char **values = calloc(size, sizeof(ioopm_hash_table_t));
+    int counter = 0;
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
+        if (entry != NULL){
+            values[counter] = entry->value;
+            entry = entry->next;
+            counter++;
+        }
+    }
+    return values;
+}
+
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key){
+    int size = ioopm_hash_table_size(ht);
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
+        if (entry != NULL){
+            int keyE = ht->buckets[i]->key;
+            if(key == keyE){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key){
+    bool found = false;
+    int *allKeys = ioopm_hash_table_keys(ht);
+    for (int i = 0; i < 5; i++){
+        if (key == allKeys[i]){
+            found = true;
+        }
+    }
+
+    return found;
+    
+}
+

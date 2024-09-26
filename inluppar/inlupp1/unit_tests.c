@@ -259,6 +259,73 @@ void test_has_values(){
 	ioopm_hash_table_destroy(ht);
 }
 
+// Helper function used for testing function
+
+// static bool key_equiv(int key, char *value_ignored, void *x)
+// {
+//   int *other_key_ptr = x;
+//   int other_key = *other_key_ptr;
+//   return key == other_key;
+// }
+// void test_all(){
+// 	// Creates an empty hashtable
+//     ioopm_hash_table_t *ht = ioopm_hash_table_create();
+//     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+
+// 	// Creates keys and values
+// 	int keys[5] = {3, 10, 42, 0, 99};
+//     char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+// 	int num_keys = 5;
+
+// 	// Adding entries to the hashtable with the keys-value pairs from above
+//     for (int i = 0; i < num_keys; i++) {
+//         ioopm_hash_table_insert(ht, keys[i], values[i]);  
+//     }
+
+// 	// Asserts that it's false that all keys in the hashtable has a 
+// 	CU_ASSERT_FALSE(ioopm_hash_table_all(ht, (pred(strlen(keys) > 5), NULL));
+
+
+// 	// Asserts that it's true that all keys in the hashtable has a 
+// 	CU_ASSERT_TRUE(ioopm_hash_table_all(ht, (strlen(*values) >= 3), NULL));
+
+// 	// Cleanup
+// 	ioopm_hash_table_destroy(ht);
+// }
+
+// void test_any(){
+// 	// Creates an empty hashtable
+//     ioopm_hash_table_t *ht = ioopm_hash_table_create();
+//     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+
+// 	// Creates keys and values
+// 	int keys[5] = {3, 10, 42, 0, 99};
+//     char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+// 	int num_keys = 5;
+
+// 	// Adding entries to the hashtable with the keys-value pairs from above
+//     for (int i = 0; i < num_keys; i++) {
+//         ioopm_hash_table_insert(ht, keys[i], values[i]);  
+//     }
+
+
+// 	// Asserts that it's true that all keys in the hashtable has a 
+// 	CU_ASSERT_EQUAL((ioopm_hash_table_any(ht, key_equiv, key[1])), (ioopm_hash_table_has_keys(ht, key[1])));
+
+
+// 	// Asserts that it's false that all keys in the hashtable has a 
+// 	// CU_ASSERT_TRUE(ioopm_hash_table_all(ht, (strlen(*values) >= 3), NULL));
+
+// 	// Cleanup
+// 	ioopm_hash_table_destroy(ht);
+// }
+
+// void test_apply_all(){
+// 	// Create an empty hashtable
+//     ioopm_hash_table_t *ht = ioopm_hash_table_create();
+//     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+
+// }
 
 
 int main() {
@@ -281,6 +348,8 @@ int main() {
   	CU_add_test(my_test_suite, "test_values", test_values);
 	CU_add_test(my_test_suite, "test_has_key", test_has_keys);
 	CU_add_test(my_test_suite, "test_has_val", test_has_values);
+	// CU_add_test(my_test_suite, "test_any", test_any);
+	
 
   	// Set the running mode to verbose for detailed output
   	CU_basic_set_mode(CU_BRM_VERBOSE);

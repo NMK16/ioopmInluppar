@@ -24,8 +24,10 @@ ioopm_hash_table_t *ioopm_hash_table_create() {
 /// @brief Destroy the hash table and free the allocated memory
 /// @param ht the hash table to destroy
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
-  ioopm_hash_table_clear(ht); // Clear all entries first
-  free(ht); // Free the hash table itself
+  if (ht != NULL) { //undantagshatering I23
+    ioopm_hash_table_clear(ht); // Clear all entries first
+    free(ht); // Free the hash table itself
+  }
 }
 
 static int hash_function(int key) {
@@ -37,7 +39,7 @@ static entry_t *entry_create(int key, char *value, entry_t *next_value) {
     entry_t *new_entry = calloc(1, sizeof(entry_t));
 
     if (new_entry == NULL) {
-        // Handle allocation failure
+        // Handle allocation failure //I23 undantagshantering
         return NULL;
     }
 
@@ -77,7 +79,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 	/// Check if the next entry should be updated or not
 	if (next != NULL && next->key == key)
     {
-    	free(next->value);  // Free the old value
+    	free(next->value);  // Free the old value, undantagshantering
     	next->value = strdup(value); // Replace with a new value
     }
   	else
@@ -182,7 +184,7 @@ int *ioopm_hash_table_keys(ioopm_hash_table_t *ht) {
     int counter = 0;
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
-        if (entry != NULL){
+        while (entry != NULL){
             keys[counter] = entry->key;
             entry = entry->next;
             counter++;
@@ -202,7 +204,7 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht){
     int counter = 0;
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
-        if (entry != NULL){
+        while (entry != NULL) {
             values[counter] = entry->value;
             entry = entry->next;
             counter++;
@@ -211,10 +213,20 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht){
     return values;
 }
 
-bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key) {
+bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key) {
     return ioopm_hash_table_lookup(ht, key) != NULL;
 }
 
+static bool key_equiv(int key, char *value_ignored, void *x)
+{
+  int *other_key_ptr = x;
+  int other_key = *other_key_ptr;
+  return key == other_key;
+}
+
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key) {
+    return ioopm_hash_table_any(ht, key_equiv, &key);
+}
 // bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key){
 //     bool found = false;
 //     int *allKeys = ioopm_hash_table_keys(ht);
@@ -246,45 +258,45 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value){
 }    
 
 
-// /// @brief Check if a predicate is satisfied by all entries in a hash table
-// /// @param ht Hash table operated upon
-// /// @param pred The predicate function pointer
-// /// @param arg Extra argument to pass to the predicate
-// /// @return True if the predicate holds for all entries, otherwise false
-// bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate *pred, void *arg) {
-//     for (int i = 0; i < No_Buckets; i++) {
-//         entry_t *entry = ht->buckets[i];
+/// @brief Check if a predicate is satisfied by all entries in a hash table
+/// @param ht Hash table operated upon
+/// @param pred The predicate function pointer
+/// @param arg Extra argument to pass to the predicate
+/// @return True if the predicate holds for all entries, otherwise false
+bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate *pred, void *arg) {
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
         
-//         // Goes through all entries in the hashtable
-//         while (entry != NULL) {
-//             if (!pred(entry->key, entry->value, arg)) {
-//                 return false;  // Predicate was false for the current entry
-//             }
-//             entry = entry->next; //Go to the next entry in the hashtable
-//         }
-//     }
-//     return true;  // All the entries satisfied the predicate
-// }
+        // Goes through all entries in the hashtable
+        while (entry != NULL) {
+            if (!pred(entry->key, entry->value, arg)) {
+                return false;  // Predicate was false for the current entry
+            }
+            entry = entry->next; //Go to the next entry in the hashtable
+        }
+    }
+    return true;  // All the entries satisfied the predicate
+}
 
-// /// @brief check if a predicate is satisfied by any entry in a hash table
-// /// @param ht hash table operated upon
-// /// @param pred the predicate
-// /// @param arg extra argument to pred
-// bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate *pred, void *arg){
-//     for (int i = 0; i < No_Buckets; i++) {
-//         entry_t *entry = ht->buckets[i];
+/// @brief check if a predicate is satisfied by any entry in a hash table
+/// @param ht hash table operated upon
+/// @param pred the predicate
+/// @param arg extra argument to pred
+bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate *pred, void *arg){
+    for (int i = 0; i < No_Buckets; i++) {
+        entry_t *entry = ht->buckets[i];
         
-//         // Goes through all entries in the hashtable
-//         while (entry != NULL) {
-//             if (pred(entry->key, entry->value, arg)) {
-//                 return true;  // Predicate proved false for an entry
-//             }
-//             entry = entry->next;  // Go to the next entry in the hashtable
-//         }
+        // Goes through all entries in the hashtable
+        while (entry != NULL) {
+            if (pred(entry->key, entry->value, arg)) {
+                return true;  // Predicate proved true for an entry, ending loop
+            }
+            entry = entry->next;  // Go to the next entry in the hashtable
+        }
     
-//     return false;  // None of the entries satisfied the predicate
-//     }
-// }
+    }
+    return false; // None of the entries satisfied the predicate
+}
 
 // / @brief apply a function to all entries in a hash table
 // / @param h hash table operated upon

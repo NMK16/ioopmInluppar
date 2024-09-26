@@ -85,6 +85,11 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht);
 /// @param key the key sought
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key);
 
+/// @brief check if a hash table has an entry with a given key
+/// @param ht hash table operated upon
+/// @param key the key sought
+bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, int key);
+
 /// @brief check if a hash table has an entry with a given value
 /// @param ht hash table operated upon
 /// @param value the value sought

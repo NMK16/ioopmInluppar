@@ -267,58 +267,53 @@ void test_has_values(){
 //   int other_key = *other_key_ptr;
 //   return key == other_key;
 // }
-// void test_all(){
-// 	// Creates an empty hashtable
-//     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-//     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+bool predFun(int key, char *value, void *arg){
+	return true;
+}
+void test_all(){
+	// Creates an empty hashtable
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
 
-// 	// Creates keys and values
-// 	int keys[5] = {3, 10, 42, 0, 99};
-//     char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
-// 	int num_keys = 5;
+	// Creates keys and values
+	int keys[5] = {3, 10, 42, 0, 99};
+    char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+	int num_keys = 5;
 
-// 	// Adding entries to the hashtable with the keys-value pairs from above
-//     for (int i = 0; i < num_keys; i++) {
-//         ioopm_hash_table_insert(ht, keys[i], values[i]);  
-//     }
+	// Adding entries to the hashtable with the keys-value pairs from above
+    for (int i = 0; i < num_keys; i++) {
+        ioopm_hash_table_insert(ht, keys[i], values[i]);  
+    }
+	CU_ASSERT_TRUE(ioopm_hash_table_all(ht, predFun, &num_keys));
+	// Asserts that it's true that all keys in the hashtable has a 
 
-// 	// Asserts that it's false that all keys in the hashtable has a 
-// 	CU_ASSERT_FALSE(ioopm_hash_table_all(ht, (pred(strlen(keys) > 5), NULL));
+	// Cleanup
+	ioopm_hash_table_destroy(ht);
+}
 
+void test_any(){
+	// Creates an empty hashtable
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
 
-// 	// Asserts that it's true that all keys in the hashtable has a 
-// 	CU_ASSERT_TRUE(ioopm_hash_table_all(ht, (strlen(*values) >= 3), NULL));
+	// Creates keys and values
+	int keys[5] = {3, 10, 42, 0, 99};
+    char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+	int num_keys = 5;
 
-// 	// Cleanup
-// 	ioopm_hash_table_destroy(ht);
-// }
-
-// void test_any(){
-// 	// Creates an empty hashtable
-//     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-//     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
-
-// 	// Creates keys and values
-// 	int keys[5] = {3, 10, 42, 0, 99};
-//     char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
-// 	int num_keys = 5;
-
-// 	// Adding entries to the hashtable with the keys-value pairs from above
-//     for (int i = 0; i < num_keys; i++) {
-//         ioopm_hash_table_insert(ht, keys[i], values[i]);  
-//     }
+	// Adding entries to the hashtable with the keys-value pairs from above
+    for (int i = 0; i < num_keys; i++) {
+        ioopm_hash_table_insert(ht, keys[i], values[i]);  
+    }
 
 
-// 	// Asserts that it's true that all keys in the hashtable has a 
-// 	CU_ASSERT_EQUAL((ioopm_hash_table_any(ht, key_equiv, key[1])), (ioopm_hash_table_has_keys(ht, key[1])));
+	// Asserts that it's true that all keys in the hashtable has a 
+	CU_ASSERT_EQUAL(ioopm_hash_table_has_key(ht, 3), ioopm_hash_table_has_key2(ht, 3));
 
 
-// 	// Asserts that it's false that all keys in the hashtable has a 
-// 	// CU_ASSERT_TRUE(ioopm_hash_table_all(ht, (strlen(*values) >= 3), NULL));
-
-// 	// Cleanup
-// 	ioopm_hash_table_destroy(ht);
-// }
+	// Cleanup
+	ioopm_hash_table_destroy(ht);
+}
 
 // void test_apply_all(){
 // 	// Create an empty hashtable
@@ -348,7 +343,9 @@ int main() {
   	CU_add_test(my_test_suite, "test_values", test_values);
 	CU_add_test(my_test_suite, "test_has_key", test_has_keys);
 	CU_add_test(my_test_suite, "test_has_val", test_has_values);
-	// CU_add_test(my_test_suite, "test_any", test_any);
+	CU_add_test(my_test_suite, "test_all", test_all);
+	CU_add_test(my_test_suite, "test_any", test_any);
+
 	
 
   	// Set the running mode to verbose for detailed output

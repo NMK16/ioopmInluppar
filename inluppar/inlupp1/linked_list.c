@@ -2,11 +2,23 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct list {
-    struct list *first;
+typedef struct link {
     int element;
-    struct list *next;
+    struct link *next;
+} ioopm_link_t;
+
+typedef struct list {
+    ioopm_link_t *head;
+    struct list *tail;
+    int size;
 } ioopm_list_t;
+
+
+ioopm_link_t *ioopm_link_create(void)
+{
+    ioopm_link_t *link = calloc(1, sizeof(ioopm_link_t));
+    return link;
+}
 
 /// @brief Creates a new empty list
 /// @return an empty linked list
@@ -28,11 +40,17 @@ void ioopm_linked_list_destroy(ioopm_list_t *list){
 /// @param value the value to be appended
 void ioopm_linked_list_append(ioopm_list_t *list, int value){
     ioopm_list_t *end = list;
-    while (end->next != NULL){
-        end = end->next;
+    if (end == NULL){
+        end = ioopm_linked_list_create();
     }
-    end->next = ioopm_linked_list_create();
-    end->element = value;
+    if(end->head == NULL){
+        end->head = ioopm_link_create();
+        end->head->element = value;
+    }
+    else{
+        ioopm_linked_list_append(end->tail, value);
+    }
+
 }
 
 
@@ -40,13 +58,12 @@ void ioopm_linked_list_append(ioopm_list_t *list, int value){
 /// @param list the linked list that will be prepended to
 /// @param value the value to be prepended
 void ioopm_linked_list_prepend(ioopm_list_t *list, int value){
-    if(list->first != NULL){
-        list->first->element = value;
+    if(list->head != NULL){
+        list->head->element = value;
     }
     else{
-        list->first = ioopm_linked_list_create();
-        list->first->element = value;
-
+        list->head = ioopm_link_create();
+        list->head->element = value;
     }
 }
 
@@ -54,10 +71,10 @@ int main(int argc, char *argv[])
 {
     ioopm_list_t *list = ioopm_linked_list_create();
     ioopm_linked_list_append(list, 2);
-    printf("%d\n", list->element);
-    ioopm_linked_list_append(list, 3);
-    printf("%d\n", list->next->element);
+    printf("%d\n", list->head->element);
+    ioopm_linked_list_append(list->tail, 3);
+    printf("%d\n", list->tail->head->element);
     ioopm_linked_list_prepend(list, 1);
-    printf("%d\n", list->element);
+    printf("%d\n", list->head->element);
     return 0;
 }

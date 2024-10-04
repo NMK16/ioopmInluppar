@@ -122,43 +122,33 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
 /// @param value the value to be inserted 
 void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
 {
-    ioopm_list_t *new_list = list;
-    
-    if(index > (list -> size)){
-        printf("Sorry the index is out of the linked lists bound \n");
+    if (index > list->size)
+    {
+        printf("Sorry, the index is out of the linked list's bounds.\n");
+        return;  
+    }
+
+    if (index == 0)
+    {
+        ioopm_linked_list_prepend(list, value);  
         return;
     }
+
+    link_t *current = list->head;
     
-    
-    if(index == 0){
-        ioopm_linked_list_prepend(list, value);
+
+    for (int i = 0; i < index - 1 && current != NULL; i++)
+    {
+        current = current->next;
     }
-    
-    else{
-        link_t *current = new_list->head;
-        link_t *next_entry = new_list -> head -> next;
 
-        int i = 0;
-        while (i <= index && current -> next != NULL )
-        {
-            
-            if(i < index){ 
-            current = current->next;
-            }
+   
+    link_t *new_node = link_create(value, current->next);
 
-            if(i == index){
-                current -> value = value;
-            }
-            
-            else if (i > index){    
-            current = next_entry;
-            }
-            
-            i++;
-        }
-    }   
-    
-    list->size++;  
+ 
+    current->next = new_node;
+
+    list->size++;
 }
 
 /// @brief Remove an element from a linked list in O(n) time.
@@ -287,7 +277,7 @@ int main(void)
 
     ioopm_linked_list_insert(list, 6, 10101010);
 
-     ioopm_linked_list_insert(list, 2, 25);
+     ioopm_linked_list_insert(list, 2, 15);
   
     link_t *current = list->head;
     while (current != NULL)

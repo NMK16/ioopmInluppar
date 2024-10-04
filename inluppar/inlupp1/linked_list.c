@@ -239,13 +239,33 @@ int ioopm_linked_list_size(ioopm_list_t *list)
 
 bool ioopm_linked_list_is_empty(ioopm_list_t *list)
 {
-    NOT_SUPPORTED();
+    if(list -> size == 0){
+        return true;
+    }
+    
+    return false;
 }
 
+
+/// @brief Remove all elements from a linked list
+/// @param list the linked list
 void ioopm_linked_list_clear(ioopm_list_t *list)
 {
-    NOT_SUPPORTED();
+    assert(list);
+    
+    link_t *current = list->head;
+
+    while (current != NULL)
+    {
+        link_t *tmp = current;  
+        current = current->next;  
+        free(tmp); 
+    }
+
+    list->head = NULL;  
+    list->size = 0;  
 }
+
 
 bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
 {
@@ -277,7 +297,7 @@ int main(void)
 
     ioopm_linked_list_insert(list, 6, 10101010);
 
-     ioopm_linked_list_insert(list, 2, 15);
+    ioopm_linked_list_insert(list, 2, 15);
   
     link_t *current = list->head;
     while (current != NULL)
@@ -287,7 +307,11 @@ int main(void)
     }
  
 
-    ioopm_linked_list_destroy(list);
-
+    ioopm_linked_list_clear(list);
+    
+    if(ioopm_linked_list_is_empty(list)){
+        printf(" \n Empty list, should prob be cleared if im right\n");
+    }
+ 
     return 0;
 }

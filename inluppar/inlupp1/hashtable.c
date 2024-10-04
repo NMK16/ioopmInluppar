@@ -89,17 +89,35 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value) {
 
 
 
-/// Helper function for recursive lookup
+// Helper function for recursive lookup (F14)
 static void *recursive_lookup(entry_t *searching_entry, int key) {
     if (searching_entry == NULL) {
-        return NULL; // Base case: key not found
+        return NULL; 
     }
+
     if (searching_entry->key == key) {
-        return searching_entry->value; // Key found, return the value
+        return searching_entry->value; 
     }
-    
-    return recursive_lookup(searching_entry->next, key); // Recursive call
+
+    // The recursive call is now the last operation.
+    return recursive_lookup(searching_entry->next, key); 
 }
+
+
+// static void *non_tail_recursive_lookup(entry_t *searching_entry, int key) {
+//     if (searching_entry == NULL) {
+//         return NULL; 
+//     }
+    
+//     if (searching_entry->key == key) {
+//         return searching_entry->value; 
+//     }
+
+//     void *result = non_tail_recursive_lookup(searching_entry->next, key); 
+    
+//     return result; 
+// }
+
 
 /// @brief Lookup the value for a key in the hash table
 /// @param ht the hash table being used

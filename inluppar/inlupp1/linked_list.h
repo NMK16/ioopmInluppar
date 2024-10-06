@@ -1,7 +1,10 @@
 #pragma once
 #include <stdbool.h>
 
-typedef struct list ioopm_list_t; /// Meta: struct definition goes in C file
+
+typedef struct link link_t; 
+typedef struct list ioopm_list_t;
+
 
 /// @brief Creates a new empty list
 /// @return an empty linked list
@@ -66,8 +69,8 @@ bool ioopm_linked_list_is_empty(ioopm_list_t *list);
 /// @param list the linked list
 void ioopm_linked_list_clear(ioopm_list_t *list);
 
-typedef bool ioopm_int_predicate(int key, int *value, void *extra);
-typedef void ioopm_apply_int_function(int key, int *value, void *extra);
+typedef bool ioopm_int_predicate(int *value, void *extra);
+typedef void ioopm_apply_int_function( int *value, void *extra);
 
 /// @brief Test if a supplied property holds for all elements in a list.
 /// The function returns as soon as the return value can be determined.

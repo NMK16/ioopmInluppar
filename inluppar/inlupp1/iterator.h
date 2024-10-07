@@ -19,6 +19,7 @@ typedef struct ioopm_list_iterator {
     link_t *current;                   
 } ioopm_list_iterator_t;
 
+ioopm_list_iterator_t *ioopm_list_iterator_create(ioopm_list_t *list);
 
 /// @brief Checks if there are more elements to iterate over
 /// @param iter the iterator

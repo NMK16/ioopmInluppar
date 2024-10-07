@@ -36,8 +36,9 @@ void test_iterator_creation() {
     CU_ASSERT_EQUAL(iter->current->value, 1); // Check if the current value is the head of the list
 
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter); // Free the iterator
-    free(test_list); // Free the test_list here properly
+
 }
 
 // Test iterator has next
@@ -55,8 +56,8 @@ void test_iterator_has_next() {
     CU_ASSERT_FALSE(ioopm_iterator_has_next(iter)); // Now should be false
 
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter);
-    free(test_list);
 }
 
 // Test iterator next
@@ -72,8 +73,9 @@ void test_iterator_next() {
     CU_ASSERT_EQUAL(ioopm_iterator_next(iter), 3); // Third elementq
 
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter);
-    free(test_list);
+
 }
 
 // Test insert (funkar ej, behövs inte implementeras heller)
@@ -95,8 +97,9 @@ void test_iterator_insert() {
     CU_ASSERT_EQUAL(test_list->size, 3); // Size should be 3
 
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter);
-    free(test_list);
+
 }
 
 // Test iterator reset
@@ -116,8 +119,9 @@ void test_iterator_reset() {
     CU_ASSERT_EQUAL(ioopm_iterator_current(iter), test_list -> head -> value); // Asserts that the value from the current is the same as lists head
     CU_ASSERT_EQUAL(test_list -> head -> value, 1); // Asserts that three is now the lists head
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter);
-    free(test_list);
+
 }
 
 // Test remove (funkar ej, behövs inte implementeras heller)
@@ -138,8 +142,8 @@ void test_iterator_remove() {
     CU_ASSERT_EQUAL(test_list->size, 2); // Size should be 3
     
     // Clean up
+    ioopm_linked_list_destroy(test_list);
     free(iter);
-    free(test_list);
 }
 
 // Main function to run the tests

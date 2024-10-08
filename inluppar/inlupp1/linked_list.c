@@ -25,7 +25,7 @@ struct link
 struct list
 {
     link_t *head;
-    int size;
+    size_t size;
 };
 
 #define NOT_SUPPORTED()                                                            \
@@ -225,7 +225,7 @@ bool ioopm_linked_list_contains(ioopm_list_t *list, int element)
 /// @brief Lookup the number of elements in the linked list in O(1) time
 /// @param list the linked list
 /// @return the number of elements in the list
-int ioopm_linked_list_size(ioopm_list_t *list)
+size_t ioopm_linked_list_size(ioopm_list_t *list)
 {
     assert(list);
     return list->size;

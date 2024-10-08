@@ -6,14 +6,26 @@
 #define No_Buckets 17
 
 typedef struct entry {
-    int key;                // Holds the key
-    char *value;           // Holds the value
-    struct entry *next;    // Points to the next entry (possibly NULL)
+    int key;                
+    char *value;         
+    struct entry *next;    
 } entry_t;
 
 typedef struct hash_table {
-    entry_t *buckets[No_Buckets]; // Fixed number of buckets
+    entry_t *buckets[No_Buckets]; 
 } ioopm_hash_table_t;
+
+typedef struct link
+{
+    int value;
+    struct link *next;
+} link_t;
+
+typedef struct list
+{
+    link_t *head;
+    size_t size;
+} ioopm_list_t;
 
 /// @brief Create a new empty hash table
 /// @return Pointer to the created hash table
@@ -156,7 +168,7 @@ char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key) {
 /// @brief Returns the number of key => value entries in the hash table
 /// @param ht hash table operated upon
 /// @return the number of key => value entries in the hash table
-int ioopm_hash_table_size(ioopm_hash_table_t *ht) {
+size_t ioopm_hash_table_size(ioopm_hash_table_t *ht) {
     int size = 0;
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
@@ -189,29 +201,41 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht) {
     }
 }
 
+
 /// @brief return the keys for all entries in a hash map 
 /// @param ht hash table operated upon
-/// @return an array of keys for hash table ht
-int *ioopm_hash_table_keys(ioopm_hash_table_t *ht) {
-    int size = ioopm_hash_table_size(ht);
-    int *keys = calloc(size, sizeof(int));
-    int counter = 0;
+/// @return a list of keys for hash table ht
+ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht) {
+    ioopm_list_t *keys = calloc(1, sizeof(ioopm_list_t)); 
+    if (!keys) return NULL;  
+    
+    keys->head = NULL;  
+    keys->size = ioopm_hash_table_size(ht);;     
+
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-            keys[counter] = entry->key;
-            entry = entry->next;
-            counter++;
+         
+            link_t *new_link = calloc(1, sizeof(link_t));
+            if (!new_link) return keys; 
+
+            new_link->value = entry->key; 
+            new_link->next = keys->head; 
+            keys->head = new_link;      
+            keys->size++;                
+
+            entry = entry->next;  
         }
     }
     return keys;
 }
 
+
 /// @brief return the values for all entries in a hash map 
 /// @param ht hash table operated upon
 /// @return an array of values for hash table ht
 char **ioopm_hash_table_values(ioopm_hash_table_t *ht) {
-    int size = ioopm_hash_table_size(ht);
+    size_t size = ioopm_hash_table_size(ht);
     char **values = calloc(size, sizeof(char *));
     int counter = 0;
     for (int i = 0; i < No_Buckets; i++) {

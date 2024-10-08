@@ -1,6 +1,7 @@
 #ifndef __HASHTABLE_H__
 #define __HASHTABLE_H__
 #include <stdbool.h>
+#include <stddef.h>
 
 
 typedef struct entry entry_t;
@@ -24,6 +25,10 @@ typedef struct hash_table ioopm_hash_table_t;
  */
 
 typedef struct hash_table ioopm_hash_table_t;
+
+typedef struct link link_t;
+
+typedef struct list ioopm_list_t;
 
 /// @brief Create a new hash table
 /// @return A new empty hash table
@@ -59,7 +64,7 @@ typedef void ioopm_apply_function(int key, char **value, void *extra);
 /// @brief returns the number of key => value entries in the hash table
 /// @param ht hash table operated upon
 /// @return the number of key => value entries in the hash table
-int ioopm_hash_table_size(ioopm_hash_table_t *ht);
+size_t ioopm_hash_table_size(ioopm_hash_table_t *ht);
 
 /// @brief checks if the hash table is empty
 /// @param ht hash table operated upon
@@ -73,7 +78,7 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht);
 /// @brief return the keys for all entries in a hash map (in no particular order, but same as ioopm_hash_table_values)
 /// @param ht hash table operated upon
 /// @return an array of keys for hash table h
-int *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
+ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
 
 /// @brief return the values for all entries in a hash map (in no particular order, but same as ioopm_hash_table_keys)
 /// @param ht hash table operated upon

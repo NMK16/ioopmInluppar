@@ -7,6 +7,28 @@
 // gcc -Wall unit_tests.c hashtable.c -lcunit -o unit_tests
 // ./unit_tests
 
+typedef struct entry {
+    int key;                
+    char *value;         
+    struct entry *next;    
+} entry_t;
+
+typedef struct hash_table {
+    entry_t *buckets[No_Buckets]; 
+} ioopm_hash_table_t;
+
+typedef struct link
+{
+    int value;
+    struct link *next;
+} link_t;
+
+typedef struct list
+{
+    link_t *head;
+    size_t size;
+} ioopm_list_t;
+
 
 int init_suite(void) {
 	// Optional setup before tests, return 0 on success
@@ -104,7 +126,7 @@ void test_size() {
 
 void test_is_empty_clear() {
   	ioopm_hash_table_t *ht = ioopm_hash_table_create();
-  	CU_ASSERT_PTR_NOT_NULL(ht);  // Ensure that a hashtable is created
+  	CU_ASSERT_PTR_NOT_NULL(ht);  // Ensure sthat a hashtable is created
 
   	// Checking that the empty hashtable function returns true for an empty hashtable
   	CU_ASSERT_EQUAL(ioopm_hash_table_is_empty(ht), true);
@@ -125,39 +147,44 @@ void test_is_empty_clear() {
 
 
 void test_keys() {
+    
     // Creates a new hashtable
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensure that a hashtable is created
+    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable is created
 
     int keys[5] = {3, 10, 42, 0, 99};
     bool found[5] = {false, false, false, false, false};
     int num_keys = 5;  // Number of keys
 
-    // Insert all keys into the hash table (the values are not important for this test)
+    // Inserts all keys into the hash table
     for (int i = 0; i < num_keys; i++) {
         ioopm_hash_table_insert(ht, keys[i], "Value not needed");
     }
 
     // Get all the keys back from the hash table
-    int *hash_table_keys = ioopm_hash_table_keys(ht);
-    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);  // Ensures that we got keys back
+    ioopm_list_t *hash_table_keys = ioopm_hash_table_keys(ht);
+    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);  // Ensure that we got keys back
 
     // Iterate over the returned keys from the hash table
-    for (int i = 0; i < num_keys; i++) {
+    link_t *current = hash_table_keys->head;
+    while (current != NULL) {
         bool key_found = false;
-        for (int j = 0; j < num_keys; j++) {
-            if (hash_table_keys[i] == keys[j]) {
-                found[j] = true;  // Mark the index in 'found' as true
+        for (int i = 0; i < num_keys; i++) {
+            if (current->value == keys[i]) {
+                found[i] = true;  
                 key_found = true;
                 break;
             }
         }
-        if (!key_found) {
-            CU_FAIL("Found a key that was never inserted!");
+        
+        if (!key_found){
+            CU_FAIL("Found a key/value that was never inserted");
         }
+
+        current = current->next;  // Move to the next key in the list
     }
 
-    // Asserts that all elements are found
+    // Assert that all keys were found
     for (int i = 0; i < num_keys; i++) {
         CU_ASSERT_TRUE(found[i]);
     }
@@ -169,54 +196,49 @@ void test_keys() {
 
 // Test for checking if the hashtable has values
 void test_values() {
-    // Create an empty hashtable
+
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-    CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
+    CU_ASSERT_PTR_NOT_NULL(ht); 
 
     int keys[5] = {3, 10, 42, 0, 99};
     char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
     bool found[5] = {false, false, false, false, false};
-    int num_keys = 5;  // Number of keys
+    int num_keys = 5; 
 
-    // Adding entries to the hashtable with the keys-value pairs from above
     for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, keys[i], values[i]);  
+        ioopm_hash_table_insert(ht, keys[i], values[i]);
     }
 
-    // Get all keys and values from the hashtable
-    int *hash_table_keys = ioopm_hash_table_keys(ht);
-    char **hash_table_values = ioopm_hash_table_values(ht);  
-    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);   // Ensures we got keys from the hashtable
-    CU_ASSERT_PTR_NOT_NULL(hash_table_values); // Ensures we got values from the hashtable
 
-    // Goes through each key in the hashtables
-    for (int i = 0; i < num_keys; i++) {
+    ioopm_list_t *hash_table_keys = ioopm_hash_table_keys(ht);
+    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);   
+
+    link_t *current = hash_table_keys->head;
+    while (current != NULL) {
         bool key_found = false;
-        for (int j = 0; j < num_keys; j++) {
-            if (hash_table_keys[i] == keys[j]) {
-                // Checks that values in the hashtables are the same as the given array of values
-                CU_ASSERT_STRING_EQUAL(hash_table_values[i], values[j]);
-                found[j] = true;  
+        for (int i = 0; i < num_keys; i++) {
+            if (current->value == keys[i]) {
+                char *hash_table_value = ioopm_hash_table_lookup(ht, keys[i]);
+                CU_ASSERT_STRING_EQUAL(hash_table_value, values[i]);
+                found[i] = true;
                 key_found = true;
                 break;
             }
         }
-        if (!key_found) {
-            CU_FAIL("Found a key/value that was never inserted!");
+
+        if (!key_found){
+            CU_FAIL("Found a key/value that was never inserted");
         }
+
+        current = current->next;
     }
 
-    // Asserts that all elements are found
     for (int i = 0; i < num_keys; i++) {
         CU_ASSERT_TRUE(found[i]);
     }
 
     // Cleanup
     free(hash_table_keys);
-    for (int i = 0; i < num_keys; i++) {
-        free(hash_table_values[i]); // Free individual values if they were dynamically allocated
-    }
-    free(hash_table_values); 
     ioopm_hash_table_destroy(ht);
 }
 

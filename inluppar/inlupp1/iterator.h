@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+#include <stddef.h>
 
 typedef struct link
 {
@@ -10,7 +11,7 @@ typedef struct link
 typedef struct list
 {
     link_t *head;
-    int size;
+    size_t size;
 } ioopm_list_t;
 
 

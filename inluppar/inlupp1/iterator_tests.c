@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "iterator.h" 
+#include "common.h"
 #include "linked_list.h"
+
 // Kör koden i denna fil genom:
 // gcc -g -Wall iterator_tests.c iterator.c linked_list.c -lcunit -o iterator_tests
 // ./iterator_tests

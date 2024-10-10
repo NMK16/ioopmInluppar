@@ -24,9 +24,9 @@ bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter) {
 /// @brief Step the iterator forward one step
 /// @param iter the iterator
 /// @return the next element
-int ioopm_iterator_next(ioopm_list_iterator_t *iter) {
+elem_t ioopm_iterator_next(ioopm_list_iterator_t *iter) {
 
-    int value = iter->current-> next -> value; // Gets the current value in the list
+    elem_t value = iter->current-> next -> value; // Gets the current value in the list
     iter->current = iter->current->next; // Goes to the next link in the list
     return value;
 }
@@ -35,7 +35,7 @@ int ioopm_iterator_next(ioopm_list_iterator_t *iter) {
 /// @brief Remove the current element from the underlying list
 /// @param iter the iterator
 /// @return the removed element
-int ioopm_iterator_remove(ioopm_list_iterator_t *iter) {
+elem_t ioopm_iterator_remove(ioopm_list_iterator_t *iter) {
     if (iter->current == NULL) {
         return false; 
     }
@@ -53,7 +53,7 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter) {
         prev->next = current->next; // Skip the current element
     }
 
-    int result = current->value; // Saves the currents value;
+    elem_t result = current->value; // Saves the currents value;
 
     iter->current = current->next; // Move iterator to the next element
     free(current);
@@ -67,7 +67,7 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter) {
 /// @brief Insert a new element into the underlying list making the current element its next
 /// @param iter the iterator
 /// @param element the element to be inserted
-void ioopm_iterator_insert(ioopm_list_iterator_t *iter, int element) {
+void ioopm_iterator_insert(ioopm_list_iterator_t *iter, elem_t element) {
     link_t *new_link = calloc(1, sizeof(link_t));
     new_link->value = element;
 
@@ -102,7 +102,7 @@ void ioopm_iterator_reset(ioopm_list_iterator_t *iter) {
 /// @brief Return the current element from the underlying list
 /// @param iter the iterator
 /// @return the current element
-int ioopm_iterator_current(ioopm_list_iterator_t *iter) {
+elem_t ioopm_iterator_current(ioopm_list_iterator_t *iter) {
 
     return iter->current->value; // Return the current value
 }

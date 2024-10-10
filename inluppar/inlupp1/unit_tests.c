@@ -1,33 +1,13 @@
 #include <CUnit/Basic.h>
 #include "hashtable.h"
 #include <stdlib.h>
-#define No_Buckets 17
+#include "hashtable.h"
+#include "common.h"
+
 
 // Kör koden i denna fil genom:
 // gcc -Wall unit_tests.c hashtable.c -lcunit -o unit_tests
 // ./unit_tests
-
-typedef struct entry {
-    int key;                
-    char *value;         
-    struct entry *next;    
-} entry_t;
-
-typedef struct hash_table {
-    entry_t *buckets[No_Buckets]; 
-} ioopm_hash_table_t;
-
-typedef struct link
-{
-    int value;
-    struct link *next;
-} link_t;
-
-typedef struct list
-{
-    link_t *head;
-    size_t size;
-} ioopm_list_t;
 
 
 int init_suite(void) {

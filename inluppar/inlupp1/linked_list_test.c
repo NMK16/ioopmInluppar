@@ -2,6 +2,7 @@
 #include "linked_list.h"
 #include <assert.h>
 #include <stdlib.h>
+#include "common.h"
 
 // Kör koden i denna fil genom:
 // gcc -Wall linked_list_test.c linked_list.c -lcunit -o linked_list_test
@@ -12,17 +13,7 @@
 //valgrind --leak-check=full --track-origins=yes ./linked_list_test
 
 
-struct link
-{
-    int value;
-    struct link *next;
-};
 
-struct list
-{
-    link_t *head;
-    int size;
-};
 
 
 // Optional setup before tests

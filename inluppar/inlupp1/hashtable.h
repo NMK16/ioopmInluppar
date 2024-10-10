@@ -18,6 +18,7 @@
  */
 
 
+
 /// @brief Create a new hash table
 /// @param hash_fn hash function
 /// @param key_eq_fn function that checks if keys are equal
@@ -49,8 +50,8 @@ elem_t *ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key);
 
 //Part 2
 
-typedef bool ioopm_predicate(elem_t key, elem_t *value, void *extra);
-typedef void ioopm_apply_function(elem_t key, elem_t *value, void *extra);
+typedef bool ioopm_predicate(elem_t key, elem_t value, void *extra);
+typedef void ioopm_apply_function(elem_t key, elem_t value, void *extra);
 
 /// @brief returns the number of key => value entries in the hash table
 /// @param ht hash table operated upon
@@ -74,7 +75,7 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
 /// @brief return the values for all entries in a hash map (in no particular order, but same as ioopm_hash_table_keys)
 /// @param ht hash table operated upon
 /// @return an array of values for hash table h
-ioopm_list_t **ioopm_hash_table_values(ioopm_hash_table_t *ht);
+ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *ht);
 
 /// @brief check if a hash table has an entry with a given key
 /// @param ht hash table operated upon
@@ -89,7 +90,7 @@ bool ioopm_hash_table_has_key2(ioopm_hash_table_t *ht, elem_t key);
 /// @brief check if a hash table has an entry with a given value
 /// @param ht hash table operated upon
 /// @param value the value sought
-bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t *value);
+bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value);
 
 /// @brief check if a predicate is satisfied by all entries in a hash table
 /// @param ht hash table operated upon

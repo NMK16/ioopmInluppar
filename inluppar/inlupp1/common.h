@@ -23,6 +23,9 @@ typedef struct entry {
     struct entry *next;    
 } entry_t;
 
+typedef bool ioopm_eq_function(elem_t a, elem_t b);
+typedef int ioopm_hash_function(elem_t);
+
 typedef struct hash_table {
     entry_t *buckets[No_Buckets]; 
     size_t size;

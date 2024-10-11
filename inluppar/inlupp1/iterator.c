@@ -37,7 +37,7 @@ elem_t ioopm_iterator_next(ioopm_list_iterator_t *iter) {
 /// @return the removed element
 elem_t ioopm_iterator_remove(ioopm_list_iterator_t *iter) {
     if (iter->current == NULL) {
-        return false; 
+        return iter -> current -> value; 
     }
 
     link_t *current = iter->current;

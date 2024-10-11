@@ -16,8 +16,7 @@
  *
  * @see $CANVAS_OBJECT_REFERENCE$/assignments/gb54499f3b7b264e3af3b68c756090f52
  */
-
-
+    
 
 /// @brief Create a new hash table
 /// @param hash_fn hash function

@@ -5,6 +5,9 @@
 #include "common.h"
 #include "linked_list.h"
 
+#define int_elem(x) (elem_t) { .i = (x) }
+#define ptr_elem(x) (elem_t) { .p = (x) }
+
 // Kör koden i denna fil genom:
 // gcc -g -Wall iterator_tests.c iterator.c linked_list.c -lcunit -o iterator_tests
 // ./iterator_tests

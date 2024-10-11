@@ -1,7 +1,6 @@
 #include <CUnit/Basic.h>
 #include "hashtable.h"
 #include <stdlib.h>
-#include "hashtable.h"
 #include "common.h"
 
 #define int_elem(x) (elem_t) { .i = (x) }
@@ -24,11 +23,11 @@ int clean_suite(void) {
 }
 
 
-int ioopm_hash_function(elem_t key){
+int *ioopm_hash_function(elem_t key){
     return key.i % 17;
 };
 
-bool ioopm_eq_function(elem_t a, elem_t b){
+bool *ioopm_eq_function(elem_t a, elem_t b){
     return a.i == b.i;
 };
 
@@ -49,8 +48,8 @@ void test_insert_once() {
 	ioopm_hash_table_insert(ht, int_elem(42), ptr_elem("Hello"));
 
 	// Lookup the inserted value
-	char *value = ioopm_hash_table_lookup(ht, int_elem(42));
-	CU_ASSERT_STRING_EQUAL(value, "Hello");
+	elem_t value = ioopm_hash_table_lookup(ht, int_elem(42));
+	CU_ASSERT_STRING_EQUAL(value, ptr_elem("Hello"));
 
 
   	// Inserting more entries
@@ -261,20 +260,20 @@ void test_has_values() {
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
 
     // Asserts that it's false that an empty hashtable has a value
-    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, int_elem("Filler")));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, ptr_elem("Filler")));
 
     // Adds an entry to the hashtable
-    ioopm_hash_table_insert(ht, 1, "Filler");
+    ioopm_hash_table_insert(ht, int_elem(1), ptr_elem("Filler"));
 
     // Lookup the inserted value
-    char *value = ioopm_hash_table_lookup(ht, 1);
+    char *value = ioopm_hash_table_lookup(ht, int_elem(1));
     CU_ASSERT_STRING_EQUAL(value, "Filler");
     
     // Asserts that it's now true that the hashtable has a value    
-    CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "Filler"));
+    CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, ptr_elem("Filler")));
     
     // Check if a different value is not found
-    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, "Not Filler"));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, ptr_elem("Not Filler")));
 
     // Cleanup
     ioopm_hash_table_destroy(ht);
@@ -295,14 +294,14 @@ void test_all() {
 
     // Insert entries into the hash table
     for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, keys[i], values[i]);
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
 
     // Test if all keys in the hash table are positive or zero
     CU_ASSERT_TRUE(ioopm_hash_table_all(ht, all_keys_bigger_than_10, NULL));  
     
 	// Add a small key
-    ioopm_hash_table_insert(ht, 3, "key smaller than 10");
+    ioopm_hash_table_insert(ht, int_elem(3), ptr_elem("key smaller than 10"));
 
     // Test again after adding a small key
     CU_ASSERT_FALSE(ioopm_hash_table_all(ht, all_keys_bigger_than_10, NULL));  
@@ -327,7 +326,7 @@ void test_any() {
 
     // Insert entries into the hash table
     for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, keys[i], values[i]);
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
 
     // Test if any key in the hash table equals 42
@@ -366,11 +365,13 @@ void test_apply() {
     int keys[] = {1, 2, 3};
     char *values[] = {"value1", "value2", "value3"};
     const char *suffix = "_suffix";
+    int num_keys = 3;
 
     // Insert entries into the hash table
-    for (int i = 0; i < 3; i++) {
-        ioopm_hash_table_insert(ht, keys[i], values[i]);
+    for (int i = 0; i < num_keys; i++) {
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
+
 
     // Apply the function to all entries in the hash table
     ioopm_hash_table_apply_to_all(ht, append_suffix, (void *)suffix);
@@ -379,7 +380,7 @@ void test_apply() {
     for (int i = 0; i < 3; i++) {
         char expected_value[20]; // Make sure it has enough memory
         snprintf(expected_value, sizeof(expected_value), "value%d_suffix", i + 1);
-        char *actual_value = ioopm_hash_table_lookup(ht, keys[i]); // Find the actual value
+        elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i])); // Find the actual value
         CU_ASSERT_STRING_EQUAL(actual_value, expected_value); 
     }
 

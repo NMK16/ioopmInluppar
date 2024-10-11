@@ -35,7 +35,7 @@ struct list
         assert(false);                                                             \
     } while (0)
 
-link_t *link_create(int value, link_t *next)
+link_t *link_create(elem_t value, link_t *next)
 {
     link_t *link = calloc(1, sizeof(link_t));
     link->value = value;
@@ -69,7 +69,7 @@ void ioopm_linked_list_destroy(ioopm_list_t *list)
 /// @brief Insert at the end of a linked list in O(1) time
 /// @param list the linked list that will be appended
 /// @param value the value to be appended
-void ioopm_linked_list_append(ioopm_list_t *list, int value)
+void ioopm_linked_list_append(ioopm_list_t *list, elem_t value)
 {
     assert(list);  
 
@@ -100,7 +100,7 @@ void ioopm_linked_list_append(ioopm_list_t *list, int value)
 /// @brief Insert at the front of a linked list in O(1) time
 /// @param list the linked list that will be prepended to
 /// @param value the value to be prepended
-void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
+void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 {
     assert(list);
     list->head = link_create(value, list->head);
@@ -114,7 +114,7 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @param value the value to be inserted 
-void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
+void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
 {
     if (index > list->size)
     {
@@ -151,7 +151,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
 /// @param list the linked list
 /// @param index the position in the list
 /// @return the value removed
-int ioopm_linked_list_remove(ioopm_list_t *list, int index)
+elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index)
 {
     assert(list);
     assert(list->head);
@@ -159,7 +159,7 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
     if (index == 0)
     {
         link_t *tmp = list->head;
-        int value = tmp->value;
+        elem_t value = tmp->value;
         list->head = tmp->next;
         free(tmp);
         list->size--;
@@ -178,7 +178,7 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
     }
 
     prev->next = current->next;
-    int value = current->value;
+    elem_t value = current->value;
     free(current);
     list->size--;
     return value;
@@ -190,7 +190,7 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @return the value at the given position
-int ioopm_linked_list_get(ioopm_list_t *list, int index)
+elem_t ioopm_linked_list_get(ioopm_list_t *list, int index)
 {
     assert(list);
     assert(list->head);
@@ -207,13 +207,13 @@ int ioopm_linked_list_get(ioopm_list_t *list, int index)
 /// @param list the linked list
 /// @param element the element sought
 /// @return true if element is in the list, else false
-bool ioopm_linked_list_contains(ioopm_list_t *list, int element)
+bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
 {
     assert(list);
     link_t *cursor = list->head;
     while (cursor)
     {
-        if(cursor->value == element)
+        if(cursor -> value == element)
         {
             return true;
         }
@@ -272,7 +272,7 @@ bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, void *
     link_t *current = list -> head;
     while(current != NULL){
 
-        if(!prop(&(current -> value), extra)){
+        if(!prop(current -> value, extra)){
             return false;
         }
 
@@ -293,7 +293,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, void *
     link_t *current = list -> head;
     while(current){
         
-        if(prop(&(current -> value), extra)){
+        if(prop(current -> value, extra)){
             return true;
         }
         current = current -> next;
@@ -311,7 +311,7 @@ void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function
     link_t *current= list -> head;
 
     while(current){
-        fun(&(current -> value), extra);
+        fun(current -> value, extra);
         current = current -> next;
     }
 }

@@ -44,6 +44,7 @@ static entry_t *entry_create(elem_t key, elem_t *value, entry_t *next_value) {
 static entry_t *find_previous_entry_for_key(entry_t **bucket_head, elem_t key, ioopm_eq_function *key_eq_fn) {
     entry_t *current = *bucket_head;
     entry_t *prev = NULL;
+    
 
     while (current != NULL && key_eq_fn(current->key, key)) {
         prev = current;

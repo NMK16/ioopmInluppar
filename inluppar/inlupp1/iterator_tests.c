@@ -26,19 +26,26 @@ int clean_suite(void) {
     return 0;
 }
 
+bool eq_fn(elem_t a, elem_t b){
+    return a.i == b.i;
+}
+
+int elem_int(elem_t element){
+    return element.i;
+}
 
 // Test iterator creation
 void test_iterator_creation() {
 
     //Setup
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
 
     CU_ASSERT_PTR_NOT_NULL(iter->current); // Ensure the current pointer is not NULL
-    CU_ASSERT_EQUAL(iter->current->value, 1); // Check if the current value is the head of the list
+    CU_ASSERT_EQUAL(elem_int(iter->current->value), 1); // Check if the current value is the head of the list
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
@@ -50,9 +57,9 @@ void test_iterator_creation() {
 void test_iterator_has_next() {
     
     
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
     
@@ -68,14 +75,14 @@ void test_iterator_has_next() {
 // Test iterator next
 void test_iterator_next() {
     
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 2);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(2));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
-    CU_ASSERT_EQUAL(ioopm_iterator_next(iter), 2); // Second element
-    CU_ASSERT_EQUAL(ioopm_iterator_next(iter), 3); // Third elementq
+    CU_ASSERT_EQUAL(elem_int(ioopm_iterator_next(iter)), 2); // Second element
+    CU_ASSERT_EQUAL(elem_int(ioopm_iterator_next(iter)), 3); // Third elementq
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
@@ -86,19 +93,19 @@ void test_iterator_next() {
 // Test insert (funkar ej, behövs inte implementeras heller)
 void test_iterator_insert() {
 
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
     
     ioopm_iterator_next(iter); // Move to the second element (3)
-    CU_ASSERT_EQUAL(iter -> current -> value, 3);
-    ioopm_iterator_insert(iter, 2); // Insert 2 before 3
+    CU_ASSERT_EQUAL(elem_int(iter -> current -> value), 3);
+    ioopm_iterator_insert(iter, int_elem(2)); // Insert 2 before 3
 
     // Check that 2 is now between 1 and 3
-    CU_ASSERT_EQUAL(test_list->head->next->value, 2); // Check that the next value after 1 is now 2
-    CU_ASSERT_EQUAL(test_list->head->next->next->value, 3); // Check that 3 is still present after 2
+    CU_ASSERT_EQUAL(elem_int(test_list->head->next->value), 2); // Check that the next value after 1 is now 2
+    CU_ASSERT_EQUAL(elem_int(test_list->head->next->next->value), 3); // Check that 3 is still present after 2
     CU_ASSERT_EQUAL(test_list->size, 3); // Size should be 3
 
     // Clean up
@@ -111,18 +118,18 @@ void test_iterator_insert() {
 void test_iterator_reset() {
 
     //Setup
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 2);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(2));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
     ioopm_iterator_next(iter); // Move to the second element, which should now be 2
     ioopm_iterator_next(iter); // Move to the third element, which should now be 3
     
     ioopm_iterator_reset(iter); // Makes 3 the current list head
-    CU_ASSERT_EQUAL(ioopm_iterator_current(iter), test_list -> head -> value); // Asserts that the value from the current is the same as lists head
-    CU_ASSERT_EQUAL(test_list -> head -> value, 1); // Asserts that three is now the lists head
+    CU_ASSERT_EQUAL(elem_int(ioopm_iterator_current(iter)), elem_int(test_list -> head -> value)); // Asserts that the value from the current is the same as lists head
+    CU_ASSERT_EQUAL(elem_int(test_list -> head -> value), 1); // Asserts that three is now the lists head
     // Clean up
     ioopm_linked_list_destroy(test_list);
     free(iter);
@@ -133,18 +140,18 @@ void test_iterator_reset() {
 void test_iterator_remove() {
     
     //Setup
-    ioopm_list_t *test_list = ioopm_linked_list_create();
-    ioopm_linked_list_append(test_list, 1);
-    ioopm_linked_list_append(test_list, 2);
-    ioopm_linked_list_append(test_list, 3);
+    ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
+    ioopm_linked_list_append(test_list, int_elem(1));
+    ioopm_linked_list_append(test_list, int_elem(2));
+    ioopm_linked_list_append(test_list, int_elem(3));
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
     ioopm_iterator_next(iter); // Move to the second element (2)
     ioopm_iterator_remove(iter); // Remove 2
 
-    CU_ASSERT_EQUAL(test_list->head->value, 1); // Head should still be 1
-    CU_ASSERT_EQUAL(test_list->head->next->value, 3); // Now 3 should be after the head
-    CU_ASSERT_EQUAL(test_list->size, 2); // Size should be 3
+    CU_ASSERT_EQUAL(elem_int(test_list->head->value), 1); // Head should still be 1
+    CU_ASSERT_EQUAL(elem_int(test_list->head->next->value), 3); // Now 3 should be after the head
+    CU_ASSERT_EQUAL((test_list->size), 2); // Size should be 3
     
     // Clean up
     ioopm_linked_list_destroy(test_list);

@@ -252,9 +252,9 @@ void test_any()
 }
 
 // Helper function
-void increment(elem_t value, elem_t *extra)
+void increment(elem_t *value, elem_t *extra)
 {
-    value.i++;
+    value -> i++;
 }
 
 void test_apply()
@@ -267,7 +267,7 @@ void test_apply()
     }
 
     // Applies the increment function to all elements in the list
-    ioopm_linked_list_apply_to_all(list, *increment, NULL);
+    ioopm_linked_list_apply_to_all(list, increment, NULL);
 
     // Checks that all values have been incremented by 1
     assert(ioopm_linked_list_get(list, 0).i == 1);

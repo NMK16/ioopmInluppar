@@ -75,7 +75,7 @@ bool ioopm_linked_list_is_empty(ioopm_list_t *list);
 void ioopm_linked_list_clear(ioopm_list_t *list);
 
 typedef bool ioopm_int_predicate(elem_t value, elem_t *extra);
-typedef void ioopm_apply_int_function(elem_t value, elem_t *extra);
+typedef void ioopm_apply_int_function(elem_t *value, elem_t *extra);
 
 /// @brief Test if a supplied property holds for all elements in a list.
 /// The function returns as soon as the return value can be determined.

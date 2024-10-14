@@ -22,24 +22,23 @@ int clean_suite(void) {
 	return 0;
 }
 
-
-int *ioopm_hash_function(elem_t key){
+int hash_fn(elem_t key){
     return key.i % 17;
-};
+}
 
-bool *ioopm_eq_function(elem_t a, elem_t b){
+bool eq_fn(elem_t a, elem_t b){
     return a.i == b.i;
-};
+}
 
 void test_create_destroy() {
-	ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+	ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
 	CU_ASSERT_PTR_NOT_NULL(ht);
 	ioopm_hash_table_destroy(ht);
 }
 
 void test_insert_once() {
 
-	ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+	ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
 
 	// Verify that our chosen key is not in h using lookup
 	CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, int_elem(42)));
@@ -48,8 +47,8 @@ void test_insert_once() {
 	ioopm_hash_table_insert(ht, int_elem(42), ptr_elem("Hello"));
 
 	// Lookup the inserted value
-	elem_t value = ioopm_hash_table_lookup(ht, int_elem(42));
-	CU_ASSERT_STRING_EQUAL(value, ptr_elem("Hello"));
+	elem_t *value = ioopm_hash_table_lookup(ht, int_elem(42));
+	CU_ASSERT_STRING_EQUAL(value->p, "Hello");
 
 
   	// Inserting more entries
@@ -58,43 +57,43 @@ void test_insert_once() {
 }
 
   	// Tries looking up a non-existent key
-  	char *missing = ioopm_hash_table_lookup(ht, int_elem(100));
-  	CU_ASSERT_PTR_NULL(missing);
+  	elem_t *missing = ioopm_hash_table_lookup(ht, int_elem(100));
+  	CU_ASSERT_PTR_NULL(missing -> p);
 
   	ioopm_hash_table_destroy(ht);
 }
 
 void test_insert_remove() {
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
   	CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, int_elem(42)));
 
   	// Insert a key-value pair
   	ioopm_hash_table_insert(ht, int_elem(42), ptr_elem("Hello"));
 
   	// Lookup the inserted value
-  	char *value = ioopm_hash_table_lookup(ht, int_elem(42));
-  	CU_ASSERT_STRING_EQUAL(value, "Hello");
+  	elem_t *value = ioopm_hash_table_lookup(ht, int_elem(42));
+  	CU_ASSERT_STRING_EQUAL(value -> p ,"Hello");
 
   	// Try looking up a non-existent key
-  	char *missing = ioopm_hash_table_lookup(ht, int_elem(100));
-  	CU_ASSERT_PTR_NULL(missing);
+  	elem_t *missing = ioopm_hash_table_lookup(ht, int_elem(100));
+  	CU_ASSERT_PTR_NULL(missing->p);
 
   	// Remove the elements with the key 42
-  	char *removed_value = ioopm_hash_table_remove(ht, int_elem(42));
+  	elem_t *removed_value = ioopm_hash_table_remove(ht, int_elem(42));
 
   	// Verify the removed value
-  	CU_ASSERT_STRING_EQUAL(removed_value, "Hello");
+  	CU_ASSERT_STRING_EQUAL(removed_value -> p, "Hello");
   	free(removed_value);
 
   	// Lookup the removed value
-  	value = ioopm_hash_table_lookup(ht, int_elem(42));
-  	CU_ASSERT_PTR_NULL(value);
+  	elem_t *value = ioopm_hash_table_lookup(ht, int_elem(42));
+  	CU_ASSERT_PTR_NULL(value -> p);
 
   	ioopm_hash_table_destroy(ht);
 }
 
 void test_size() {
-  	ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+  	ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
   	CU_ASSERT_PTR_NOT_NULL(ht);  // Ensure that a hashtable is created
 
   	// Checking if the size of the empty hashtable is 0
@@ -117,7 +116,7 @@ void test_size() {
 }
 
 void test_is_empty_clear() {
-  	ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+  	ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
   	CU_ASSERT_PTR_NOT_NULL(ht);  // Ensure sthat a hashtable is created
 
   	// Checking that the empty hashtable function returns true for an empty hashtable
@@ -141,11 +140,11 @@ void test_is_empty_clear() {
 void test_keys() {
     
     // Creates a new hashtable
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable is created
 
-    int keys[5] = {3, 10, 42, 0, 99};
-    bool found[5] = {false, false, false, false, false};
+    int keys[] = {3, 10, 42, 0, 99};
+    bool found[] = {false, false, false, false, false};
     int num_keys = 5;  // Number of keys
 
     // Inserts all keys into the hash table
@@ -189,16 +188,16 @@ void test_keys() {
 // Test for checking if the hashtable has values
 void test_values() {
 
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht); 
 
-    int keys[5] = {3, 10, 42, 0, 99};
-    char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
-    bool found[5] = {false, false, false, false, false};
+    int keys[] = {3, 10, 42, 0, 99};
+    char *values[] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+    bool found[] = {false, false, false, false, false};
     int num_keys = 5; 
 
     for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, int_elem(keys[i]), int_elem(values[i]));
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
 
 
@@ -210,8 +209,8 @@ void test_values() {
         bool key_found = false;
         for (int i = 0; i < num_keys; i++) {
             if ((current->value).i == keys[i]) {
-                char *hash_table_value = ioopm_hash_table_lookup(ht, int_elem(keys[i]));
-                CU_ASSERT_STRING_EQUAL(hash_table_value, values[i]);
+                elem_t *hash_table_value = ioopm_hash_table_lookup(ht, int_elem(keys[i]));
+                CU_ASSERT_STRING_EQUAL(hash_table_value -> p, values[i]);
                 found[i] = true;
                 key_found = true;
                 break;
@@ -237,14 +236,14 @@ void test_values() {
 // Test for checking if the hashtable has a key
 void test_has_keys() {
     // Create an empty hashtable
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
 
     // Asserts that it's false that an empty hashtable has a key
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, int_elem(1)));
 
     // Adds an entry to the hashtable
-    ioopm_hash_table_insert(ht, int_elem(1), int_elem("Filler"));
+    ioopm_hash_table_insert(ht, int_elem(1), ptr_elem("Filler"));
 
     // Asserts that it's now true that the hashtable has a key
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(ht, int_elem(1)));
@@ -256,7 +255,7 @@ void test_has_keys() {
 // Test for checking if the hashtable has a value
 void test_has_values() {
     // Create an empty hashtable
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures that a hashtable was created
 
     // Asserts that it's false that an empty hashtable has a value
@@ -266,8 +265,8 @@ void test_has_values() {
     ioopm_hash_table_insert(ht, int_elem(1), ptr_elem("Filler"));
 
     // Lookup the inserted value
-    char *value = ioopm_hash_table_lookup(ht, int_elem(1));
-    CU_ASSERT_STRING_EQUAL(value, "Filler");
+    elem_t *value = ioopm_hash_table_lookup(ht, int_elem(1));
+    CU_ASSERT_STRING_EQUAL(value -> p, "Filler");
     
     // Asserts that it's now true that the hashtable has a value    
     CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, ptr_elem("Filler")));
@@ -279,13 +278,13 @@ void test_has_values() {
     ioopm_hash_table_destroy(ht);
 }
 
-static bool all_keys_bigger_than_10(int key, char *value, void *x) {
+static bool all_keys_bigger_than_10(int key, elem_t value, void *x) {
     return key >= 10;
 }
 
 void test_all() {
     // Creates a new hash table
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures the hash table is created
 
     int keys[] = {11, 10, 42, 30, 99};
@@ -310,14 +309,14 @@ void test_all() {
 }
 
 // Helper function that checks if the key is equal to a given value
-static bool key_is_equal(int key, char *value, void *x) {
+static bool key_is_equal(int key, char value, void *x) {
     int *target_key = (int *)x;
     return key == *target_key;
 }
 
 void test_any() {
     // Creates a new hash table
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht);  // Ensures the hash table is created
 
     int keys[] = {3, 10, 42, 0, 99};
@@ -341,8 +340,8 @@ void test_any() {
 }
 
 
-void append_suffix(int key, char **value, void *arg) {
-    if (value && *value) {
+void append_suffix(int key, char *value, void *arg) {
+    if (value) {
         char *suffix = (char *)arg; // Cast arg to char*
         size_t new_length = strlen(*value) + strlen(suffix) + 1; // +1 due to null terminator
         char *new_value = malloc(new_length); // Allocate memory for new value
@@ -350,7 +349,7 @@ void append_suffix(int key, char **value, void *arg) {
             strcpy(new_value, *value); // Copys suffix
             strcat(new_value, suffix); // Appends suffix
             free(*value); // Frees old value
-            *value = new_value; // Updates the pointer
+            value = new_value; // Updates the pointer
         }
     }
 }
@@ -358,7 +357,7 @@ void append_suffix(int key, char **value, void *arg) {
 // Test function for ioopm_hash_table_apply_to_all
 void test_apply() {
     // Creates a new hash table
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht); // Ensures a hash table is created
 
     // Create keys and values
@@ -380,7 +379,7 @@ void test_apply() {
     for (int i = 0; i < 3; i++) {
         char expected_value[20]; // Make sure it has enough memory
         snprintf(expected_value, sizeof(expected_value), "value%d_suffix", i + 1);
-        elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i])); // Find the actual value
+        char actual_value = (char *) ioopm_hash_table_lookup(ht, int_elem(keys[i])); // Find the actual value
         CU_ASSERT_STRING_EQUAL(actual_value, expected_value); 
     }
 

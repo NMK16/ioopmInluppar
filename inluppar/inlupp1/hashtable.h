@@ -16,14 +16,9 @@
  *
  * @see $CANVAS_OBJECT_REFERENCE$/assignments/gb54499f3b7b264e3af3b68c756090f52
  */
-    
 
-/// @brief Create a new hash table
-/// @param hash_fn hash function
-/// @param key_eq_fn function that checks if keys are equal
-/// @param value_eq_fn function that checks if keys are equal
-/// @return A new empty hash table
-ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_fn, ioopm_eq_function key_eq_fn, ioopm_eq_function value_eq_fn);
+
+
 
 /// @brief Delete a hash table and free its memory
 /// @param ht a hash table to be deleted

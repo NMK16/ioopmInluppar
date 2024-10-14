@@ -23,17 +23,25 @@ typedef struct entry {
 } entry_t;
 
 // Function pointers for hash and equality functions
-typedef bool (ioopm_eq_function)(elem_t a, elem_t b);
-typedef int (ioopm_hash_function)(elem_t element);
+typedef int ioopm_hash_function(elem_t key);
+typedef bool ioopm_equal_function(elem_t a, elem_t b);
+
 
 // Hash table structure
 typedef struct hash_table {
     entry_t *buckets[No_Buckets]; 
     size_t size;
     ioopm_hash_function *hash_fn;
-    ioopm_eq_function *key_eq_fn; 
-    ioopm_eq_function *value_eq_fn; 
+    ioopm_equal_function *key_eq_fn; 
+    ioopm_equal_function *value_eq_fn; 
 } ioopm_hash_table_t;
+
+/// @brief Create a new hash table
+/// @param hash_fn hash function
+/// @param key_eq_fn function that checks if keys are equal
+/// @param value_eq_fn function that checks if keys are equal
+/// @return A new empty hash table
+ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_equal_function key_eq_fn, ioopm_equal_function value_eq_fn);
 
 // Linked list structure
 typedef struct link {
@@ -44,5 +52,5 @@ typedef struct link {
 typedef struct list {
     link_t *head;
     size_t size;
-    ioopm_eq_function *eq_fn;  // No need for a pointer here, already a function pointer
+    ioopm_equal_function *eq_fn;  
 } ioopm_list_t;

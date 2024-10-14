@@ -10,7 +10,7 @@
 
 /// @brief Create a new empty hash table
 /// @return Pointer to the created hash table
-ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_eq_function *key_eq_fn, ioopm_eq_function *value_eq_fn) {
+ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_equal_function *key_eq_fn, ioopm_equal_function *value_eq_fn) {
     ioopm_hash_table_t *result = calloc(No_Buckets, sizeof(ioopm_hash_table_t));
     result->hash_fn = hash_fn;
     result->key_eq_fn = key_eq_fn;
@@ -22,8 +22,8 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_
 /// @param ht the hash table to destroy
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
     if (ht != NULL) {
-        ioopm_hash_table_clear(ht); // Clear all entries first
-        free(ht);                   // Free the hash table itself
+        ioopm_hash_table_clear(ht); 
+        free(ht);               
     }
 }
 
@@ -41,7 +41,7 @@ static entry_t *entry_create(elem_t key, elem_t *value, entry_t *next_value) {
 }
 
 // Helper function to find previous entry for a key
-static entry_t *find_previous_entry_for_key(entry_t **bucket_head, elem_t key, ioopm_eq_function *key_eq_fn) {
+static entry_t *find_previous_entry_for_key(entry_t **bucket_head, elem_t key, ioopm_equal_function *key_eq_fn) {
     entry_t *current = *bucket_head;
     entry_t *prev = NULL;
     

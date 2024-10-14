@@ -9,13 +9,21 @@ CUNIT_LINK     = -lcunit
 	$(C_COMPILER) $(C_OPTIONS) $^ -c
 
 # Executable for the main program
-myprog: unit_tests.o hashtable.o
+myprog: unit_tests.o hashtable.o linked_list.o linked_list_tests.o iterator.o iterator_tests.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
 # Executable for testing
 test_hash_table: unit_tests.o hashtable.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
 
+# Executable for testing linked list
+test_linked_list: $(linked_list_objs)
+	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
+
+# Executable for testing iterator
+test_iterator: $(iterator_objs)
+	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
+	
 # Clean command to remove object files and executables
 clean:
 	rm -f *.o myprog test_hash_table

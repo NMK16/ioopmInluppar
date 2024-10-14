@@ -11,7 +11,7 @@ typedef struct list ioopm_list_t;
 /// @brief Creates a new empty list
 /// @param eq_fn Checks that two functions have same type
 /// @return an empty linked list
-ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function eq_fn);
+ioopm_list_t *ioopm_linked_list_create(ioopm_equal_function eq_fn);
 
 /// @brief Tear down the linked list and return all its memory (but not the memory of the elements)
 /// @param list the list to be destroyed
@@ -34,7 +34,7 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value);
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @param value the value to be inserted 
-void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_T value);
+void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value);
 
 /// @brief Remove an element from a linked list in O(n) time.
 /// The valid values of index are [0,n-1] for a list of n elements,

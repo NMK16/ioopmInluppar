@@ -45,7 +45,7 @@ link_t *link_create(elem_t value, link_t *next)
 
 /// @brief Creates a new empty list
 /// @return an empty linked list
-ioopm_list_t *ioopm_linked_list_create()
+ioopm_list_t *ioopm_linked_list_create(eq_fn)
 {
     return calloc(1, sizeof(struct list));
 }
@@ -213,7 +213,7 @@ bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
     link_t *cursor = list->head;
     while (cursor)
     {
-        if(cursor -> value == element)
+        if(list->eq_fn(cursor->value, element))
         {
             return true;
         }

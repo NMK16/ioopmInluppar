@@ -29,11 +29,14 @@ int clean_suite(void) {
     return 0;
 }
 
+bool eq_fn(elem_t a, elem_t b){
+    return a.i == b.i;
+}
 // Test list creation and destruction
 void test_create_destroy() {
     
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     CU_ASSERT_PTR_NOT_NULL(list);
     ioopm_linked_list_destroy(list);
 }
@@ -42,13 +45,13 @@ void test_create_destroy() {
 
 void test_get() {
     // Create an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
 
     // Append the values 10, 20, 30 and 40 to the list
-    ioopm_linked_list_append(list, 10);
-    ioopm_linked_list_append(list, 20);
-    ioopm_linked_list_append(list, 30);
-    ioopm_linked_list_append(list, 40);
+    ioopm_linked_list_append(list, int_elem(10));
+    ioopm_linked_list_append(list, int_elem(20));
+    ioopm_linked_list_append(list, int_elem(30));
+    ioopm_linked_list_append(list, int_elem(40));
 
 
     // Checks that the value you get from using the function is the same as the one we set earlier
@@ -68,7 +71,7 @@ void test_get() {
 void test_append() {
 
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
 
     //Appends the value 42 into the list
     ioopm_linked_list_append(list, int_elem(42));
@@ -82,7 +85,7 @@ void test_append() {
 void test_prepend() {
 
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     //Appends the value 10 and 20 into the list
     ioopm_linked_list_append(list, int_elem(10));
@@ -102,14 +105,14 @@ void test_prepend() {
 void test_insert() {
 
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     //Appends the value 42 and then 10 into the list
     ioopm_linked_list_append(list, int_elem(10));
     ioopm_linked_list_append(list, int_elem(20));
 
     //Inserts the value 15 into the list's index 1
-    ioopm_linked_list_insert(list, 1, 15);  
+    ioopm_linked_list_insert(list, 1, int_elem(15));  
 
     //Asserts that value you get from index 1 is 15 (because we inserted it in earlier)
     CU_ASSERT_EQUAL(ioopm_linked_list_get(list, 1).i, 15);
@@ -122,7 +125,7 @@ void test_insert() {
 void test_remove() {
     
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     //Appends the value 42 into the list
     ioopm_linked_list_append(list, int_elem(42));
@@ -138,7 +141,7 @@ void test_remove() {
 void test_clear_is_empty() {
 
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
 
     //Appends the value 42 into the list
     ioopm_linked_list_append(list, int_elem(42));
@@ -157,7 +160,7 @@ void test_clear_is_empty() {
 void test_size() {
     
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
 
     //Asserst that the empty list has the size of 0
     CU_ASSERT_EQUAL(ioopm_linked_list_size(list), 0);
@@ -176,7 +179,7 @@ void test_size() {
 void test_contains() {
     
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     
     // Appends the value 42 into the list
@@ -200,18 +203,18 @@ bool is_positive(int *value, void *extra)
 void test_all()
 {
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     
     for(int i = 0; i < 3; i++){ 
-        ioopm_linked_list_insert(list, i, i+1);
+        ioopm_linked_list_insert(list, i, int_elem(i+1));
     }
 
     // Test if all elements are positive
     assert(ioopm_linked_list_all(list, *is_positive, NULL));
 
     // Insert a negative value
-    ioopm_linked_list_insert(list, 3, -1);
+    ioopm_linked_list_insert(list, 3, int_elem(-1));
 
     // Test again (should return false now)
     assert(!ioopm_linked_list_all(list, *is_positive, NULL));
@@ -228,18 +231,18 @@ bool is_negative(int *value, void *extra)
 void test_any()
 {
     //Creates an empty list
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
     
     // Inserts values into the list    
     for(int i = 0; i < 3; i++){ 
-        ioopm_linked_list_insert(list, i, i+1);
+        ioopm_linked_list_insert(list, i, int_elem(i+1));
     }
 
     // Assserts that no elements are negative (should return false if programs runs as intended)
     assert(!ioopm_linked_list_any(list, *is_negative, NULL));
 
     // Inserts a negative value
-    ioopm_linked_list_insert(list, 3, -1);
+    ioopm_linked_list_insert(list, 3, int_elem(-1));
 
     // Asserts that there is a negativ element (should return true now)
     assert(ioopm_linked_list_any(list, *is_negative, NULL));
@@ -256,11 +259,11 @@ void increment(int *value, void *extra)
 
 void test_apply()
 {
-    ioopm_list_t *list = ioopm_linked_list_create(ioopm_hash_function, ioopm_eq_function, ioopm_eq_function);
+    ioopm_list_t *list = ioopm_linked_list_create(eq_fn);
 
     // Inserts values into the list
     for(int i = 0; i < 3; i++){ 
-        ioopm_linked_list_insert(list, i, i);
+        ioopm_linked_list_insert(list, i, int_elem(i));
     }
 
     // Applies the increment function to all elements in the list

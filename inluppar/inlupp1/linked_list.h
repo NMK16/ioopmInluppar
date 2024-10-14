@@ -42,7 +42,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value);
 /// @param list the linked list
 /// @param index the position in the list
 /// @return the value removed
-elem_t ioopm_linked_list_remove(ioopm_list_t *list, size_t index);
+elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index);
 
 
 
@@ -52,7 +52,7 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, size_t index);
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @return the value at the given position
-elem_t ioopm_linked_list_get(ioopm_list_t *list, size_t index);
+elem_t ioopm_linked_list_get(ioopm_list_t *list, int index);
 
 /// @brief Test if an element is in the list
 /// @param list the linked list
@@ -74,8 +74,8 @@ bool ioopm_linked_list_is_empty(ioopm_list_t *list);
 /// @param list the linked list
 void ioopm_linked_list_clear(ioopm_list_t *list);
 
-typedef bool ioopm_int_predicate(elem_t value, void *extra);
-typedef void ioopm_apply_int_function(elem_t value, void *extra);
+typedef bool ioopm_int_predicate(elem_t value, elem_t *extra);
+typedef void ioopm_apply_int_function(elem_t value, elem_t *extra);
 
 /// @brief Test if a supplied property holds for all elements in a list.
 /// The function returns as soon as the return value can be determined.
@@ -83,7 +83,7 @@ typedef void ioopm_apply_int_function(elem_t value, void *extra);
 /// @param prop the property to be tested (function pointer)
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of prop
 /// @return true if prop holds for all elements in the list, else false
-bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, void *extra);
+bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, elem_t *extra);
 
 /// @brief Test if a supplied property holds for any element in a list.
 /// The function returns as soon as the return value can be determined.
@@ -91,10 +91,10 @@ bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, void *
 /// @param prop the property to be tested
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of prop
 /// @return true if prop holds for any elements in the list, else false
-bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, void *extra);
+bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, elem_t *extra);
 
 /// @brief Apply a supplied function to all elements in a list.
 /// @param list the linked list
 /// @param fun the function to be applied
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of fun
-void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function *fun, void *extra);
+void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function *fun, elem_t *extra);

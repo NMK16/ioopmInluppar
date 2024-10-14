@@ -195,9 +195,9 @@ void test_contains() {
     ioopm_linked_list_destroy(list);
 }
 
-bool is_positive(int *value, void *extra)
+bool is_positive(elem_t value, elem_t *extra)
 {
-    return (*value) > 0;
+    return (value.i) > 0;
 }
 
 void test_all()
@@ -223,9 +223,9 @@ void test_all()
     ioopm_linked_list_destroy(list);
 }
 
-bool is_negative(int *value, void *extra)
+bool is_negative(elem_t value, elem_t *extra)
 {
-    return (*value) < 0;
+    return (value.i) < 0;
 }
 
 void test_any()
@@ -252,9 +252,9 @@ void test_any()
 }
 
 // Helper function
-void increment(int *value, void *extra)
+void increment(elem_t value, elem_t *extra)
 {
-    (*value) += 1;
+    value.i++;
 }
 
 void test_apply()

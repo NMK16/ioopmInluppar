@@ -16,18 +16,6 @@
 // to have them fail at runtime. You do not have to understand it to use
 // this file!
 
-struct link
-{
-    int value;
-    struct link *next;
-};
-
-struct list
-{
-    link_t *head;
-    size_t size;
-};
-
 #define NOT_SUPPORTED()                                                            \
     do                                                                             \
     {                                                                              \
@@ -45,9 +33,11 @@ link_t *link_create(elem_t value, link_t *next)
 
 /// @brief Creates a new empty list
 /// @return an empty linked list
-ioopm_list_t *ioopm_linked_list_create(eq_fn)
+ioopm_list_t *ioopm_linked_list_create(ioopm_equal_function *eq_fun)
 {
-    return calloc(1, sizeof(struct list));
+    ioopm_list_t *empty = calloc(1, sizeof(struct list));
+    empty->eq_fn = eq_fun;
+    return empty;
 }
 
 
@@ -233,7 +223,7 @@ size_t ioopm_linked_list_size(ioopm_list_t *list)
 
 bool ioopm_linked_list_is_empty(ioopm_list_t *list)
 {
-    if(list -> size == 0){
+    if(list->size == 0){
         return true;
     }
     
@@ -267,7 +257,7 @@ void ioopm_linked_list_clear(ioopm_list_t *list)
 /// @param prop the property to be tested (function pointer)
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of prop
 /// @return true if prop holds for all elements in the list, else false
-bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, void *extra)
+bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, elem_t *extra)
 {
     link_t *current = list -> head;
     while(current != NULL){
@@ -288,11 +278,10 @@ bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate *prop, void *
 /// @param prop the property to be tested
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of prop
 /// @return true if prop holds for any elements in the list, else false
-bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, void *extra)
+bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, elem_t *extra)
 {
     link_t *current = list -> head;
-    while(current){
-        
+    while(current != NULL){
         if(prop(current -> value, extra)){
             return true;
         }
@@ -306,7 +295,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate *prop, void *
 /// @param list the linked list
 /// @param fun the function to be applied
 /// @param extra an additional argument (may be NULL) that will be passed to all internal calls of fun
-void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function *fun, void *extra)
+void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function *fun, elem_t *extra)
 {
     link_t *current= list -> head;
 

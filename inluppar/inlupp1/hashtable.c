@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "common.h"
 #include "hashtable.h"
+#include <assert.h>
 
 #define No_Buckets 17
 
@@ -224,10 +225,10 @@ ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *ht) {
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-        
+            // Allocate a new link for the value
             link_t *new_link = calloc(1, sizeof(link_t));
             if (!new_link) {
-
+                // Cleanup in case of allocation failure
                 while (values->head) {
                     link_t *temp = values->head;
                     values->head = values->head->next;
@@ -237,18 +238,21 @@ ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *ht) {
                 return NULL;
             }
 
+            // Copy the value from the entry (which is elem_t)
             new_link->value = entry->value;
 
-      
+            // Prepend the new link to the values list
             new_link->next = values->head;
             values->head = new_link;
 
+            // Increment the size of the list
             values->size++; 
             entry = entry->next; 
         }
     }
     return values;
 }
+
 
 /// @brief return the values for all entries in a hash map 
 /// @param ht hash table operated upon
@@ -266,13 +270,13 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value) {
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-            if (ht -> value_eq_fn(value, entry->value)) { // Compares the values
+            if (ht -> value_eq_fn(value, entry->value)) { 
                 return true;
             }
             entry = entry->next; 
         }
     }
-    return false; // Value not found
+    return false; 
 }
 
 /// @brief Check if a predicate is satisfied by all entries in a hash table

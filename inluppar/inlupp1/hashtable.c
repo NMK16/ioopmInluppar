@@ -105,7 +105,6 @@ elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key) {
 }
 
 
-
 // Helper function
 static elem_t *recursive_remove(ioopm_hash_table_t *ht, entry_t **entry, elem_t key) {
     if (*entry == NULL) {
@@ -113,14 +112,13 @@ static elem_t *recursive_remove(ioopm_hash_table_t *ht, entry_t **entry, elem_t 
     }
 
     if (ht->key_eq_fn((*entry)->key, key)) {
-        elem_t *removed_val = malloc(sizeof(elem_t)); 
+        elem_t *removed_val = calloc(1, sizeof(elem_t)); 
         if (removed_val == NULL) {
-          
             return NULL;
         }
         *removed_val = (*entry)->value; // Copy the value to return
         entry_t *entry_to_remove = *entry;
-        *entry = (*entry)->next; 
+        *entry = (*entry)->next;
         free(entry_to_remove);  
 
         return removed_val;

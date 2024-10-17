@@ -97,7 +97,7 @@ void test_insert_remove() {
     // Lookup the removed value
     value = ioopm_hash_table_lookup(ht, int_elem(42));
     CU_ASSERT_PTR_NULL(value);
-
+    free(removed_value);
     ioopm_hash_table_destroy(ht);
 }
 
@@ -148,6 +148,15 @@ void test_is_empty_clear() {
   	ioopm_hash_table_destroy(ht);
 }
 
+void free_linked_list(ioopm_list_t *list) {
+    link_t *current = list->head;
+    while (current != NULL) {
+        link_t *next = current->next;
+        free(current); 
+        current = next;
+    }
+    free(list); 
+}
 
 void test_keys() {
     
@@ -193,7 +202,7 @@ void test_keys() {
     }
 
     // Cleanup
-    free(hash_table_keys);
+    free_linked_list(hash_table_keys);
     ioopm_hash_table_destroy(ht);
 }
 
@@ -203,7 +212,7 @@ void test_values() {
     CU_ASSERT_PTR_NOT_NULL(ht);
 
     int keys[] = {3, 10, 42, 0, 99};
-    char *values[5] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
+    char *values[] = {"three", "ten", "fortytwo", "zero", "ninetynine"};
     bool found[5] = {false, false, false, false, false};
     int num_keys = 5;
 
@@ -212,39 +221,37 @@ void test_values() {
         ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
 
-    // Get the keys from the hash table
-    ioopm_list_t *hash_table_keys = ioopm_hash_table_keys(ht);
-    CU_ASSERT_PTR_NOT_NULL(hash_table_keys);
+    // Get the values from the hash table
+    ioopm_list_t *hash_table_values = ioopm_hash_table_values(ht);
+    CU_ASSERT_PTR_NOT_NULL(hash_table_values);
 
-    // Traverse the keys and verify their corresponding values
-    link_t *current = hash_table_keys->head;
+    // Traverse the values and verify
+    link_t *current = hash_table_values->head;
     while (current != NULL) {
-        bool key_found = false;
+        bool value_found = false;
         for (int i = 0; i < num_keys; i++) {
-            if (current->value.i == keys[i]) {
-                elem_t hash_table_value = *ioopm_hash_table_lookup(ht, int_elem(keys[i]));
-                CU_ASSERT_STRING_EQUAL(hash_table_value.p , values[i]);
+            if (strcmp(current->value.p, values[i]) == 0) {
                 found[i] = true;
-                key_found = true;
+                value_found = true;
                 break;
             }
         }
-        if (!key_found) {
-            CU_FAIL("Found a key/value that was never inserted");
+        if (!value_found) {
+            CU_FAIL("Found a value that was never inserted");
         }
       
         current = current->next;
     }
 
-
+    // Ensure that all values were found
     for (int i = 0; i < num_keys; i++) {
         CU_ASSERT_TRUE(found[i]);
     }
 
-
-    free(hash_table_keys);
-    ioopm_hash_table_destroy(ht); 
+    free_linked_list(hash_table_values);  // Free the linked list
+    ioopm_hash_table_destroy(ht);         // Destroy the hash table
 }
+
 
 
 

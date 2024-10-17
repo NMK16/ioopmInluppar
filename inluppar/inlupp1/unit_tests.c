@@ -368,47 +368,49 @@ elem_t square_int_val(elem_t key, elem_t value, void *arg){
     return value;
 }
 
-// elem_t *append_suffix(elem_t key, elem_t value, void *arg) {
-//     char *suffix = (char *)arg;  // Cast arg to char*
-//     size_t original_length = strlen((char *)value.p);
-//     size_t new_length = original_length + strlen(suffix) + 1;  // +1 for null terminator
+elem_t append_suffix(elem_t key, elem_t value, void *arg) {
+    char *suffix = (char *)arg;  // Cast arg to char*
+    size_t original_length = strlen((char *)value.p);
+    size_t new_length = original_length + strlen(suffix) + 1;  // +1 for null terminator
     
-//     // Allocate memory for the new value
-//     char *new_value = malloc(new_length);
-//     if (new_value) {
-//         // Copy the original value and append the suffix
-//         strcpy(new_value, (char *)value.p);  // Fix missing closing parenthesis
-//         strcat(new_value, suffix);
+    // Allocate memory for the new value
+    char *new_value = malloc(new_length);
+    if (new_value) {
+        // Copy the original value and append the suffix
+        strcpy(new_value, (char *)value.p);  // Fix missing closing parenthesis
+        strcat(new_value, suffix);
         
-//         // Free the old value's memory and update it with the new value
-//         free(value.p);
-//         value.p = new_value;  // Update the pointer in elem_t to the new value
-//     }
+        // Free the old value's memory and update it with the new value
+        free(value.p);
+        value.p = new_value;  // Update the pointer in elem_t to the new value
+    }
 
-//     return value;  // Return the updated value
-// }
+    return value;  // Return the updated value
+}
 
 
 // Test function for ioopm_hash_table_apply_to_all
-void test_apply() {
+void test_apply_squared_int() {
     // Creates a new hash table
     ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht); // Ensures a hash table is created
 
-    // Create keys and values
+    // Create keys and values for squared vals
     int keys[3] = {1, 2, 3};
     int values[3] = {1, 2, 3};
 
-    // Insert entries into the hash table using elem_t
+    // Insert entries into the hash table using elem_t for squared vals
     for (int i = 0; i < 3; i++) {
         ioopm_hash_table_insert(ht, int_elem(keys[i]), int_elem(values[i]));
     }
 
+
     // Apply the square_int_val function to all entries in the hash table
     ioopm_hash_table_apply_to_all(ht, square_int_val, NULL);  // No extra argument needed
 
-    // Check if the values have been squared correctly
+
     int expected_values[3] = {1, 4, 9};  // The squared values
+ 
 
     for (int i = 0; i < 3; i++) {
         elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i]));  // Find the actual value
@@ -420,6 +422,34 @@ void test_apply() {
     ioopm_hash_table_destroy(ht);  // Ensure hash table is properly destroyed
 }
 
+void test_apply_append_suffix() {
+    // Creates a new hash table
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
+    CU_ASSERT_PTR_NOT_NULL(ht); // Ensures a hash table is created
+
+    //Keys and values for the append suffix
+    int keys[] = {1, 2, 3};
+    char *values[] = {"value1", "value2", "value3"};
+    const char *suffix = "_suffix";
+
+
+    // Insert entries into the hash table for the appended suffix
+    for (int i = 0; i < 3; i++) {
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
+    }
+
+    ioopm_hash_table_apply_to_all(ht, append_suffix, (void *)suffix);
+
+    for (int i = 0; i < 3; i++) {
+        char expected_value[20]; // Make sure it has enough memory
+        snprintf(expected_value, sizeof(expected_value), "value%d_suffix", i + 1);
+        elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i])); // Find the actual value
+        CU_ASSERT_STRING_EQUAL(actual_value, expected_value); 
+    }
+    
+    // Clean up
+    ioopm_hash_table_destroy(ht);  // Ensure hash table is properly destroyed
+}
 
 
 int main() {
@@ -444,7 +474,8 @@ int main() {
 	CU_add_test(my_test_suite, "test_has_val", test_has_values);
 	CU_add_test(my_test_suite, "test_all", test_all);
 	CU_add_test(my_test_suite, "test_any", test_any);
-	CU_add_test(my_test_suite, "test_apply", test_apply);
+    CU_add_test(my_test_suite, "test_apply_squared_int", test_apply_squared_int);
+    CU_add_test(my_test_suite, "test_apply_append_suffix", test_apply_append_suffix);
 
 	
 

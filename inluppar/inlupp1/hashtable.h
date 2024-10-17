@@ -45,7 +45,7 @@ elem_t *ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key);
 //Part 2
 
 typedef bool ioopm_predicate(elem_t key, elem_t value, void *extra);
-typedef elem_t ioopm_apply_function(elem_t key, elem_t *value, void *extra);
+typedef elem_t ioopm_apply_function(elem_t key, elem_t value, void *extra);
 
 /// @brief returns the number of key => value entries in the hash table
 /// @param ht hash table operated upon

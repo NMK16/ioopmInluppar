@@ -30,13 +30,13 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
 }
 
 
-static entry_t *entry_create(elem_t key, elem_t *value, entry_t *next_value) {
+static entry_t *entry_create(elem_t key, elem_t value, entry_t *next_value) {
     entry_t *new_entry = calloc(1, sizeof(entry_t));
     if (new_entry == NULL) {
         return NULL;
     }
     new_entry->key = key;
-    new_entry->value = *value; 
+    new_entry->value = value; 
     new_entry->next = next_value;
 
     return new_entry;
@@ -68,7 +68,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
     if (next != NULL && ht -> key_eq_fn(next->key,key)) {
         next->value = value; // Replace with a new value
     } else {
-        entry_t *new_entry = entry_create(key, value.p, next);
+        entry_t *new_entry = entry_create(key, value, next);
         if (prev_entry) {
             prev_entry->next = new_entry;
         } else {
@@ -321,7 +321,7 @@ bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *ar
 /// @param ht Hash table operated upon
 /// @param apply_fun The function to be applied to all elements
 /// @param arg Extra argument to pass to apply_fun
-void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function apply_fun, void *arg) {
+void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function *apply_fun, void *arg) {
     if (!ht || !apply_fun) {
         return;
     }
@@ -329,7 +329,7 @@ void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function 
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-            apply_fun(entry->key, &(entry->value), arg);
+            entry->value = apply_fun(entry->key, entry->value, arg);
             entry = entry->next;
         }
     }

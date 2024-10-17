@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "common.h"
 #include "linked_list.h"
+#include "string.h"
 
 #define int_elem(x) (elem_t) { .i = (x) }
 #define ptr_elem(x) (elem_t) { .p = (x) }
@@ -61,7 +62,7 @@ void test_insert_once() {
 
 	// Lookup the inserted value
 	elem_t *value = ioopm_hash_table_lookup(ht, int_elem(42));
-	CU_ASSERT_STRING_EQUAL(value, "Hello");
+	CU_ASSERT_STRING_EQUAL(value -> p, "Hello");
 
 
   	// Inserting more entries
@@ -85,13 +86,13 @@ void test_insert_remove() {
 
 
     elem_t *value = ioopm_hash_table_lookup(ht, int_elem(42));
-    CU_ASSERT_STRING_EQUAL(value, "Hello");
+    CU_ASSERT_STRING_EQUAL(value->p, "Hello");
 
     // Remove the element with the key 42
     elem_t *removed_value = ioopm_hash_table_remove(ht, int_elem(42));
 
     // Verify the removed value
-    CU_ASSERT_STRING_EQUAL(removed_value, "Hello");  // Compare strings correctly
+    CU_ASSERT_STRING_EQUAL(removed_value->p, "Hello");  // Compare strings correctly
 
     // Lookup the removed value
     value = ioopm_hash_table_lookup(ht, int_elem(42));
@@ -208,7 +209,7 @@ void test_values() {
 
     // Insert key-value pairs into the hash table
     for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(&values[i]));
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
     }
 
     // Get the keys from the hash table
@@ -281,7 +282,7 @@ void test_has_values() {
     // Lookup the inserted value
     elem_t value = *ioopm_hash_table_lookup(ht, int_elem(1));
 
-    CU_ASSERT_STRING_EQUAL(&value, "Filler");
+    CU_ASSERT_STRING_EQUAL(value.p, "Filler");
     
     // Asserts that it's now true that the hashtable has a value  
 
@@ -355,54 +356,64 @@ void test_any() {
     ioopm_hash_table_destroy(ht);
 }
 
-
-elem_t append_suffix(elem_t key, elem_t *value, void *arg) {
-    if (value) {
-        elem_t *suffix = (elem_t *)arg; 
-        int new_length = strlen(elem_char(*value)) + strlen(elem_char(*suffix)) + 1; 
-        char *new_value = malloc(new_length);
-        if (new_value) {
-            strcpy(new_value, elem_char(*value)); 
-            strcat(new_value, elem_char(*suffix)); 
-            free(elem_char(*value)); 
-            *value = ptr_elem(new_value); 
-        }
-    }
-    return *value;
+elem_t square_int_val(elem_t key, elem_t value, void *arg){
+    value.i = value.i * value.i;
+    return value;
 }
+
+// elem_t *append_suffix(elem_t key, elem_t value, void *arg) {
+//     char *suffix = (char *)arg;  // Cast arg to char*
+//     size_t original_length = strlen((char *)value.p);
+//     size_t new_length = original_length + strlen(suffix) + 1;  // +1 for null terminator
+    
+//     // Allocate memory for the new value
+//     char *new_value = malloc(new_length);
+//     if (new_value) {
+//         // Copy the original value and append the suffix
+//         strcpy(new_value, (char *)value.p);  // Fix missing closing parenthesis
+//         strcat(new_value, suffix);
+        
+//         // Free the old value's memory and update it with the new value
+//         free(value.p);
+//         value.p = new_value;  // Update the pointer in elem_t to the new value
+//     }
+
+//     return value;  // Return the updated value
+// }
+
 
 // Test function for ioopm_hash_table_apply_to_all
 void test_apply() {
     // Creates a new hash table
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(*hash_fn, *eq_fn, *eq_fn);
     CU_ASSERT_PTR_NOT_NULL(ht); // Ensures a hash table is created
 
     // Create keys and values
     int keys[3] = {1, 2, 3};
-    char *values[3] = {"value1", "value2", "value3"};
-    const char *suffix = "_suffix";
-    int num_keys = 3;
+    int values[3] = {1, 2, 3};
 
-    // Insert entries into the hash table
-    for (int i = 0; i < num_keys; i++) {
-        ioopm_hash_table_insert(ht, int_elem(keys[i]), ptr_elem(values[i]));
+    // Insert entries into the hash table using elem_t
+    for (int i = 0; i < 3; i++) {
+        ioopm_hash_table_insert(ht, int_elem(keys[i]), int_elem(values[i]));
     }
 
+    // Apply the square_int_val function to all entries in the hash table
+    ioopm_hash_table_apply_to_all(ht, square_int_val, NULL);  // No extra argument needed
 
-    // Apply the function to all entries in the hash table
-    ioopm_hash_table_apply_to_all(ht, append_suffix, (void *)suffix);
+    // Check if the values have been squared correctly
+    int expected_values[3] = {1, 4, 9};  // The squared values
 
-    // Check if the values have been modified correctly
     for (int i = 0; i < 3; i++) {
-        char expected_value[20]; // Make sure it has enough memory
-        snprintf(expected_value, sizeof(expected_value), "value%d_suffix", i + 1);
-        elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i])); // Find the actual value
-        CU_ASSERT_STRING_EQUAL(actual_value, expected_value); 
+        elem_t *actual_value = ioopm_hash_table_lookup(ht, int_elem(keys[i]));  // Find the actual value
+        CU_ASSERT_PTR_NOT_NULL(actual_value);  // Ensure the value was found
+        CU_ASSERT_EQUAL(actual_value->i, expected_values[i]);  // Compare the squared value with expected
     }
 
     // Clean up
-    ioopm_hash_table_destroy(ht);
+    ioopm_hash_table_destroy(ht);  // Ensure hash table is properly destroyed
 }
+
+
 
 int main() {
   if (CU_initialize_registry() != CUE_SUCCESS)

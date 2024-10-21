@@ -8,6 +8,8 @@
 
 #define Delimiters "+-#@()[]{}.,:;!? \t\n\r"
 
+#define int_elem(x) (elem_t) { .i = (x) }
+
 static int cmpstringp(const void *p1, const void *p2)
 {
   return strcmp(*(char *const *)p1, *(char *const *)p2);
@@ -20,12 +22,11 @@ void sort_keys(char *keys[], size_t no_keys)
 
 void process_word(char *word, ioopm_hash_table_t *ht)
 {
-  // FIXME: Rewrite to match your own interface, error-handling, etc.
   int freq =
     ioopm_hash_table_has_key(ht, (elem_t) {.p = word})?
     (ioopm_hash_table_lookup(ht, (elem_t) {.p = word}))->i:
     0;
-  ioopm_hash_table_insert(ht, (elem_t) {.p = strdup(word)}, (elem_t) {.i = freq + 1});
+  ioopm_hash_table_insert(ht, (elem_t) {.i = freq + 1}, (elem_t) {.p = strdup(word)});
 }
 
 void process_file(char *filename, ioopm_hash_table_t *ht)
@@ -48,8 +49,8 @@ void process_file(char *filename, ioopm_hash_table_t *ht)
          word && *word;
          word = strtok(NULL, Delimiters))
     {
-      process_word(word, ht);
-    }
+       process_word(word, ht);
+     }
 
     free(buf);
   }
@@ -74,9 +75,17 @@ bool string_eq(elem_t e1, elem_t e2)
   return (strcmp(e1.p, e2.p) == 0);
 }
 
+bool eq_fn(elem_t a, elem_t b){
+    return a.i == b.i;
+}
+
+bool eq_fn_char(elem_t a, elem_t b){
+    return a.p == b.p;
+}
+
 int main(int argc, char *argv[])
 {
-  ioopm_hash_table_t *ht = ioopm_hash_table_create(string_sum_hash, string_eq, NULL);
+  ioopm_hash_table_t *ht = ioopm_hash_table_create(string_sum_hash, eq_fn, string_eq);
 
   if (argc > 1)
   {
@@ -87,14 +96,15 @@ int main(int argc, char *argv[])
 
     // FIXME: If the keys are returned as a list, transfer them into 
     // an array to use `sort_keys` (perhaps using an iterator?)
-    char **keys = (char **) ioopm_hash_table_keys(ht);
+    char **keys = calloc(ioopm_hash_table_keys(ht)->size, sizeof(char *));
+    printf("%s", keys[0]);
+
 
     int size = ioopm_hash_table_size(ht);
     sort_keys(keys, size);
 
     for (int i = 0; i < size; ++i)
     {
-      // FIXME: Update to match your own interface, error handling, etc.
       int freq = (ioopm_hash_table_lookup(ht, (elem_t) {.p = keys[i]}))->i;
       printf("%s: %d\n", keys[i], freq);
     }

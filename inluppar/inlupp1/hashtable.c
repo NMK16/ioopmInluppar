@@ -104,7 +104,6 @@ elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key) {
     return recursive_lookup(ht, ht->buckets[bucket], key);
 }
 
-
 // Helper function
 static elem_t *recursive_remove(ioopm_hash_table_t *ht, entry_t **entry, elem_t key) {
     if (*entry == NULL) {

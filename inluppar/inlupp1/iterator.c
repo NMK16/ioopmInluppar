@@ -18,7 +18,11 @@ ioopm_list_iterator_t *ioopm_list_iterator_create(ioopm_list_t *list) {
 /// @param iter the iterator
 /// @return true if there is at least one more element 
 bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter) { 
-    return iter->current -> next != NULL; // Check if there are more elements
+    if(iter -> current != NULL)
+    {
+        return iter->current -> next!= NULL; // Check if there are more elements
+    }
+
 }
 
 /// @brief Step the iterator forward one step
@@ -26,9 +30,15 @@ bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter) {
 /// @return the next element
 elem_t ioopm_iterator_next(ioopm_list_iterator_t *iter) {
 
-    elem_t value = iter->current-> next -> value; // Gets the current value in the list
-    iter->current = iter->current->next; // Goes to the next link in the list
-    return value;
+    if(ioopm_iterator_has_next(iter)){
+        elem_t value = iter->current-> next -> value; // Gets the current value in the list
+        iter->current = iter->current-> next; // Goes to the next link in the list
+        return value;
+    }
+    else{
+        return iter -> current -> value;
+    } 
+
 }
 
 /// NOTE: REMOVE IS OPTIONAL TO IMPLEMENT 

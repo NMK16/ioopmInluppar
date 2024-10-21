@@ -46,12 +46,14 @@ ioopm_list_t *ioopm_linked_list_create(ioopm_equal_function *eq_fun)
 void ioopm_linked_list_destroy(ioopm_list_t *list)
 {
     assert(list);
+    
     link_t *current = list->head;
     while (current)
     {
-        link_t *tmp = current;
-        current = current->next;
-        free(tmp);
+        link_t *tmp = current -> next;
+        free(current);
+        current = tmp;
+        
     }
     free(list);
 }

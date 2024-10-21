@@ -4,118 +4,174 @@
 #include <string.h>
 #include "hashtable.h"
 #include "linked_list.h"
+#include "iterator.h"
+#include "ctype.h"
 #include "common.h"
 
 #define Delimiters "+-#@()[]{}.,:;!? \t\n\r"
 
-#define int_elem(x) (elem_t) { .i = (x) }
-
 static int cmpstringp(const void *p1, const void *p2)
 {
-  return strcmp(*(char *const *)p1, *(char *const *)p2);
+    return strcmp(*(char *const *)p1, *(char *const *)p2);
 }
 
 void sort_keys(char *keys[], size_t no_keys)
 {
-  qsort(keys, no_keys, sizeof(char *), cmpstringp);
+    qsort(keys, no_keys, sizeof(char *), cmpstringp);
+}
+
+void complete_ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
+    if (!ht) return;
+
+    ioopm_list_t *keys_list = ioopm_hash_table_keys(ht);
+    ioopm_list_iterator_t *iter = ioopm_list_iterator_create(keys_list);
+
+    while (ioopm_iterator_has_next(iter)) {
+        elem_t key = ioopm_iterator_current(iter);
+        if (key.p) {
+            free(key.p);
+        }
+        ioopm_iterator_next(iter);
+    }
+
+    ioopm_iterator_destroy(iter);
+    ioopm_linked_list_destroy(keys_list);
+    ioopm_hash_table_destroy(ht);
 }
 
 void process_word(char *word, ioopm_hash_table_t *ht)
 {
-  int freq =
-    ioopm_hash_table_has_key(ht, (elem_t) {.p = word})?
-    (ioopm_hash_table_lookup(ht, (elem_t) {.p = word}))->i:
-    0;
-  ioopm_hash_table_insert(ht, (elem_t) {.i = freq + 1}, (elem_t) {.p = strdup(word)});
+    if (!word || strlen(word) == 0) return;
+
+    for (char *p = word; *p; ++p) *p = tolower(*p);
+
+    elem_t key = { .p = word };
+    elem_t *lookup_result = ioopm_hash_table_lookup(ht, key);
+
+    if (!lookup_result) 
+    {
+        if (!word) 
+        {
+            fprintf(stderr, "Error: Failed to allocate memory for word copy\n");
+            return;
+        }
+        ioopm_hash_table_insert(ht, (elem_t) { .p = strdup(word) }, (elem_t) { .i = 1 });
+    } 
+    else  
+    {
+        lookup_result->i += 1;
+    }
 }
 
 void process_file(char *filename, ioopm_hash_table_t *ht)
 {
-  FILE *f = fopen(filename, "r");
-
-  while (true)
-  {
-    char *buf = NULL;
-    size_t len = 0;
-    getline(&buf, &len, f);
-
-    if (feof(f))
+    FILE *f = fopen(filename, "r");
+    if (!f)
     {
-      free(buf);
-      break;
+        fprintf(stderr, "Error: could not open file %s\n", filename);
+        return;
     }
 
-    for (char *word = strtok(buf, Delimiters);
-         word && *word;
-         word = strtok(NULL, Delimiters))
+    char *buf = NULL;
+    size_t len = 0;
+
+    while (getline(&buf, &len, f) != -1)
     {
-       process_word(word, ht);
-     }
+        for (char *word = strtok(buf, Delimiters);
+             word && *word;
+             word = strtok(NULL, Delimiters))
+        {
+            process_word(word, ht);
+        }
+    }
 
-    free(buf);
-  }
-
-  fclose(f);
+    free(buf); 
+    fclose(f);
 }
+
 
 int string_sum_hash(elem_t e)
 {
-  char *str = e.p;
-  int result = 0;
-  do
-    {
-      result += *str;
-    }
-  while (*++str != '\0');
-  return result;
+    char *str = e.p;
+    int result = 0;
+    do
+        {
+        result += *str;
+        }
+    while (*++str != '\0');
+    return result;
 }
 
 bool string_eq(elem_t e1, elem_t e2)
 {
-  return (strcmp(e1.p, e2.p) == 0);
+    return strcmp(e1.p, e2.p) == 0;
 }
 
-bool eq_fn(elem_t a, elem_t b){
-    return a.i == b.i;
-}
 
-bool eq_fn_char(elem_t a, elem_t b){
-    return a.p == b.p;
-}
-
+// Main function
 int main(int argc, char *argv[])
 {
-  ioopm_hash_table_t *ht = ioopm_hash_table_create(string_sum_hash, eq_fn, string_eq);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(string_sum_hash, string_eq, string_eq);
 
-  if (argc > 1)
-  {
-    for (int i = 1; i < argc; ++i)
+    if (argc > 1)
     {
-      process_file(argv[i], ht);
+        for (int i = 1; i < argc; ++i)
+        {
+            process_file(argv[i], ht);
+        }
+
+        // FIXME NOT GIVEN 
+        ioopm_list_t *keys_list = ioopm_hash_table_keys(ht);
+        ioopm_list_iterator_t *iter = ioopm_list_iterator_create(keys_list);
+
+        int size = ioopm_hash_table_size(ht);
+        if (size == 0)
+        {
+            printf("No keys found in the hash table.\n");
+            ioopm_iterator_destroy(iter);
+            ioopm_linked_list_destroy(keys_list);
+            complete_ioopm_hash_table_destroy(ht);
+            return 0;
+        }
+
+        char **keys = calloc(1, size * sizeof(char *));
+        if (!keys)
+        {
+            fprintf(stderr, "Error: Failed to allocate memory for keys array\n");
+            ioopm_iterator_destroy(iter);
+            ioopm_linked_list_destroy(keys_list);
+            complete_ioopm_hash_table_destroy(ht);
+            return 1;
+        }
+
+        for (int i = 0; i < size; ++i)
+        {
+            elem_t key = ioopm_iterator_current(iter);
+            keys[i] = key.p; 
+            ioopm_iterator_next(iter);
+        }
+
+        ioopm_iterator_destroy(iter);
+        ioopm_linked_list_destroy(keys_list); 
+
+        sort_keys(keys, size);
+
+        for (int i = 0; i < size; ++i)
+        {
+            elem_t *lookup_result = ioopm_hash_table_lookup(ht, (elem_t) {.p = keys[i]});
+            if (lookup_result)
+            {
+                printf("%s: %d\n", keys[i], lookup_result->i);
+            }
+        }
+
+        free(keys); 
+    }
+    else
+    {
+        puts("Usage: freq-count file1 ... filen");
     }
 
-    // FIXME: If the keys are returned as a list, transfer them into 
-    // an array to use `sort_keys` (perhaps using an iterator?)
-    char **keys = calloc(ioopm_hash_table_keys(ht)->size, sizeof(char *));
-    printf("%s", keys[0]);
-
-
-    int size = ioopm_hash_table_size(ht);
-    sort_keys(keys, size);
-
-    for (int i = 0; i < size; ++i)
-    {
-      int freq = (ioopm_hash_table_lookup(ht, (elem_t) {.p = keys[i]}))->i;
-      printf("%s: %d\n", keys[i], freq);
-    }
-  }
-  else
-  {
-    puts("Usage: freq-count file1 ... filen");
-  }
-
-  // FIXME: Leaks memory! Use valgrind to find out where that memory is 
-  // being allocated, and then insert code here to free it.
-  ioopm_hash_table_destroy(ht);
+    complete_ioopm_hash_table_destroy(ht); 
+    return 0;
 }
-

@@ -49,7 +49,7 @@ void test_iterator_creation() {
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter); // Free the iterator
+    ioopm_iterator_destroy(iter); // Free the iterator
 
 }
 
@@ -69,7 +69,7 @@ void test_iterator_has_next() {
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter);
+    ioopm_iterator_destroy(iter);
 }
 
 // Test iterator next
@@ -86,11 +86,11 @@ void test_iterator_next() {
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter);
+    ioopm_iterator_destroy(iter);
 
 }
 
-// Test insert (funkar ej, behövs inte implementeras heller)
+// Test insert 
 void test_iterator_insert() {
 
     ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
@@ -110,7 +110,7 @@ void test_iterator_insert() {
 
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter);
+    ioopm_iterator_destroy(iter);
 
 }
 
@@ -132,11 +132,10 @@ void test_iterator_reset() {
     CU_ASSERT_EQUAL(elem_int(test_list -> head -> value), 1); // Asserts that three is now the lists head
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter);
+    ioopm_iterator_destroy(iter);
 
 }
 
-// Test remove (funkar ej, behövs inte implementeras heller)
 void test_iterator_remove() {
     
     //Setup
@@ -155,7 +154,7 @@ void test_iterator_remove() {
     
     // Clean up
     ioopm_linked_list_destroy(test_list);
-    free(iter);
+    ioopm_iterator_destroy(iter);
 }
 
 // Main function to run the tests

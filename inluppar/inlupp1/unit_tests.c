@@ -148,7 +148,7 @@ void test_is_empty_clear() {
   	ioopm_hash_table_destroy(ht);
 }
 
-void free_linked_list(ioopm_list_t *list) {
+void free_linked_list(ioopm_list_t *list) { //Basically ioopm_linked_list_destroy
     link_t *current = list->head;
     while (current != NULL) {
         link_t *next = current->next;

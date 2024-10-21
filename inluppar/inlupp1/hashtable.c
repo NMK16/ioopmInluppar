@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include "common.h"
 #include "hashtable.h"
@@ -13,6 +14,7 @@
 /// @return Pointer to the created hash table
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_equal_function *key_eq_fn, ioopm_equal_function *value_eq_fn) {
     ioopm_hash_table_t *result = calloc(No_Buckets, sizeof(ioopm_hash_table_t));
+    
     result -> size = 0;
     result->hash_fn = hash_fn;
     result->key_eq_fn = key_eq_fn;
@@ -24,7 +26,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_
 /// @param ht the hash table to destroy
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
     if (ht != NULL) {
-        ioopm_hash_table_clear(ht); 
+        ioopm_hash_table_clear(ht);
         free(ht);               
     }
 }
@@ -48,7 +50,7 @@ static entry_t *find_previous_entry_for_key(entry_t **bucket_head, elem_t key, i
     entry_t *prev = NULL;
     
 
-    while (current != NULL && key_eq_fn(current->key, key)) {
+    while (current != NULL && !key_eq_fn(current->key, key)) {
         prev = current;
         current = current->next;
     }
@@ -61,7 +63,7 @@ static entry_t *find_previous_entry_for_key(entry_t **bucket_head, elem_t key, i
 /// @param key the key being inserted
 /// @param value the value being inserted
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
-    int bucket = ht -> hash_fn(key);
+    int bucket = ht -> hash_fn(key) % No_Buckets;
     entry_t *prev_entry = find_previous_entry_for_key(&ht->buckets[bucket], key, ht -> key_eq_fn);
     entry_t *next = prev_entry ? prev_entry->next : ht->buckets[bucket];
 
@@ -80,8 +82,15 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
 
 // Helper function for recursive lookup (F14)
 static elem_t *recursive_lookup(ioopm_hash_table_t *ht, entry_t *searching_entry, elem_t key) {
+    // Ensure the entry is valid before proceeding
     if (searching_entry == NULL) {
         return NULL; 
+    }
+
+    // Check if the key in the current entry is valid before dereferencing
+    if (searching_entry->key.p == NULL) {
+        fprintf(stderr, "Error: Encountered an entry with an uninitialized key.\n");
+        return NULL;
     }
 
     // Check if the keys are equal using the provided equality function
@@ -99,10 +108,13 @@ static elem_t *recursive_lookup(ioopm_hash_table_t *ht, entry_t *searching_entry
 /// @param key the key to lookup
 /// @return the value mapped to by key, or NULL if not found
 elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key) {
-    int bucket = ht->hash_fn(key);  // Determine which bucket to search
+    // Determine which bucket to search
+    int bucket = ht->hash_fn(key) % No_Buckets;
+
     // Call the recursive lookup starting from the head of the bucket's linked list
     return recursive_lookup(ht, ht->buckets[bucket], key);
 }
+
 
 // Helper function
 static elem_t *recursive_remove(ioopm_hash_table_t *ht, entry_t **entry, elem_t key) {
@@ -155,12 +167,16 @@ bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht) {
 /// @brief Clear all the entries in a hash table
 /// @param ht hash table operated upon
 void ioopm_hash_table_clear(ioopm_hash_table_t *ht) {
+    if(!ht){
+        NULL;
+    }
+    
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-            entry_t *next = entry->next;
+            entry_t *next = entry;
             free(entry);          // Free the entry itself
-            entry = next;
+            entry = entry -> next;
         }
         ht->buckets[i] = NULL; // Set bucket to NULL after clearing
     }

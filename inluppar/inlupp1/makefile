@@ -4,34 +4,41 @@ C_OPTIONS      = -Wall -pedantic -g
 C_LINK_OPTIONS = -lm
 CUNIT_LINK     = -lcunit
 
+# Source files
+SRC_FILES      = hashtable.c linked_list.c iterator.c
+TEST_SRC_FILES = unit_tests.c linked_list_tests.c iterator_tests.c
+
 # Object files (automatically generated for each .c file)
-%.o: %.c
-	$(C_COMPILER) $(C_OPTIONS) $^ -c
+OBJ_FILES       = $(SRC_FILES:.c=.o) $(TEST_SRC_FILES:.c=.o)
 
 # Executable for the main program
-myprog: unit_tests.o hashtable.o linked_list.o linked_list_tests.o iterator.o iterator_tests.o
+myprog: $(SRC_FILES:.c=.o)
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
-# Executable for testing
-test_hash_table: unit_tests.o hashtable.o
-	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
+# Rule for building unit tests
+unit_tests: unit_tests.o hashtable.o
+	$(C_COMPILER) $(C_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
-# Executable for testing linked list
-test_linked_list: $(linked_list_objs)
-	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
+# Rule for testing linked list
+linked_list_test: linked_list_tests.o linked_list.o
+	$(C_COMPILER) $(C_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
-# Executable for testing iterator
-test_iterator: $(iterator_objs)
-	$(C_COMPILER) $(C_LINK_OPTIONS) $? -o $@ $(CUNIT_LINK)
-	
+# Rule for testing iterator
+iterator_tests: iterator_tests.o iterator.o linked_list.o
+	$(C_COMPILER) $(C_OPTIONS) $^ -o $@ $(CUNIT_LINK)
+
 # Clean command to remove object files and executables
 clean:
-	rm -f *.o myprog test_hash_table
+	rm -f *.o myprog unit_tests linked_list_test iterator_tests
 
 # Run the tests
-run: test_hash_table
-	./test_hash_table
+run: unit_tests
+	./unit_tests
 
 # Memory testing using Valgrind
-memtest: test_hash_table
-	valgrind --leak-check=full ./test_hash_table
+memtest: unit_tests
+	valgrind --leak-check=full ./unit_tests
+
+# Pattern rule for object files
+%.o: %.c
+	$(C_COMPILER) $(C_OPTIONS) -c $< -o $@

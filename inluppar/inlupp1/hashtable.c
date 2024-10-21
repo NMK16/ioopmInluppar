@@ -174,10 +174,11 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht) {
     for (int i = 0; i < No_Buckets; i++) {
         entry_t *entry = ht->buckets[i];
         while (entry != NULL) {
-            entry_t *next = entry;
-            free(entry);          // Free the entry itself
-            entry = entry -> next;
+            entry_t *next = entry->next; // Store the next entry before freeing
+            free(entry); // Free the current entry
+            entry = next; // Move to the next entry
         }
+
         ht->buckets[i] = NULL; // Set bucket to NULL after clearing
     }
     ht -> size = 0;

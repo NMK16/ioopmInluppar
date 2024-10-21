@@ -21,18 +21,28 @@ void sort_keys(char *keys[], size_t no_keys)
 }
 
 void complete_ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
-    if (!ht) return;
+    if (!ht) {
+        return;
+    }
 
     ioopm_list_t *keys_list = ioopm_hash_table_keys(ht);
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(keys_list);
 
     while (ioopm_iterator_has_next(iter)) {
-        elem_t key = ioopm_iterator_current(iter);
+    elem_t key = ioopm_iterator_current(iter);
         if (key.p) {
             free(key.p);
         }
         ioopm_iterator_next(iter);
     }
+    if(ioopm_iterator_has_current(iter)){
+        elem_t key = ioopm_iterator_current(iter);
+        if (key.p) {
+            free(key.p);
+        }
+
+    }
+   
 
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(keys_list);
@@ -50,11 +60,6 @@ void process_word(char *word, ioopm_hash_table_t *ht)
 
     if (!lookup_result) 
     {
-        if (!word) 
-        {
-            fprintf(stderr, "Error: Failed to allocate memory for word copy\n");
-            return;
-        }
         ioopm_hash_table_insert(ht, (elem_t) { .p = strdup(word) }, (elem_t) { .i = 1 });
     } 
     else  
@@ -68,7 +73,7 @@ void process_file(char *filename, ioopm_hash_table_t *ht)
     FILE *f = fopen(filename, "r");
     if (!f)
     {
-        fprintf(stderr, "Error: could not open file %s\n", filename);
+        fprintf(stderr, "This file cannot open: %s\n", filename);
         return;
     }
 
@@ -107,7 +112,6 @@ bool string_eq(elem_t e1, elem_t e2)
     return strcmp(e1.p, e2.p) == 0;
 }
 
-
 // Main function
 int main(int argc, char *argv[])
 {
@@ -127,7 +131,7 @@ int main(int argc, char *argv[])
         int size = ioopm_hash_table_size(ht);
         if (size == 0)
         {
-            printf("No keys found in the hash table.\n");
+            printf("No keys found in the hash table of the users text file\n");
             ioopm_iterator_destroy(iter);
             ioopm_linked_list_destroy(keys_list);
             complete_ioopm_hash_table_destroy(ht);
@@ -137,7 +141,7 @@ int main(int argc, char *argv[])
         char **keys = calloc(1, size * sizeof(char *));
         if (!keys)
         {
-            fprintf(stderr, "Error: Failed to allocate memory for keys array\n");
+            fprintf(stderr, "It fails to allocate memory for the keys array\n");
             ioopm_iterator_destroy(iter);
             ioopm_linked_list_destroy(keys_list);
             complete_ioopm_hash_table_destroy(ht);
@@ -175,3 +179,4 @@ int main(int argc, char *argv[])
     complete_ioopm_hash_table_destroy(ht); 
     return 0;
 }
+

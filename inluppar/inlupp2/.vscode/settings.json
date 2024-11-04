@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "cunit.h": "c",
+        "string.h": "c"
+    }
+}

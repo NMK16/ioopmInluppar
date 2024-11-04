@@ -1,3 +1,27 @@
+How to run the program: 
+1. Download/Git clone all the files in inlupp1 in the repo:
+https://github.com/IOOPM-UU/nokh8135
+
+2. To test the program hashtable.c; linked_list.c; iterator.c, where you'll see coverage, tests, and memory (allocs/frees) write (in the terminal): 
+bash:
+make 
+make memtest
+(use "make clean" to clean up)
+
+
+3. To run the freq-counter that counts how many times a word occurs in a text file, write (in the terminal):
+bash:
+gcc -g freq-count.c hashtable.c linked_list.c iterator.c -o freq-count
+(optional: Valgrind) ./freq-count <(the name of a text file in the folder followed by) .txt>>
+
+4. If you want to see the profiling of the program
+bash:
+gcc -pg freq-count.c hashtable.c linked_list.c iterator.c -o freq-count
+(optional: Valgrind) ./freq-count <(the name of a text file in the folder followed by) .txt>>
+gprof freq-count gmon.out > profile.txt
+
+The simply open the newly created profile file within the folder
+
 Run your program on each input file and inspect the result. Answer the following questions.
 
 For each input, what are the top 3 functions?
@@ -13,9 +37,9 @@ For each input, what are the top 3 functions?
 10k-words.txt
   %   cumulative   self              self     total      
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
-  0.00      0.00     0.00    59933     0.00     0.00  string_eq
-  0.00      0.00     0.00    10372     0.00     0.00  string_sum_hash
-  0.00      0.00     0.00    10186     0.00     0.00  ioopm_hash_table_lookup
+  0.00      0.00     0.00    59933     0.00     0.00  string_eq (given)
+  0.00      0.00     0.00    10372     0.00     0.00  string_sum_hash (given)
+  0.00      0.00     0.00    10186     0.00     0.00  ioopm_hash_table_lookup (selfmade)
 
 1k-long-words.txt:
   %   cumulative   self              self     total           
@@ -32,19 +56,15 @@ small.txt:
   0.00      0.00     0.00       77     0.00     0.00  ioopm_iterator_has_next (selfmade)
 
 For each input, are the top 3 functions in your code (that you have written), or is it in library functions?
+It's written if it was given or if we created it in the () in the earlier question
+
 Are the top 3 functions in your code consistent across the inputs? Why? Why not?
 
-Not quite, the top functions aren’t the same for all the input files. In 16k-words.txt, the functions that we wrote took the lead, while for smaller files such as 1k-long-words.txt and small.txt, the given functions string_eq and string_sum_hash shows up more. This difference likely comes from the size and complexity of the input files, which changes how often the functions are called.
+Almost, the top functions aren’t the same for all the input files we were given. In 16k-words.txt, the functions that we wrote took up more space and time, while for smaller files such as 1k-long-words.txt and small.txt, the given functions string_eq and string_sum_hash shows up more. This difference likely comes from the size and complexity of the input files, which changes how often the functions are called. Time-wise we cannot fully know since all input files except for the 16k one, were rounded down to 0 due to it being too quick.
 
 Is there some kind of trend? (Possibly several)
 
-
-Are the Top 3 Functions in Your Code Consistent Across the Inputs? Why? Why Not?
-No, the top functions aren’t the same for all the input files. In 16k-words.txt, the functions that I wrote take the lead, while for smaller files like 1k-long-words.txt and small.txt, the built-in library functions like string_eq and string_sum_hash show up more. This difference likely comes from the size and complexity of the input files, which changes how often the functions are called.
-
-Is There Some Kind of Trend? (Possibly Several)
-Yes, there seems to be a trend! As the size of the input files gets smaller, the use of library functions like string_eq and string_sum_hash increases. On the other hand, with larger input files, the time spent on functions I created goes up. This shows that when dealing with bigger datasets, the operations related to the hash table become more important.
-
+Yes, there seems to be a trend where if the size of the input files gets smaller, the use of library functions like string_eq and string_sum_hash increases. Although, with larger input files, the time spent on functions we created goes up. This shows that when dealing with bigger datasets, the operations related to the hash table become more important.
 
 Do the results correspond with your expectations?
 The results mostly match what I expected. I thought that the functions I wrote would take more time with larger input files because they often involve looking things up in the hash table. However, it was surprising to see the library functions being so frequently called in the smaller files. This suggests that these functions are used a lot in those situations.

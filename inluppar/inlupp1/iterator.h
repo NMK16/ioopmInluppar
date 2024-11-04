@@ -10,6 +10,9 @@ typedef struct ioopm_list_iterator {
 
 ioopm_list_iterator_t *ioopm_list_iterator_create(ioopm_list_t *list);
 
+/// @brief Checks if the current element exists
+/// @param iter the iterator
+/// @return true if there is current element is not NULL
 bool ioopm_iterator_has_current(ioopm_list_iterator_t *iter);
 
 /// @brief Checks if there are more elements to iterate over

@@ -29,7 +29,7 @@ bool eq_fn(elem_t a, elem_t b);
 
 // Merchandise management functions
 merch_t *create_merch(char *name, char *description, int price);
-bool add_merch(ioopm_hash_table_t *merch_table, char *name, char *description, int price);
+void add_merch(ioopm_hash_table_t *merch_table);
 void list_merch(ioopm_hash_table_t *merch_table);
 bool remove_merch(ioopm_hash_table_t *merch_table, char *name);
 bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price);
@@ -38,7 +38,8 @@ bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name,
 void show_stock(ioopm_hash_table_t *stock_table, char *name);
 bool replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table, char *name, char *location, int quantity);
 
-// Cart management functions
+// Cart management function
+
 void create_cart(ioopm_hash_table_t *cart_table, int cart_id);
 void remove_cart(ioopm_hash_table_t *cart_table, int cart_id);
 void add_to_cart(ioopm_hash_table_t *cart_table, int cart_id, char *name, int quantity);

@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "iterator.h"
+
 
 #define MAX_INPUT 256
 
@@ -13,13 +15,19 @@
 #define int_elem(x) (elem_t) { .i = (x) }
 #define ptr_elem(x) (elem_t) { .p = (x) }
 
-bool eq_fn(elem_t a, elem_t b){
-    return a.i == b.i;
+bool eq_fn(elem_t e1, elem_t e2)
+{
+    return strcmp(e1.p, e2.p) == 0;
 }
 
-int hash_fn(elem_t key){
-    return key.i % 17;
+int hash_fn(elem_t key) {
+    int hash = 0;
+    for (char *str = key.p; *str != '\0'; str++) {
+        hash = (hash * 31) + *str;  // hash * 31 + character value
+    }
+    return hash % 17;  // modulo to fit within the table size
 }
+
 merch_t *create_merch(char *name, char *description, int price) {
     merch_t *new_merch = malloc(sizeof(merch_t));
     if (!new_merch) return NULL;
@@ -33,73 +41,49 @@ int cmpstringp(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
 }
 
-bool add_merch(ioopm_hash_table_t *merch_table, char *name, char *description, int price) {
-    elem_t key = ptr_elem(strdup(name));
-    if (ioopm_hash_table_has_key(merch_table, key)) {
-        return false;
-    } 
+void add_merch(ioopm_hash_table_t *merch_table) {
+    char *nameOfMerch = ask_question_string("\nEnter name of Merch: ");
+    elem_t key = ptr_elem(nameOfMerch);
 
-    merch_t *merch = create_merch(name, description, price);
-    if (!merch) {
-        return false;
+    while(ioopm_hash_table_has_key(merch_table, key)){
+        printf("Name already exists, enter another name:\n");
+        nameOfMerch = ask_question_string("\nEnter name of Merch: ");
+        key = ptr_elem(nameOfMerch);
     }
+    char *desc = ask_question_string("\nEnter description of Merch: ");
+    int price = ask_question_int("\nEnter price of Merch: ");
+    merch_t *merch = create_merch(nameOfMerch, desc, price);
+ 
     elem_t value = ptr_elem(merch);
     ioopm_hash_table_insert(merch_table, key, value);
-    return true;
 }
 
 // List all merchandise items in alphabetical order
 
-void list_merch(ioopm_hash_table_t *merch_table) {
-    size_t no_keys = ioopm_hash_table_size(merch_table);
-    char **keys = malloc(no_keys * sizeof(char *));
-    if (!keys) {
-        return;
-    }
-
-
-    size_t index = 0;
-    for (size_t i = 0; i < merch_table->size; i++) {
-        ioopm_list_t *list = (ioopm_list_t *)merch_table->buckets[i];
-        if (list) {
-            for (link_t *current = list->head; current != NULL; current = current->next) {
-                if (index >= no_keys) {
-                    break; 
-                }
-                keys[index] = strdup((char *)current->value.p); 
-                if (!keys[index]) {
-                    // In case of strdup failure
-                    for (size_t j = 0; j < index; j++) {
-                        free(keys[j]);
-                    }
-                    free(keys);
-                    return;
-                }
-                index++;
-            }
+void list_merch(ioopm_hash_table_t *merch_table){
+    ioopm_list_iterator_t *allValues = calloc(1, sizeof(ioopm_list_iterator_t));
+    allValues->list = ioopm_hash_table_values(merch_table);
+    allValues->current = ioopm_hash_table_keys(merch_table)->head;
+    size_t size = ioopm_linked_list_size(allValues->list);
+    int i = 0;
+    char **merch_array = calloc(size, sizeof(merch_t));
+    while (ioopm_iterator_has_current(allValues)) {
+        merch_array[i] = (char *)allValues->current->value.p;  // Cast and store pointer to merch_t
+        if(ioopm_iterator_has_next(allValues)){
+            ioopm_iterator_next(allValues);
+            i++;
+        }
+        else{
+            break;
         }
     }
-
-    // Resize keys to the number of actual keys filled
-    keys = realloc(keys, index * sizeof(char *));
-    if (!keys) {
-        return;
-    } // in case of realloc failure
-
-    // Sort and print
-    qsort(keys, index, sizeof(char *), cmpstringp);
-    for (size_t i = 0; i < index; i++) {
-        elem_t key_elem = ptr_elem(keys[i]);
-        elem_t *value = ioopm_hash_table_lookup(merch_table, key_elem);
-        if (value && value->p) {
-            merch_t *merch = value->p;
-            printf("Name: %s, Description: %s, Price: %d\n", merch->name, merch->description, merch->price);
-        }
-        free(keys[i]); 
+    qsort(merch_array, size, sizeof(char *), cmpstringp);
+    for (int j = 0; j < size; j++) {
+        char *merch = merch_array[j];
+        printf("\n%d. %s\n", j+1, merch);  // Print merch name
     }
-
-    free(keys);
 }
+
 
 
 
@@ -263,43 +247,21 @@ int main() {
     ioopm_hash_table_t *stock_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
 
-    char action;
-    char input[MAX_INPUT];
-
     printf("Welcome to MAMAZON! \n");
 
     while (1) {
-        printf("Enter input/action  (A: Add, L: List, D: Remove, E: Edit, S: Show Stock, P: Replenish, C: Create Cart, R: Remove Cart, +: Add to Cart, -: Remove from Cart, =: Calculate Cost, O: Checkout, Q: Quit): ");
-        fgets(input, sizeof(input), stdin);
-        sscanf(input, "%c", &action);
+        char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
 
-        switch (action) {
+        switch (*option) {
             case 'A':
                 {
-                    char name[MAX_INPUT], description[MAX_INPUT];
-                    int price;
-                    printf("Enter merchandise name: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n"); 
-                    printf("Enter merchandise description: ");
-                    fgets(description, sizeof(description), stdin);
-                    strtok(description, "\n"); 
-                    printf("Enter merchandise price: ");
-                    scanf("%d", &price);
-                    getchar(); 
-
-                    if (add_merch(merch_table, name, description, price)) {
-                        printf("Merchandise added successfully.\n");
-                    } else {
-                        printf("Merchandise with the same name already exists.\n");
-                    }
+                    add_merch(merch_table);
+                    break;
                 }
-                break;
 
             case 'L':
                 list_merch(merch_table);
                 printf("Merch table size: %zu\n", ioopm_hash_table_size(merch_table)); //Den ökar men de list_merch printar inte us svaren
-
                 break;
 
             case 'D':

@@ -42,17 +42,21 @@ int cmpstringp(const void *a, const void *b) {
 }
 
 void add_merch(ioopm_hash_table_t *merch_table) {
-    char *nameOfMerch = ask_question_string("\nEnter name of Merch: ");
-    elem_t key = ptr_elem(nameOfMerch);
+    char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
+
+    for (int i = 0; merch_name[i] != '\0'; i++) {
+        merch_name[i] = toupper((unsigned char)merch_name[i]);
+    }
+    elem_t key = ptr_elem(merch_name);
 
     while(ioopm_hash_table_has_key(merch_table, key)){
         printf("Name already exists, enter another name:\n");
-        nameOfMerch = ask_question_string("\nEnter name of Merch: ");
-        key = ptr_elem(nameOfMerch);
+        merch_name = ask_question_string("\nEnter name of Merch: ");
+        key = ptr_elem(merch_name);
     }
     char *desc = ask_question_string("\nEnter description of Merch: ");
     int price = ask_question_int("\nEnter price of Merch: ");
-    merch_t *merch = create_merch(nameOfMerch, desc, price);
+    merch_t *merch = create_merch(merch_name, desc, price);
  
     elem_t value = ptr_elem(merch);
     ioopm_hash_table_insert(merch_table, key, value);
@@ -89,51 +93,82 @@ void list_merch(ioopm_hash_table_t *merch_table){
 
 
 void remove_merch(ioopm_hash_table_t *merch_table) {
+    
     char *merch_name = ask_question_string("\nEnter merchandise name to remove: ");
+
+    for (int i = 0; merch_name[i] != '\0'; i++) {
+        merch_name[i] = toupper((unsigned char)merch_name[i]);
+    }
     elem_t key = ptr_elem(merch_name);
     elem_t *value = ioopm_hash_table_remove(merch_table, key);
     if (!value || value->p == NULL) return;
-    char *confirmation = ask_question_string("Type 'Y'/'N' to confirm/revoke removal: ");
-    if ((confirmation[0]) == 'Y') {
-            merch_t *merch = value->p;
-            free(merch->name);
-            free(merch->description);
-            free(merch);
-            printf("\nMerchandise removed successfully.\n");
-        }
-    else if((confirmation[0]) == 'N'){
-            printf("\nMerchandise NOT removed.\n");
-        }
-    else {
-            printf("Merchandise not found.\n");
+    char *confirmation;
+    while(confirmation[0] != 'Y' || confirmation[0] != 'N'){
+        confirmation = ask_question_string("Type 'Y'/'N' to confirm/revoke removal: ");
+        if ((confirmation[0]) == 'Y') {
+                merch_t *merch = value->p;
+                free(merch->name);
+                free(merch->description);
+                free(merch);
+                printf("\nMerchandise removed successfully.\n");
+                return;
+            }
+        else if((confirmation[0]) == 'N'){
+                printf("\nMerchandise NOT removed.\n");
+                return;
+            }
+        else    {
+                printf("Invalid input.\n");
+            }
         }
     }
 
-
-
-bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price) {
+static void edit_helper(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price){
     elem_t old_key = ptr_elem(old_name);
-    if (!ioopm_hash_table_has_key(merch_table, old_key)) {
-        return false;
-    } 
-
     elem_t *existing = ioopm_hash_table_lookup(merch_table, old_key);
+
     merch_t *merch = existing->p;
 
+    
+    free(merch->name);  
+    merch->name = strdup(new_name);  
 
-    free(merch->name);
-    merch->name = strdup(new_name);
-    free(merch->description);
-    merch->description = strdup(new_description);
-    merch->price = new_price;
+    free(merch->description); 
+    merch->description = strdup(new_description); 
 
+    merch->price = new_price;  
+
+ 
     if (strcmp(old_name, new_name) != 0) {
-        ioopm_hash_table_remove(merch_table, old_key);
-        elem_t new_key = ptr_elem(new_name);
-        ioopm_hash_table_insert(merch_table, new_key, ptr_elem(merch));
+        ioopm_hash_table_remove(merch_table, old_key);  
+        elem_t new_key = ptr_elem(new_name);  
+        ioopm_hash_table_insert(merch_table, new_key, ptr_elem(merch)); 
     }
-    return true;
 }
+
+void edit_merch(ioopm_hash_table_t *merch_table) {
+ 
+    char *old_name = ask_question_string("Enter old name: ");
+    for (int i = 0; old_name[i] != '\0'; i++) {
+        old_name[i] = (unsigned char) toupper(old_name[i]);  
+    }
+
+    if (!ioopm_hash_table_has_key(merch_table, ptr_elem(old_name))) {
+        printf("Merchandise with name '%s' not found.\n", old_name);
+        return; 
+    }
+
+    char *new_name = ask_question_string("Enter new name: ");
+    for (int i = 0; new_name[i] != '\0'; i++) {
+        new_name[i] = (unsigned char) toupper(new_name[i]);  
+    }
+
+    char *new_description = ask_question_string("Enter new description: ");
+    int new_price = ask_question_int("Enter new price: ");
+
+    edit_helper(merch_table, old_name, new_name, new_description, new_price);
+}
+
 
 
 void show_stock(ioopm_hash_table_t *stock_table, char *name) {
@@ -263,6 +298,9 @@ int main() {
     while (1) {
         char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
 
+        for(int i = 0; option[i] != '\0'; i++){
+            option[i] = (unsigned char) toupper(option[i]);
+        }
         switch (*option) {
             case 'A':
                 {
@@ -284,28 +322,9 @@ int main() {
 
             case 'E':
                 {
-                    char old_name[MAX_INPUT], new_name[MAX_INPUT], new_description[MAX_INPUT];
-                    int new_price;
-                    printf("Enter old merchandise name: ");
-                    fgets(old_name, sizeof(old_name), stdin);
-                    strtok(old_name, "\n");
-                    printf("Enter new merchandise name: ");
-                    fgets(new_name, sizeof(new_name), stdin);
-                    strtok(new_name, "\n"); 
-                    printf("Enter new merchandise description: ");
-                    fgets(new_description, sizeof(new_description), stdin);
-                    strtok(new_description, "\n"); 
-                    printf("Enter new merchandise price: ");
-                    scanf("%d", &new_price);
-                    getchar(); 
-
-                    if (edit_merch(merch_table, old_name, new_name, new_description, new_price)) {
-                        printf("Merchandise updated successfully.\n");
-                    } else {
-                        printf("Failed to update merchandise. Check if old name exists.\n");
-                    }
+                    edit_merch(merch_table); 
+                    break;
                 }
-                break;
 
             case 'S':
                 {

@@ -32,7 +32,7 @@ merch_t *create_merch(char *name, char *description, int price);
 void add_merch(ioopm_hash_table_t *merch_table);
 void list_merch(ioopm_hash_table_t *merch_table);
 void remove_merch(ioopm_hash_table_t *merch_table);
-bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price);
+void edit_merch(ioopm_hash_table_t *merch_table);
 
 // Stock management functions
 void show_stock(ioopm_hash_table_t *stock_table, char *name);

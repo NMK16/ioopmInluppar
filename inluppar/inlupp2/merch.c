@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "iterator.h"
-
+#include <ctype.h>
 
 #define MAX_INPUT 256
 
@@ -88,17 +88,28 @@ void list_merch(ioopm_hash_table_t *merch_table){
 
 
 
-bool remove_merch(ioopm_hash_table_t *merch_table, char *name) {
-    elem_t key = ptr_elem(name);
+void remove_merch(ioopm_hash_table_t *merch_table) {
+    char *merch_name = ask_question_string("\nEnter merchandise name to remove: ");
+    elem_t key = ptr_elem(merch_name);
     elem_t *value = ioopm_hash_table_remove(merch_table, key);
-    if (!value || value->p == NULL) return false;
-    
-    merch_t *merch = value->p;
-    free(merch->name);
-    free(merch->description);
-    free(merch);
-    return true;
-}
+    if (!value || value->p == NULL) return;
+    char *confirmation = ask_question_string("Type 'Y'/'N' to confirm/revoke removal: ");
+    if ((confirmation[0]) == 'Y') {
+            merch_t *merch = value->p;
+            free(merch->name);
+            free(merch->description);
+            free(merch);
+            printf("\nMerchandise removed successfully.\n");
+        }
+    else if((confirmation[0]) == 'N'){
+            printf("\nMerchandise NOT removed.\n");
+        }
+    else {
+            printf("Merchandise not found.\n");
+        }
+    }
+
+
 
 bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price) {
     elem_t old_key = ptr_elem(old_name);
@@ -266,21 +277,10 @@ int main() {
 
             case 'D':
                 {
-                    char name[MAX_INPUT], confirmation[MAX_INPUT];
-                    printf("Enter merchandise name to remove: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n"); 
-                    printf("Type 'Y' to confirm removal: ");
-                    fgets(confirmation, sizeof(confirmation), stdin);
-                    if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
-                        if (remove_merch(merch_table, name)) {
-                            printf("Merchandise removed successfully.\n");
-                        } else {
-                            printf("Merchandise not found.\n");
-                        }
-                    }
+                    remove_merch(merch_table);
+                    break;
                 }
-                break;
+                
 
             case 'E':
                 {

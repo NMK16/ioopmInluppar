@@ -31,7 +31,7 @@ bool eq_fn(elem_t a, elem_t b);
 merch_t *create_merch(char *name, char *description, int price);
 void add_merch(ioopm_hash_table_t *merch_table);
 void list_merch(ioopm_hash_table_t *merch_table);
-bool remove_merch(ioopm_hash_table_t *merch_table, char *name);
+void remove_merch(ioopm_hash_table_t *merch_table);
 bool edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price);
 
 // Stock management functions

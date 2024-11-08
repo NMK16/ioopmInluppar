@@ -40,12 +40,12 @@ bool replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_
 
 // Cart management function
 
-void create_cart(ioopm_hash_table_t *cart_table, int cart_id);
-void remove_cart(ioopm_hash_table_t *cart_table, int cart_id);
-void add_to_cart(ioopm_hash_table_t *cart_table, int cart_id, char *name, int quantity);
-void remove_from_cart(ioopm_hash_table_t *cart_table, int cart_id, char *name);
-int calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, int cart_id);
-void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *stock_table, int cart_id);
+void create_cart(ioopm_hash_table_t *cart_table, char* cart_id);
+void remove_cart(ioopm_hash_table_t *cart_table, char* cart_id);
+void add_to_cart(ioopm_hash_table_t *cart_table, char* cart_id, char *name, int quantity);
+void remove_from_cart(ioopm_hash_table_t *cart_table, char* cart_id, char *name, int quantity);
+int calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char* cart_id);
+void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *stock_table, char* cart_id);
 
 
 

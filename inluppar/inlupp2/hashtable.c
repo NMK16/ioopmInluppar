@@ -82,36 +82,29 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
 
 // Helper function for recursive lookup (F14)
 static elem_t *recursive_lookup(ioopm_hash_table_t *ht, entry_t *searching_entry, elem_t key) {
-    // Ensure the entry is valid before proceeding
     if (searching_entry == NULL) {
         return NULL; 
     }
 
-    // Check if the key in the current entry is valid before dereferencing
-    if (searching_entry->key.p == NULL) {
+    printf("Looking for key: %s\n", (char *)key.p);
+
+    // Ensure the entry has a valid key before accessing it
+    if (searching_entry->key.p != NULL) {
+        printf("Checking entry with key: %s\n", (char *)searching_entry->key.p);
+        if (ht->key_eq_fn(searching_entry->key, key)) {
+            printf("Key match found.\n");
+            return &searching_entry->value;
+        }
+    } else {
         fprintf(stderr, "Error: Encountered an entry with an uninitialized key.\n");
-        return NULL;
     }
 
-    // Check if the keys are equal using the provided equality function
-    if (ht->key_eq_fn(searching_entry->key, key)) {
-        // Return a pointer to the value of the found entry
-        return &searching_entry->value; 
-    }
-
-    // Continue the search recursively
-    return recursive_lookup(ht, searching_entry->next, key); 
+    return recursive_lookup(ht, searching_entry->next, key);
 }
 
-/// @brief Lookup the value for a key in the hash table
-/// @param ht the hash table being used
-/// @param key the key to lookup
-/// @return the value mapped to by key, or NULL if not found
+// Lookup function using recursive lookup helper
 elem_t *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key) {
-    // Determine which bucket to search
     int bucket = ht->hash_fn(key) % No_Buckets;
-
-    // Call the recursive lookup starting from the head of the bucket's linked list
     return recursive_lookup(ht, ht->buckets[bucket], key);
 }
 

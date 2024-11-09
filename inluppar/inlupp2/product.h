@@ -17,6 +17,8 @@ typedef struct merch {
     char *name;
     char *description;
     int price;
+    ioopm_list_t *locStocks;
+    int amountInStock;
 } merch_t;
 
 typedef struct stock_location {
@@ -35,20 +37,18 @@ void remove_merch(ioopm_hash_table_t *merch_table);
 void edit_merch(ioopm_hash_table_t *merch_table);
 
 // Stock management functions
-void show_stock(ioopm_hash_table_t *stock_table, char *name);
-bool replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table, char *name, char *location, int quantity);
+void show_stock(ioopm_hash_table_t *stock_table);
+void replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table);
 
 // Cart management function
 
-void create_cart(ioopm_hash_table_t *cart_table, char* cart_id);
-void remove_cart(ioopm_hash_table_t *cart_table, char* cart_id);
-void add_to_cart(ioopm_hash_table_t *cart_table, char* cart_id, char *name, int quantity);
-void remove_from_cart(ioopm_hash_table_t *cart_table, char* cart_id, char *name, int quantity);
-int calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char* cart_id);
+void create_cart(ioopm_hash_table_t *cart_table);
+void remove_cart(ioopm_hash_table_t *cart_table);
+void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
+void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
+void calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
 void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *stock_table, char* cart_id);
 
 
 
 #endif // INVENTORY_SYSTEM_H
-
-

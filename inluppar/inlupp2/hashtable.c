@@ -86,13 +86,9 @@ static elem_t *recursive_lookup(ioopm_hash_table_t *ht, entry_t *searching_entry
         return NULL; 
     }
 
-    printf("Looking for key: %s\n", (char *)key.p);
-
     // Ensure the entry has a valid key before accessing it
     if (searching_entry->key.p != NULL) {
-        printf("Checking entry with key: %s\n", (char *)searching_entry->key.p);
         if (ht->key_eq_fn(searching_entry->key, key)) {
-            printf("Key match found.\n");
             return &searching_entry->value;
         }
     } else {

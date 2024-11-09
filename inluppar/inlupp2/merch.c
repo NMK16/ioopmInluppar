@@ -34,6 +34,8 @@ merch_t *create_merch(char *name, char *description, int price) {
     new_merch->name = strdup(name);
     new_merch->description = strdup(description);
     new_merch->price = price;
+    new_merch->locStocks = ioopm_linked_list_create(eq_fn);
+    new_merch->amountInStock = 0;
     return new_merch;
 }
 
@@ -43,10 +45,6 @@ int cmpstringp(const void *a, const void *b) {
 
 void add_merch(ioopm_hash_table_t *merch_table) {
     char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
-
-    for (int i = 0; merch_name[i] != '\0'; i++) {
-        merch_name[i] = toupper((unsigned char)merch_name[i]);
-    }
     elem_t key = ptr_elem(merch_name);
 
     while(ioopm_hash_table_has_key(merch_table, key)){
@@ -96,32 +94,28 @@ void remove_merch(ioopm_hash_table_t *merch_table) {
     
     char *merch_name = ask_question_string("\nEnter merchandise name to remove: ");
 
-    for (int i = 0; merch_name[i] != '\0'; i++) {
-        merch_name[i] = toupper((unsigned char)merch_name[i]);
-    }
     elem_t key = ptr_elem(merch_name);
-    elem_t *value = ioopm_hash_table_remove(merch_table, key);
+    elem_t *value = ioopm_hash_table_lookup(merch_table, key);
     if (!value || value->p == NULL) return;
-    char *confirmation;
-    while(confirmation[0] != 'Y' || confirmation[0] != 'N'){
-        confirmation = ask_question_string("Type 'Y'/'N' to confirm/revoke removal: ");
-        if ((confirmation[0]) == 'Y') {
-                merch_t *merch = value->p;
-                free(merch->name);
-                free(merch->description);
-                free(merch);
-                printf("\nMerchandise removed successfully.\n");
-                return;
-            }
-        else if((confirmation[0]) == 'N'){
-                printf("\nMerchandise NOT removed.\n");
-                return;
-            }
-        else    {
-                printf("Invalid input.\n");
-            }
+    char *confirmation = ask_question_string("\nType 'Y'/'N' to confirm/deny removal: ");
+    if (toupper(confirmation[0]) == 'Y') {
+            value = ioopm_hash_table_remove(merch_table, key);
+            merch_t *merch = value->p;
+            free(merch->name);
+            free(merch->description);
+            free(merch);
+            printf("\nMerchandise removed successfully.\n");
+            return;
         }
-    }
+    else if(toupper(confirmation[0]) == 'N'){
+            printf("\nMerchandise NOT removed.\n");
+            return;
+        }
+    else{
+            printf("\nInvalid input.\n");
+        }
+}
+    
 
 static void edit_helper(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price){
     elem_t old_key = ptr_elem(old_name);
@@ -169,12 +163,13 @@ void edit_merch(ioopm_hash_table_t *merch_table) {
     edit_helper(merch_table, old_name, new_name, new_description, new_price);
 }
 
-void show_stock(ioopm_hash_table_t *stock_table, char *name) {
+void show_stock(ioopm_hash_table_t *stock_table) {
+    char *name = ask_question_string("\nEnter merchandise name (in all caps) to show stock: ");
     elem_t merch_key = ptr_elem(name);
     elem_t *stock_list = ioopm_hash_table_lookup(stock_table, merch_key);
 
     if (!stock_list || stock_list->p == NULL) {
-        printf("No stock available for %s.\n", name);
+        printf("\nNo stock available for %s.\n", name);
         return;
     }
 
@@ -182,14 +177,14 @@ void show_stock(ioopm_hash_table_t *stock_table, char *name) {
 
     size_t total_locations = ioopm_linked_list_size(locations);
     if (total_locations == 0) {
-        printf("No stock locations found for %s.\n", name);
+        printf("\nNo stock locations found for %s.\n", name);
         return;
     }
 
     // Allocate memory to sort and store unique location keys
     char **location_keys = malloc(total_locations * sizeof(char *));
     if (!location_keys) {
-        printf("Memory allocation failed!\n");
+        printf("\nMemory allocation failed!\n");
         return;
     }
 
@@ -217,114 +212,164 @@ void show_stock(ioopm_hash_table_t *stock_table, char *name) {
 }
 
 
-bool replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table, char *name, char *location, int quantity) {
+void replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table) {
+    char *name = ask_question_string("\nEnter merchandise name in all caps: ");
     elem_t merch_key = ptr_elem(name);
-    if (!ioopm_hash_table_has_key(merch_table, merch_key)) {
-        return false;
+    elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, merch_key);
+    if(merch_elem == NULL){
+        printf("Merchandise not found in inventory:\n");
+        return;
     }
+    merch_t *merch = merch_elem->p;
+    char *location = ask_question_string("\nEnter location name: ");
+    int quantity = ask_question_int("\nEnter quantity: ");
 
-    elem_t *stock_list_elem = ioopm_hash_table_lookup(stock_table, merch_key);
-    ioopm_list_t *locations;
-
-    if (!stock_list_elem || !stock_list_elem->p) {
-        locations = ioopm_linked_list_create(eq_fn);
-        ioopm_hash_table_insert(stock_table, merch_key, ptr_elem(locations));
-    } else {
-        locations = stock_list_elem->p;
-    }
-
-    for (size_t i = 0; i < ioopm_linked_list_size(locations); i++) {
-        elem_t location_elem = ioopm_linked_list_get(locations, i);
+    for (size_t i = 0; i < ioopm_linked_list_size(merch->locStocks); i++) {
+        elem_t location_elem = ioopm_linked_list_get(merch->locStocks, i);
         stock_location_t *stock = location_elem.p;
         
         if (strcmp(stock->location, location) == 0) {
             stock->quantity += quantity; // Update quantity
+            merch->amountInStock += quantity;
             printf("Updated %d units of %s at location %s\n", stock->quantity, name, location);
-            return true;
+            return;
         }
     }
 
     stock_location_t *new_stock = malloc(sizeof(stock_location_t));
     new_stock->location = strdup(location);
     new_stock->quantity = quantity;
-    ioopm_linked_list_append(locations, ptr_elem(new_stock));
-
-    printf("Added %d units of %s at location %s\n", quantity, name, location);
-    return true;
+    ioopm_linked_list_append(merch->locStocks, ptr_elem(new_stock));
+    merch->amountInStock += quantity;
+    printf("\nAdded %d units of %s at location %s\n", quantity, name, location);
 }
 
 
 
-void create_cart(ioopm_hash_table_t *cart_table, char* user_id) {
+void create_cart(ioopm_hash_table_t *cart_table) {
+    char *cart_id = ask_question_string("Enter cart ID: ");
     ioopm_hash_table_t *cart = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);  
-    ioopm_hash_table_insert(cart_table, ptr_elem(user_id), ptr_elem(cart));  
+    ioopm_hash_table_insert(cart_table, ptr_elem(cart_id), ptr_elem(cart));  
+    printf("\nCart %s created successfully.\n", cart_id);
 }
 
 // Remove a user's cart from the cart_table
-void remove_cart(ioopm_hash_table_t *cart_table, char *user_id) {
-    elem_t *cart = ioopm_hash_table_remove(cart_table, ptr_elem(user_id));  // Remove cart from the cart_table
-    if (cart && cart->p) {
-        ioopm_hash_table_destroy(cart->p); 
+void remove_cart(ioopm_hash_table_t *cart_table) {
+    char* cart_id = ask_question_string("Enter cart ID to remove: "); 
+    elem_t *cart = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id)); 
+    if(cart == NULL){
+        printf("\nCart id not found.\n");
+        return;
     }
+    char *confirmation = ask_question_string("\nType 'Y'/'N' to confirm/deny removal: ");
+    if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
+        elem_t *cart = ioopm_hash_table_remove(cart_table, ptr_elem(cart_id)); 
+        if (cart && cart->p) {
+            ioopm_hash_table_destroy(cart->p); 
+        }
+        printf("\nCart removed successfully.\n");
+    }
+    else{
+        printf("\nCart NOT removed.\n");
+        return;
+    }
+
 }
 
 // Add an item to a user's cart (increases the quantity if the item already exists)
-void add_to_cart(ioopm_hash_table_t *cart_table, char *user_id, char *item_name, int quantity) {
-    elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(user_id));  
-    if (!cart_elem || !cart_elem->p) {
+void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table) {
+    char *cart_id = ask_question_string("Enter cart ID: "); 
+    elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));  
+    if (cart_elem == NULL) {
+        printf("\nCart not found!\n");
         return;  
+    }
+    char *merch_name = ask_question_string("Enter merchandise name to add: ");
+    elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, ptr_elem(merch_name));
+    merch_t *merch = merch_elem == NULL ? NULL : merch_elem->p;
+    if(merch == NULL || merch->locStocks->size == 0){
+        printf("\nMerch is either non-existant or out of stock!\n");
+        return;
+    }
+    int quantity = ask_question_int("Enter quantity to add: ");
+    if(quantity > merch->amountInStock){
+        printf("\nThat amount is not currently available in stock. Amount available: %d\n", merch->amountInStock);
+        return;
     }
 
     ioopm_hash_table_t *cart = cart_elem->p;  
     
-    elem_t *item_elem = ioopm_hash_table_lookup(cart, ptr_elem(item_name));
-    if (item_elem) {
+    elem_t *merch_elem_cart = ioopm_hash_table_lookup(cart, ptr_elem(merch_name));
+    if (merch_elem_cart) {
         // Item exists, increase the quantity
-        item_elem->i += quantity;
+        merch_elem_cart->i += quantity;
     } else {
         // Item doesn't exist, add it with the specified quantity
-        ioopm_hash_table_insert(cart, ptr_elem(item_name), int_elem(quantity));
+        ioopm_hash_table_insert(cart, ptr_elem(merch_name), int_elem(quantity));
     }
+    printf("Added %d of %s to cart %s.\n", quantity, merch_name, cart_id);
 }
 
 // Remove an item from a user's cart (decreases the quantity or removes it)
-void remove_from_cart(ioopm_hash_table_t *cart_table, char *user_id, char *item_name, int quantity) {
-    elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(user_id));  
-    if (!cart_elem || !cart_elem->p) {
+void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table) {
+    char *cart_id = ask_question_string("\nEnter cart ID: ");
+    elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));  
+    if (cart_elem == NULL) {
+        printf("\nCart not found!\n");
         return;  
     }
+    char *merch_name = ask_question_string("Enter merchandise name to remove: ");
+    elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, ptr_elem(merch_name));
+    merch_t *merch = merch_elem == NULL ? NULL : merch_elem->p;
+    if(merch == NULL || merch->locStocks->size == 0){
+        printf("\nMerch is either non-existant or out of stock!\n");
+        return;
+    }
+    int quantity = ask_question_int("Enter quantity to remove: ");
 
     ioopm_hash_table_t *cart = cart_elem->p;  
 
-    elem_t *item_elem = ioopm_hash_table_lookup(cart, ptr_elem(item_name));
+    elem_t *item_elem = ioopm_hash_table_lookup(cart, ptr_elem(merch_name));
     if (!item_elem) {
+        printf("Item doesn't exist in cart!");
         return;  // If the item doesn't exist, return
     }
 
     if (item_elem->i > quantity) {
         item_elem->i -= quantity;  // Decrease quantity
-    } else {
-        ioopm_hash_table_remove(cart, ptr_elem(item_name));  
+        printf("\n%d of %s removed from the cart!\n", quantity, merch_name);
+    } else if(item_elem->i == quantity){
+        item_elem->i = 0;
+        ioopm_hash_table_remove(cart, ptr_elem(merch_name));
+        printf("\nAll of %s removed from the cart", merch_name);
+    }
+    else{
+        printf("\nYou only have %d of %s in the cart", item_elem->i, merch_name);
     }
 }
 
 
 
-int calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char* cart_id) {
+void calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table) {
+    char *cart_id = ask_question_string("\nEnter cart ID: ");
     int total_cost = 0;
     elem_t *cart = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));
-    if (!cart || !cart->p) return total_cost;
-
-    ioopm_list_t *cart_list = cart->p;
+    if(cart == NULL || cart->p == NULL){
+        printf("Cart is empty. Total cost: 0");
+        return;
+    }
+    ioopm_hash_table_t *cart_HT = cart->p;
+    ioopm_list_t *cart_list = ioopm_hash_table_keys(cart_HT);
     for (size_t i = 0; i < ioopm_linked_list_size(cart_list); i++) {
         elem_t name = ioopm_linked_list_get(cart_list, i);
-        elem_t *merch = ioopm_hash_table_lookup(merch_table, name);
-        if (merch && merch->p) {
-            merch_t *merch_item = merch->p;
-            total_cost += merch_item->price;
+        elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, name);
+        elem_t *item_elem = ioopm_hash_table_lookup(cart->p, name);
+        if (merch_elem != NULL && merch_elem->p != NULL) {
+            merch_t *merch_item = merch_elem->p;
+            total_cost += merch_item->price*item_elem->i;
         }
     }
-    return total_cost;
+    printf("Total cost: %d", total_cost);
 }
 
 void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *stock_table, char* cart_id) {
@@ -374,113 +419,56 @@ int main() {
 
             case 'S':
                 {
-                    char name[MAX_INPUT];
-                    printf("Enter merchandise name (in all caps) to show stock: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n");
-                    show_stock(stock_table, name);
+                    show_stock(stock_table);
                 }
                 break;
 
             case 'P':
                 {
-                    char name[MAX_INPUT], location[MAX_INPUT];
-                    int quantity;
-                    printf("Enter merchandise name in all capss: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n"); 
-                    printf("Enter storage location: ");
-                    fgets(location, sizeof(location), stdin);
-                    strtok(location, "\n"); 
-                    printf("Enter quantity to add: ");
-                    scanf("%d", &quantity);
-                    getchar(); 
-
-                    if (replenish_stock(merch_table, stock_table, name, location, quantity)) {
-                        printf("Stock replenished successfully.\n");
-                    } else {
-                        printf("Failed to replenish stock. Merchandise may not exist.\n");
-                    }
+                    replenish_stock(merch_table, stock_table);
+                    break;                    
                 }
-                break;
+
 
             case 'C':
                 {
-                    char* cart_id = ask_question_string("Enter cart ID: "); 
-                    create_cart(cart_table, cart_id);
-                    printf("Cart %s created successfully.\n", cart_id);
+                    create_cart(cart_table);
+                    break;
                 }
-                break;
 
             case 'R':
                 {
-                    char* cart_id = ask_question_string("Enter cart ID: "); 
-                    char confirmation[MAX_INPUT];
-                    printf("Enter cart ID to remove: ");
-                    getchar(); 
-                    printf("Type 'Y' to confirm removal: ");
-                    fgets(confirmation, sizeof(confirmation), stdin);
-                    if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
-                        remove_cart(cart_table, cart_id);
-                        printf("Cart removed successfully.\n");
-                    }
+                    remove_cart(cart_table);
+                    break;
                 }
-                break;
 
             case '+':
                 {
-                    char* cart_id = ask_question_string("Enter cart ID: "); 
-                    char name[MAX_INPUT];
-                    int quantity;
-                    printf("Enter cart ID: ");
-                    scanf("%d", &cart_id);
-                    getchar(); 
-                    printf("Enter merchandise name: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n"); 
-                    printf("Enter quantity to add: ");
-                    scanf("%d", &quantity);
-                    getchar(); 
-                    add_to_cart(cart_table, cart_id, name, quantity);
-                    printf("Added %d of %s to cart %d.\n", quantity, name, cart_id);
+                    add_to_cart(cart_table, merch_table);
+                    break;
                 }
-                break;
 
             case '-':
                 {
-                    int cart_id;
-                    char name[MAX_INPUT];
-                    printf("Enter cart ID: ");
-                    scanf("%d", &cart_id);
-                    getchar(); 
-                    printf("Enter merchandise name: ");
-                    fgets(name, sizeof(name), stdin);
-                    strtok(name, "\n"); 
-                    int quantity = ask_question_int("Write the quanitity that you want to remove:");
-                    remove_from_cart(cart_table, cart_id, name, quantity);
-                    printf("Removed %s from cart %d.\n", name, cart_id);
+                    remove_from_cart(cart_table, merch_table);
+                    break;
                 }
-                break;
 
             case '=':
                 {
-                    int cart_id = 0;
-                    printf("Enter cart ID: ");
-                    scanf("%d", &cart_id);
-                    getchar(); 
-                    int cost = calculate_cost(cart_table, merch_table, cart_id);
-                    printf("Total cost for cart %d is: %d\n", cart_id, cost);
+
+                    calculate_cost(cart_table, merch_table);
+                    break;
                 }
-                break;
 
             case 'O':
                 {
-                    int cart_id;
+                    char *cart_id;
                     printf("Enter cart ID for checkout: ");
-                    scanf("%d", &cart_id);
+                    scanf("%s", cart_id);
                     getchar(); 
                     checkout(cart_table, stock_table, cart_id);
-                    printf("Checked out cart %d.\n", cart_id);
+                    printf("Checked out cart %s.\n", cart_id);
                 }
                 break;
 

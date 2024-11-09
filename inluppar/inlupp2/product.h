@@ -37,8 +37,8 @@ void remove_merch(ioopm_hash_table_t *merch_table);
 void edit_merch(ioopm_hash_table_t *merch_table);
 
 // Stock management functions
-void show_stock(ioopm_hash_table_t *stock_table);
-void replenish_stock(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *stock_table);
+void show_stock(ioopm_hash_table_t *merch_table);
+void replenish_stock(ioopm_hash_table_t *merch_table);
 
 // Cart management function
 
@@ -47,7 +47,7 @@ void remove_cart(ioopm_hash_table_t *cart_table);
 void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
 void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
 void calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
-void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *stock_table, char* cart_id);
+void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table);
 
 
 

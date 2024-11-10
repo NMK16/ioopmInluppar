@@ -12,6 +12,10 @@
 #define MAX_INPUT 256
 
 // Compile command: gcc merch_test.c hashtable.c linked_list.c merch.c utils.c -o merch_test -lcunit
+
+//FIX TESTS
+
+//VALGRIND
 #define int_elem(x) (elem_t) { .i = (x) }
 #define ptr_elem(x) (elem_t) { .p = (x) }
 
@@ -81,6 +85,12 @@ void list_merch(ioopm_hash_table_t *merch_table){
     }
     qsort(merch_array, size, sizeof(char *), cmpstringp);
     for (int j = 0; j < size; j++) {
+        if(j % 20 == 0 && j != 0){
+            char *listMore = ask_question_string_empty("\nWould you like to list more?");
+            if (toupper(listMore[0]) == 'N'){
+                return;
+            }
+        }
         char *merch = merch_array[j];
         printf("\n%d. %s\n", j+1, merch);  // Print merch name
     }

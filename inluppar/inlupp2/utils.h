@@ -20,7 +20,7 @@ answer_t make_float(const char *str);
 bool not_empty(const char *str);
 answer_t ask_question(const char *question, check_func check, convert_func convert);
 char *ask_question_string(const char *question);
+char *ask_question_string_empty(const char *question);
 int ask_question_int(const char *question);
 double ask_question_float(const char *question);
-
 #endif /* __UTILS_H__ */

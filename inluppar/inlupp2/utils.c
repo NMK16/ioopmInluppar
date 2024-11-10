@@ -27,6 +27,10 @@ bool not_empty(const char *str) {
     return strlen(str) > 0;
 }
 
+bool always_true(const char *str) {
+    return true;
+}
+
 bool is_number(const char *str) {
     if (*str == '\0') {
         return false;
@@ -116,4 +120,7 @@ char *ask_question_string(const char *question) {
     return ask_question(question, not_empty, convert_string).string_value;
 }
 
+char *ask_question_string_empty(const char *question) {
+    return ask_question(question, always_true, convert_string).string_value;
+}
 

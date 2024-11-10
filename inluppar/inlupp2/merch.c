@@ -16,6 +16,7 @@
 //FIX TESTS
 
 //VALGRIND
+
 #define int_elem(x) (elem_t) { .i = (x) }
 #define ptr_elem(x) (elem_t) { .p = (x) }
 
@@ -25,15 +26,12 @@ bool eq_fn(elem_t e1, elem_t e2)
 }
 
 int hash_fn(elem_t key) {
-    int hash = 0;
-    for (char *str = key.p; *str != '\0'; str++) {
-        hash = (hash * 31) + *str;  // hash * 31 + character value
-    }
-    return hash % 17;  // modulo to fit within the table size
+    int *hash = (int *) key.p;
+    return *hash % 17;  // modulo to fit within the table size
 }
 
 merch_t *create_merch(char *name, char *description, int price) {
-    merch_t *new_merch = malloc(sizeof(merch_t));
+    merch_t *new_merch = calloc(1, sizeof(merch_t));
     if (!new_merch) return NULL;
     new_merch->name = strdup(name);
     new_merch->description = strdup(description);
@@ -72,7 +70,7 @@ void list_merch(ioopm_hash_table_t *merch_table){
     allValues->current = ioopm_hash_table_keys(merch_table)->head;
     size_t size = ioopm_linked_list_size(allValues->list);
     int i = 0;
-    char **merch_array = calloc(size, sizeof(merch_t));
+    char **merch_array = calloc(1, sizeof(merch_t));
     while (ioopm_iterator_has_current(allValues)) {
         merch_array[i] = (char *)allValues->current->value.p;  // Cast and store pointer to merch_t
         if(ioopm_iterator_has_next(allValues)){
@@ -94,6 +92,7 @@ void list_merch(ioopm_hash_table_t *merch_table){
         char *merch = merch_array[j];
         printf("\n%d. %s\n", j+1, merch);  // Print merch name
     }
+    printf("Merch table size: %zu\n", ioopm_hash_table_size(merch_table));
 }
 
 
@@ -463,7 +462,6 @@ int main() {
 
             case 'L':
                 list_merch(merch_table);
-                printf("Merch table size: %zu\n", ioopm_hash_table_size(merch_table)); //Den ökar men de list_merch printar inte us svaren
                 break;
 
             case 'D':

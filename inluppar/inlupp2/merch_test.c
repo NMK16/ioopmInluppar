@@ -22,7 +22,7 @@ int clean_suite(void) { return 0; }
 static void merch_table_destroy(ioopm_hash_table_t *merch_table) {
     ioopm_list_t *merch_value_list = ioopm_hash_table_values(merch_table);
     ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(merch_value_list);
-    for(int i = 0; i < ioopm_linked_list_size(merch_value_list); i++){
+    for(int i = 0; i < ioopm_linked_list_size(merch_value_list) && ioopm_iterator_has_current(iterator_list); i++){
         destroy_merch((merch_t *)iterator_list->current->value.p);
         ioopm_iterator_next(iterator_list);
     }
@@ -37,9 +37,7 @@ void test_create_merch(void) {
     CU_ASSERT_STRING_EQUAL(merch->name, "Vara1");
     CU_ASSERT_STRING_EQUAL(merch->description, "Test Vara");
     CU_ASSERT_EQUAL(merch->price, 100);
-    free(merch->name);
-    free(merch->description);
-    free(merch);
+    destroy_merch(merch);
 }
 
 void test_add_merch(void) {
@@ -95,46 +93,46 @@ void test_replenish_stock(void) {
     //ioopm_hash_table_destroy(merch_table);
     merch_table_destroy(merch_table);}
 
-// void test_create_Vagn(void) {
-//     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     create_cart(cart_table, "Vagn1");
-//     CU_ASSERT_TRUE(ioopm_hash_table_has_key(cart_table, ptr_elem("Vagn1")));
-//     ioopm_hash_table_destroy(cart_table);
-// }
+void test_create_cart(void) {
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    create_cart(cart_table, "Vagn1");
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(cart_table, ptr_elem("Vagn1")));
+    ioopm_hash_table_destroy(cart_table);
+}
 
-// void test_remove_Vagn(void) {
-//     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     create_cart(cart_table, "Vagn2");
-//     remove_cart(cart_table, "Vagn2", "Y");
-//     CU_ASSERT_FALSE(ioopm_hash_table_has_key(cart_table, ptr_elem("Vagn2")));
-//     ioopm_hash_table_destroy(cart_table);
-// }
+void test_remove_cart(void) {
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    create_cart(cart_table, "Vagn2");
+    remove_cart(cart_table, "Vagn2", "Y");
+    CU_ASSERT_FALSE(ioopm_hash_table_has_key(cart_table, ptr_elem("Vagn2")));
+    ioopm_hash_table_destroy(cart_table);
+}
 
 
 
-// void test_add_to_Vagn(void) {
-//     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     add_merch(merch_table, "Vara9", "Vara to add to Vagn", 900);
-//     replenish_stock(merch_table, "Vara9", "Varuhus C", 50);
-//     create_cart(cart_table, "Vagn3");
-//     add_to_cart(cart_table, merch_table, "Vagn3", "Vara9", 5);
-//     ioopm_hash_table_destroy(cart_table);
+void test_add_to_cart(void) {
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    add_merch(merch_table, "Vara9", "Vara to add to Vagn", 900);
+    replenish_stock(merch_table, "Vara9", "Varuhus C", 50);
+    create_cart(cart_table, "Vagn3");
+    add_to_cart(cart_table, merch_table, "Vagn3", "Vara9", 5);
+    ioopm_hash_table_destroy(cart_table);
     
 
-// }
+}
 
-// void test_remove_from_Vagn(void) {
-//     ioopm_hash_table_t *Vagn_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     add_merch(merch_table, "Vara10", "Vara in Vagn", 1000);
-//     replenish_stock(merch_table, "Vara10", "Varuhus D", 100);
-//     create_cart(Vagn_table, "Vagn4");
-//     add_to_cart(Vagn_table, merch_table, "Vagn4", "Vara10", 10);
-//     remove_from_cart(Vagn_table, merch_table, "Vagn4", "Vara10", 5);
-//     ioopm_hash_table_destroy(Vagn_table);
-//     ioopm_hash_table_destroy(merch_table);
-// }
+void test_remove_from_cart(void) {
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    add_merch(merch_table, "Vara10", "Vara in Vagn", 1000);
+    replenish_stock(merch_table, "Vara10", "Varuhus D", 100);
+    create_cart(cart_table, "Vagn4");
+    add_to_cart(cart_table, merch_table, "Vagn4", "Vara10", 10);
+    remove_from_cart(cart_table, merch_table, "Vagn4", "Vara10", 5);
+    ioopm_hash_table_destroy(cart_table);
+    ioopm_hash_table_destroy(merch_table);
+}
 
 void test_calculate_cost(void) {
     ioopm_hash_table_t *Vagn_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
@@ -170,12 +168,12 @@ int main() {
     CU_add_test(suite, "Edit Merch", test_edit_merch);
     CU_add_test(suite, "Show Stock", test_show_stock);
     CU_add_test(suite, "Replenish Stock", test_replenish_stock);
-    // CU_add_test(suite, "Create Vagn", test_create_Vagn);
-    // CU_add_test(suite, "Remove Vagn", test_remove_Vagn);
-    // CU_add_test(suite, "Add to Vagn", test_add_to_Vagn);
-    // CU_add_test(suite, "Remove from Vagn", test_remove_from_Vagn);
-    // CU_add_test(suite, "Calculate Cost", test_calculate_cost);
-    // CU_add_test(suite, "Checkout", test_checkout);
+    CU_add_test(suite, "Create Vagn", test_create_cart);
+    CU_add_test(suite, "Remove Vagn", test_remove_cart);
+    CU_add_test(suite, "Add to Vagn", test_add_to_cart);
+    CU_add_test(suite, "Remove from Vagn", test_remove_from_cart);
+    CU_add_test(suite, "Calculate Cost", test_calculate_cost);
+    CU_add_test(suite, "Checkout", test_checkout);
 
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();

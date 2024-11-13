@@ -54,7 +54,8 @@ void test_remove_merch(void) {
     remove_merch(merch_table, "Vara3", "Y");
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(merch_table, ptr_elem("Vara3")));
     //ioopm_hash_table_destroy(merch_table);
-    merch_table_destroy(merch_table);}
+    // merch_table_destroy(merch_table);
+    }
 
 void test_list_merch(void) {
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
@@ -118,6 +119,7 @@ void test_add_to_cart(void) {
     create_cart(cart_table, "Vagn3");
     add_to_cart(cart_table, merch_table, "Vagn3", "Vara9", 5);
     ioopm_hash_table_destroy(cart_table);
+    merch_table_destroy(merch_table);
     
 
 }
@@ -131,7 +133,7 @@ void test_remove_from_cart(void) {
     add_to_cart(cart_table, merch_table, "Vagn4", "Vara10", 10);
     remove_from_cart(cart_table, merch_table, "Vagn4", "Vara10", 5);
     ioopm_hash_table_destroy(cart_table);
-    ioopm_hash_table_destroy(merch_table);
+    merch_table_destroy(merch_table);
 }
 
 void test_calculate_cost(void) {
@@ -142,7 +144,7 @@ void test_calculate_cost(void) {
     add_to_cart(Vagn_table, merch_table, "Vagn5", "Vara11", 3);
     calculate_cost(Vagn_table, merch_table, "Vagn5");
     ioopm_hash_table_destroy(Vagn_table);
-    ioopm_hash_table_destroy(merch_table);
+    merch_table_destroy(merch_table);
 }
 
 void test_checkout(void) {
@@ -154,7 +156,7 @@ void test_checkout(void) {
     add_to_cart(Vagn_table, merch_table, "Vagn6", "Vara12", 5);
     checkout(Vagn_table, merch_table, "Vagn6");
     ioopm_hash_table_destroy(Vagn_table);
-    ioopm_hash_table_destroy(merch_table);
+    merch_table_destroy(merch_table);
 }
 
 int main() {
@@ -168,10 +170,10 @@ int main() {
     CU_add_test(suite, "Edit Merch", test_edit_merch);
     CU_add_test(suite, "Show Stock", test_show_stock);
     CU_add_test(suite, "Replenish Stock", test_replenish_stock);
-    CU_add_test(suite, "Create Vagn", test_create_cart);
-    CU_add_test(suite, "Remove Vagn", test_remove_cart);
-    CU_add_test(suite, "Add to Vagn", test_add_to_cart);
-    CU_add_test(suite, "Remove from Vagn", test_remove_from_cart);
+    CU_add_test(suite, "Create Cart", test_create_cart);
+    CU_add_test(suite, "Remove CArt", test_remove_cart);
+    CU_add_test(suite, "Add to Cart", test_add_to_cart);
+    CU_add_test(suite, "Remove from Cart", test_remove_from_cart);
     CU_add_test(suite, "Calculate Cost", test_calculate_cost);
     CU_add_test(suite, "Checkout", test_checkout);
 

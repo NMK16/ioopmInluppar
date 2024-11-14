@@ -48,8 +48,28 @@ void destroy_merch(merch_t *merch){
     free(merch);
 }
 
-void destroy_cart(ioopm_hash_table_t *ht){
+void cart_table_destroy(ioopm_hash_table_t *cart_table) {
+    ioopm_list_t *cart_table_list = ioopm_hash_table_values(cart_table);
+    ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(cart_table_list);
+    for(int i = 0; i < ioopm_linked_list_size(cart_table_list) && ioopm_iterator_has_current(iterator_list); i++){
+        ioopm_hash_table_destroy(iterator_list->current->value.p);
+        ioopm_iterator_next(iterator_list);
+    }
+    ioopm_iterator_destroy(iterator_list);
+    ioopm_linked_list_destroy(cart_table_list);
+    ioopm_hash_table_destroy(cart_table);
+}
 
+void merch_table_destroy(ioopm_hash_table_t *merch_table) {
+    ioopm_list_t *merch_value_list = ioopm_hash_table_values(merch_table);
+    ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(merch_value_list);
+    for(int i = 0; i < ioopm_linked_list_size(merch_value_list) && ioopm_iterator_has_current(iterator_list); i++){
+        destroy_merch((merch_t *)iterator_list->current->value.p);
+        ioopm_iterator_next(iterator_list);
+    }
+    ioopm_iterator_destroy(iterator_list);
+    ioopm_linked_list_destroy(merch_value_list);
+    ioopm_hash_table_destroy(merch_table);
 }
 
 int cmpstringp(const void *a, const void *b) {
@@ -184,11 +204,14 @@ void show_stock(ioopm_hash_table_t *merch_table, char *name) {
     elem_t merch_key = ptr_elem((name));
     elem_t *stock_list = ioopm_hash_table_lookup(merch_table, merch_key);
 
-    if (!stock_list || stock_list->p == NULL) {
+    if (!stock_list) {
         printf("\nNo stock available for %s.\n", name);
         return;
     }
-
+    if(stock_list->p == NULL){
+        printf("\nNo stock available for %s.\n", name);
+        return;
+    }
     merch_t *merch = stock_list->p;
     ioopm_list_t *locations = merch->locStocks;
     if (locations->size == 0) {
@@ -197,13 +220,13 @@ void show_stock(ioopm_hash_table_t *merch_table, char *name) {
     }
 
     // Allocate memory to sort and store unique location keys
-    char **location_keys = malloc(locations->size * sizeof(char *));
+    char **location_keys = calloc(locations->size, 255 * sizeof(char *));
     if (!location_keys) {
         printf("\nMemory allocation failed!\n");
         return;
     }
 
-    for (size_t i = 0; i < locations->size; i++) {
+    for (size_t i = 0; i < locations->size-1; i++) {
         elem_t location_elem = ioopm_linked_list_get(locations, i);
         stock_location_t *stock = location_elem.p;
         location_keys[i] = stock->location;
@@ -213,7 +236,7 @@ void show_stock(ioopm_hash_table_t *merch_table, char *name) {
     qsort(location_keys, locations->size, sizeof(char *), cmpstringp);
 
     // Print stock quantities for each unique location
-    for (size_t i = 0; i < locations->size; i++) {
+    for (size_t i = 0; i < locations->size-1; i++) {
         if (i > 0 && strcmp(location_keys[i], location_keys[i - 1]) == 0) {
             continue;  // Skip duplicate locations
         }
@@ -252,10 +275,11 @@ void replenish_stock(ioopm_hash_table_t *merch_table, char *name, char *location
     }
 
     stock_location_t *new_stock = malloc(sizeof(stock_location_t));
-    new_stock->location = strdup(location);
+    new_stock->location = location;
     new_stock->quantity = quantity;
     ioopm_linked_list_append(merch->locStocks, ptr_elem(new_stock));
     merch->amountInStock += quantity;
+    free(new_stock);
     printf("\nAdded %d units of %s at location %s\n", quantity, name, location);
 }
 
@@ -403,7 +427,7 @@ void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, c
 
     ioopm_hash_table_t *cart = cart_elem->p;
     ioopm_list_t *cart_list = ioopm_hash_table_keys(cart);
-    for (size_t i = 0; i < ioopm_linked_list_size(cart_list); i++) {
+    for (size_t i = 0; i < ioopm_linked_list_size(cart_list)-1; i++) {
         elem_t merch_name = ioopm_linked_list_get(cart_list, i);
         elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, merch_name);
         elem_t *item_elem = ioopm_hash_table_lookup(cart, merch_name);
@@ -422,8 +446,7 @@ void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, c
         }
     }
     ioopm_linked_list_destroy(cart_list);
-    ioopm_hash_table_remove(cart_table, ptr_elem(cart_id));
-    ioopm_hash_table_destroy(cart);
+    cart_table_destroy(cart_table);
     printf("\nChecked out cart %s.\n", cart_id);
 }
 

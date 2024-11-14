@@ -19,17 +19,6 @@ static int hash_fn(elem_t key) {
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
 
-static void merch_table_destroy(ioopm_hash_table_t *merch_table) {
-    ioopm_list_t *merch_value_list = ioopm_hash_table_values(merch_table);
-    ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(merch_value_list);
-    for(int i = 0; i < ioopm_linked_list_size(merch_value_list) && ioopm_iterator_has_current(iterator_list); i++){
-        destroy_merch((merch_t *)iterator_list->current->value.p);
-        ioopm_iterator_next(iterator_list);
-    }
-    ioopm_iterator_destroy(iterator_list);
-    ioopm_linked_list_destroy(merch_value_list);
-    ioopm_hash_table_destroy(merch_table);
-}
 
 void test_create_merch(void) {
     merch_t *merch = create_merch("Vara1", "Test Vara", 100);
@@ -54,8 +43,8 @@ void test_remove_merch(void) {
     remove_merch(merch_table, "Vara3", "Y");
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(merch_table, ptr_elem("Vara3")));
     //ioopm_hash_table_destroy(merch_table);
-    // merch_table_destroy(merch_table);
-    }
+    merch_table_destroy(merch_table);
+}
 
 void test_list_merch(void) {
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
@@ -82,8 +71,8 @@ void test_show_stock(void) {
     add_merch(merch_table, "Vara7", "Test Vara", 700);
     replenish_stock(merch_table, "Vara7", "Varuhus A", 10);
     show_stock(merch_table, "Vara7");
-    //ioopm_hash_table_destroy(merch_table);
-    merch_table_destroy(merch_table);}
+    merch_table_destroy(merch_table);
+}
 
 void test_replenish_stock(void) {
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
@@ -98,7 +87,7 @@ void test_create_cart(void) {
     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     create_cart(cart_table, "Vagn1");
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(cart_table, ptr_elem("Vagn1")));
-    ioopm_hash_table_destroy(cart_table);
+    cart_table_destroy(cart_table);
 }
 
 void test_remove_cart(void) {
@@ -118,9 +107,8 @@ void test_add_to_cart(void) {
     replenish_stock(merch_table, "Vara9", "Varuhus C", 50);
     create_cart(cart_table, "Vagn3");
     add_to_cart(cart_table, merch_table, "Vagn3", "Vara9", 5);
-    ioopm_hash_table_destroy(cart_table);
     merch_table_destroy(merch_table);
-    
+    cart_table_destroy(cart_table);
 
 }
 
@@ -132,30 +120,29 @@ void test_remove_from_cart(void) {
     create_cart(cart_table, "Vagn4");
     add_to_cart(cart_table, merch_table, "Vagn4", "Vara10", 10);
     remove_from_cart(cart_table, merch_table, "Vagn4", "Vara10", 5);
-    ioopm_hash_table_destroy(cart_table);
     merch_table_destroy(merch_table);
+    cart_table_destroy(cart_table);
 }
 
 void test_calculate_cost(void) {
-    ioopm_hash_table_t *Vagn_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     add_merch(merch_table, "Vara11", "Vara to calculate", 1100);
-    create_cart(Vagn_table, "Vagn5");
-    add_to_cart(Vagn_table, merch_table, "Vagn5", "Vara11", 3);
-    calculate_cost(Vagn_table, merch_table, "Vagn5");
-    ioopm_hash_table_destroy(Vagn_table);
+    create_cart(cart_table, "Vagn5");
+    add_to_cart(cart_table, merch_table, "Vagn5", "Vara11", 3);
+    calculate_cost(cart_table, merch_table, "Vagn5");
     merch_table_destroy(merch_table);
+    cart_table_destroy(cart_table);
 }
 
 void test_checkout(void) {
-    ioopm_hash_table_t *Vagn_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     add_merch(merch_table, "Vara12", "Vara to checkout", 1200);
     replenish_stock(merch_table, "Vara12", "Varuhus E", 40);
-    create_cart(Vagn_table, "Vagn6");
-    add_to_cart(Vagn_table, merch_table, "Vagn6", "Vara12", 5);
-    checkout(Vagn_table, merch_table, "Vagn6");
-    ioopm_hash_table_destroy(Vagn_table);
+    create_cart(cart_table, "Vagn6");
+    add_to_cart(cart_table, merch_table, "Vagn6", "Vara12", 5);
+    checkout(cart_table, merch_table, "Vagn6");
     merch_table_destroy(merch_table);
 }
 

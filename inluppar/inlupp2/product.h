@@ -1,7 +1,6 @@
 #ifndef INVENTORY_SYSTEM_H
 #define INVENTORY_SYSTEM_H
 
-#include "product.h"
 #include "hashtable.h"
 #include "linked_list.h"
 #include "utils.h"
@@ -48,7 +47,8 @@ void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table
 void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id, char *merch_name, int quantity);
 void calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id);
 void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id);
-
+void cart_table_destroy(ioopm_hash_table_t *cart_table);
+void merch_table_destroy(ioopm_hash_table_t *merch_table);
 
 
 #endif // INVENTORY_SYSTEM_H

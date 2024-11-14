@@ -1,8 +1,22 @@
 A
-Kritor
-Vita kritor
+egg
+egg
+2
+p
+egg
+a25
 20
-L
-Y
+p
+egg
+b25
+20
+s
+egg
+p
+egg
+a25
+20
+s
+egg
 Q
 Y

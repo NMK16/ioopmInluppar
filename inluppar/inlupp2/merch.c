@@ -30,6 +30,7 @@ int hash_fn(elem_t key) {
     return *hash % 17;  
 }
 
+
 merch_t *create_merch(char *name, char *description, int price) {
     merch_t *new_merch = calloc(1, sizeof(merch_t));
     if (!new_merch) return NULL;
@@ -76,7 +77,7 @@ int cmpstringp(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
 }
 
-void add_merch(ioopm_hash_table_t *merch_table, char *merch_name, char *desc, int price) {
+void add_merch(ioopm_hash_table_t *merch_table, int price, char *desc,  char *merch_name) {
     // char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
     elem_t key = ptr_elem(merch_name);
 
@@ -113,8 +114,7 @@ void list_merch(ioopm_hash_table_t *merch_table, char *listMore){
 
     qsort(merch_array, size, sizeof(char *), cmpstringp);
     for (int j = 0; j < size; j++) {
-        if(j % 20 == 0 && j != 0){
-            // char *listMore = ask_question_string_empty("\nWould you like to list more?");
+        if(j % 20 == 0 && j > 0){
             if (toupper(listMore[0]) == 'N'){
                 return;
             }
@@ -133,7 +133,7 @@ void list_merch(ioopm_hash_table_t *merch_table, char *listMore){
 
 
 
-void remove_merch(ioopm_hash_table_t *merch_table, char *merch_name, char *confirmation) {
+void remove_merch(ioopm_hash_table_t *merch_table, char *confirmation, char *merch_name) {
     elem_t key = ptr_elem(merch_name);
     elem_t *value = ioopm_hash_table_lookup(merch_table, key);
     
@@ -158,7 +158,7 @@ void remove_merch(ioopm_hash_table_t *merch_table, char *merch_name, char *confi
     free(value);  
 }
 
-static void edit_helper(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price){
+static void edit_helper(ioopm_hash_table_t *merch_table, int new_price, char *new_description, char *new_name, char *old_name){
     elem_t old_key = ptr_elem(old_name);
     elem_t *existing = ioopm_hash_table_lookup(merch_table, old_key);
 
@@ -175,13 +175,13 @@ static void edit_helper(ioopm_hash_table_t *merch_table, char *old_name, char *n
 
  
     if (strcmp(old_name, new_name) != 0) {
-        ioopm_hash_table_remove(merch_table, old_key);  
+        free(ioopm_hash_table_remove(merch_table, old_key));  
         elem_t new_key = ptr_elem(new_name);  
         ioopm_hash_table_insert(merch_table, new_key, ptr_elem(merch)); 
     }
 }
 
-void edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name, char *new_description, int new_price) {
+void edit_merch(ioopm_hash_table_t *merch_table, int new_price,char *new_description, char *new_name, char *old_name) {
  
     // char *old_name = ask_question_string("Enter old name: ");
 
@@ -196,7 +196,7 @@ void edit_merch(ioopm_hash_table_t *merch_table, char *old_name, char *new_name,
     // char *new_description = ask_question_string("Enter new description: ");
     // int new_price = ask_question_int("Enter new price: ");
 
-    edit_helper(merch_table, old_name, new_name, new_description, new_price);
+    edit_helper(merch_table, new_price, new_description, new_name, old_name);
 }
 
 void show_stock(ioopm_hash_table_t *merch_table, char *name) {
@@ -220,7 +220,7 @@ void show_stock(ioopm_hash_table_t *merch_table, char *name) {
     }
 
     // Allocate memory to sort and store unique location keys
-    char **location_keys = calloc(locations->size, 255 * sizeof(char *));
+    char **location_keys = calloc(locations->size, sizeof(char *));
     if (!location_keys) {
         printf("\nMemory allocation failed!\n");
         return;
@@ -249,8 +249,18 @@ void show_stock(ioopm_hash_table_t *merch_table, char *name) {
     free(location_keys);
 }
 
+//Helper function for location in replenish stock
+static int is_valid_shelf(const char *shelf) {
+    if (strlen(shelf) != 3) {
+        return false;
+    }
+    if (!isalpha(shelf[0]) || !isdigit(shelf[1]) || !isdigit(shelf[2])) {
+        return false;
+    }
+    return true;
+}
 
-void replenish_stock(ioopm_hash_table_t *merch_table, char *name, char *location, int quantity) {
+void replenish_stock(ioopm_hash_table_t *merch_table, int quantity, char *location, char *name) {
     // char *name = ask_question_string("\nEnter merchandise name in all caps: ");
     elem_t merch_key = ptr_elem(name);
     elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, merch_key);
@@ -262,12 +272,17 @@ void replenish_stock(ioopm_hash_table_t *merch_table, char *name, char *location
     // char *location = ask_question_string("\nEnter location name: ");
     // int quantity = ask_question_int("\nEnter quantity: ");
 
+    if(!is_valid_shelf(location)){
+        printf("\n Not a valid location, try with a letter followed by two digits \n");
+        return;
+    }
+
     for (size_t i = 0; i < ioopm_linked_list_size(merch->locStocks); i++) {
         elem_t location_elem = ioopm_linked_list_get(merch->locStocks, i);
         stock_location_t *stock = location_elem.p;
         
         if (strcmp(stock->location, location) == 0) {
-            stock->quantity += quantity; // Update quantity
+            stock->quantity += quantity;
             merch->amountInStock += quantity;
             printf("Updated %d units of %s at location %s\n", stock->quantity, name, location);
             return;
@@ -293,7 +308,7 @@ void create_cart(ioopm_hash_table_t *cart_table, char *cart_id) {
 }
 
 // Remove a user's cart from the cart_table
-void remove_cart(ioopm_hash_table_t *cart_table, char *cart_id, char *confirmation) {
+void remove_cart(ioopm_hash_table_t *cart_table, char *confirmation, char *cart_id) {
     // char* cart_id = ask_question_string("Enter cart ID to remove: "); 
     elem_t *elem_cart = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id)); 
     if(elem_cart == NULL){
@@ -316,7 +331,7 @@ void remove_cart(ioopm_hash_table_t *cart_table, char *cart_id, char *confirmati
 }
 
 // Add an item to a user's cart (increases the quantity if the item already exists)
-void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id, char *merch_name, int quantity) {
+void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, int quantity, char *merch_name, char *cart_id) {
     // char *cart_id = ask_question_string("Enter cart ID: "); 
     elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));  
     if (cart_elem == NULL) {
@@ -340,17 +355,17 @@ void add_to_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table
     
     elem_t *merch_elem_cart = ioopm_hash_table_lookup(cart, ptr_elem(merch_name));
     if (merch_elem_cart) {
-        // Item exists, increase the quantity
+        // Item exists, it will increase the quantity
         merch_elem_cart->i += quantity;
     } else {
-        // Item doesn't exist, add it with the specified quantity
+        // IF Item doesn't exist, add it with the specified quantity
         ioopm_hash_table_insert(cart, ptr_elem(merch_name), int_elem(quantity));
     }
     printf("Added %d of %s to cart %s.\n", quantity, merch_name, cart_id);
 }
 
 // Remove an item from a user's cart (decreases the quantity or removes it)
-void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id, char *merch_name, int quantity) {
+void remove_from_cart(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, int quantity, char *merch_name, char *cart_id) {
     // char *cart_id = ask_question_string("\nEnter cart ID: ");
     elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));  
     if (cart_elem == NULL) {
@@ -415,6 +430,7 @@ void calculate_cost(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_ta
             total_cost += merch_item->price*item_elem->i;
         }
     }
+    ioopm_linked_list_destroy(cart_list);
     printf("Total cost: %d", total_cost);
 }
 
@@ -426,6 +442,10 @@ void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, c
     }
 
     ioopm_hash_table_t *cart = cart_elem->p;
+    if(ioopm_hash_table_is_empty(cart)){
+        printf("\nCart is empty. Total cost: 0\n");
+        return;
+    }
     ioopm_list_t *cart_list = ioopm_hash_table_keys(cart);
     for (size_t i = 0; i < ioopm_linked_list_size(cart_list)-1; i++) {
         elem_t merch_name = ioopm_linked_list_get(cart_list, i);
@@ -450,116 +470,116 @@ void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, c
     printf("\nChecked out cart %s.\n", cart_id);
 }
 
-// int main() {
-//     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     ioopm_hash_table_t *stock_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-//     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+int main() {
+    ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *stock_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
 
-//     printf("Welcome to MAMAZON! \n");
+    printf("Welcome to MAMAZON! \n");
 
-//     while (1) {
-//         char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
+    while (1) {
+        char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
 
-//         for(int i = 0; option[i] != '\0'; i++){
-//             option[i] = (unsigned char) toupper(option[i]);
-//         }
-//         switch (*option) {
-//             case 'A':
-//                 {
-//                     add_merch(merch_table, ask_question_string("Enter merch name: \n"), ask_question_string("Enter merch description: \n"), ask_question_int("Enter merch price: \n"));
-//                     break;
-//                 }
+        for(int i = 0; option[i] != '\0'; i++){
+            option[i] = (unsigned char) toupper(option[i]);
+        }
+        switch (*option) {
+            case 'A':
+                {
+                    add_merch(merch_table, ask_question_int("Enter merch price: \n"), ask_question_string("Enter merch description: \n"), ask_question_string("Enter merch name: \n"));
+                    break;
+                }
 
-//             case 'L':
-//                 list_merch(merch_table, ask_question_string("Enter confirmation (Y) to list 20 more items: \n"));
-//                 break;
+            case 'L':
+                list_merch(merch_table, ask_question_string("Enter confirmation or reject (Y/N) to list 20 more items if available: \n"));
+                break;
 
-//             case 'D':
-//                 {
-//                     remove_merch(merch_table, ask_question_string("Enter merch name: \n"), ask_question_string("Enter confirmation (Y) to confirm: \n"));
-//                     break;
-//                 }
+            case 'D':
+                {
+                    remove_merch(merch_table, ask_question_string("Enter confirmation (Y) to confirm: \n"), ask_question_string("Enter merch name: \n"));
+                    break;
+                }
                 
 
-//             case 'E':
-//                 {
-//                     edit_merch(merch_table, ask_question_string("Enter old merch name: \n"), ask_question_string("Enter the new name for the merch: \n"), ask_question_string("Enter the new description for the merch: \n"), ask_question_int("Enter the new price of the merch: \n")); 
-//                     break;
-//                 }
+            case 'E':
+                {
+                    edit_merch(merch_table, ask_question_int("Enter the new price of the merch: \n"), ask_question_string("Enter the new description for the merch: \n"), ask_question_string("Enter the new name for the merch: \n"), ask_question_string("Enter old merch name: \n")); 
+                    break;
+                }
 
-//             case 'S':
-//                 {
-//                     show_stock(merch_table, ask_question_string("Enter the merchchandise that you wish to see the stock of: \n "));
-//                 }
-//                 break;
+            case 'S':
+                {
+                    show_stock(merch_table, ask_question_string("Enter the merchchandise that you wish to see the stock of: \n "));
+                }
+                break;
 
-//             case 'P':
-//                 {
-//                     replenish_stock(merch_table, ask_question_string("Enter the merchandise name that you wish to replenish the stock of: \n"),ask_question_string("Enter location: \n"), ask_question_int("Enter quanitity: \n"));
-//                     break;                    
-//                 }
+            case 'P':
+                {
+                    replenish_stock(merch_table, ask_question_int("Enter quanitity: \n"), ask_question_string("Enter location: \n"), ask_question_string("Enter the merchandise name that you wish to replenish the stock of: \n"));
+                    break;                    
+                }
 
 
-//             case 'C':
-//                 {
-//                     create_cart(cart_table, ask_question_string("Enter cart ID: \n"));
-//                     break;
-//                 }
+            case 'C':
+                {
+                    create_cart(cart_table, ask_question_string("Enter cart ID: \n"));
+                    break;
+                }
 
-//             case 'R':
-//                 {
-//                     remove_cart(cart_table, ask_question_string("Enter cart ID: \n"), ask_question_string("Confirm removal of cart (Y):  \n"));
-//                     break;
-//                 }
+            case 'R':
+                {
+                    remove_cart(cart_table, ask_question_string("Confirm removal of cart (Y):  \n"), ask_question_string("Enter cart ID: \n"));
+                    break;
+                }
 
-//             case '+':
-//                 {
-//                     add_to_cart(cart_table, merch_table, ask_question_string("Enter cart ID: \n"), ask_question_string("Enter merchandise name to add to cart  \n"), ask_question_int("Enter quantity to add:  \n"));
-//                     break;
-//                 }
+            case '+':
+                {
+                    add_to_cart(cart_table, merch_table, ask_question_int("Enter quantity to add:  \n"), ask_question_string("Enter merchandise name to add to cart  \n"),ask_question_string("Enter cart ID: \n"));
+                    break;
+                }
 
-//             case '-':
-//                 {
-//                     remove_from_cart(cart_table, merch_table, ask_question_string("Enter cart ID: \n"), ask_question_string("Enter merchandise name to remove from cart: \n"), ask_question_int("Enter quantity to remove: \n"));
-//                     break;
-//                 }
+            case '-':
+                {
+                    remove_from_cart(cart_table, merch_table, ask_question_int("Enter quantity to remove: \n"), ask_question_string("Enter merchandise name to remove from cart: \n"), ask_question_string("Enter cart ID: \n"));
+                    break;
+                }
 
-//             case '=':
-//                 {
+            case '=':
+                {
 
-//                     calculate_cost(cart_table, merch_table, ask_question_string("Enter cart ID to calculate the cost of: \n"));
-//                     break;
-//                 }
+                    calculate_cost(cart_table, merch_table, ask_question_string("Enter cart ID to calculate the cost of: \n"));
+                    break;
+                }
 
-//             case 'O':
-//                 {
-//                     checkout(cart_table, merch_table, ask_question_string("Enter cart ID that you wish to checkout: \n"));
-//                     break;
-//                 }
+            case 'O':
+                {
+                    checkout(cart_table, merch_table, ask_question_string("Enter cart ID that you wish to checkout: \n"));
+                    break;
+                }
 
-//             case 'Q':
-//                 {
-//                     char confirmation[MAX_INPUT];
-//                     printf("Are you sure you want to quit? Type 'Y' to confirm: \n");
-//                     fgets(confirmation, sizeof(confirmation), stdin);
-//                     if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
-//                         printf("Exiting...\n");
-//                         ioopm_hash_table_destroy(merch_table);
-//                         ioopm_hash_table_destroy(stock_table);
-//                         ioopm_hash_table_destroy(cart_table);
-//                         return 0;
-//                     }
-//                 }
-//                 break;
+            case 'Q':
+                {
+                    char confirmation[MAX_INPUT];
+                    printf("Are you sure you want to quit? Type 'Y' to confirm: \n");
+                    fgets(confirmation, sizeof(confirmation), stdin);
+                    if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
+                        printf("Exiting...\n");
+                        ioopm_hash_table_destroy(merch_table);
+                        ioopm_hash_table_destroy(stock_table);
+                        ioopm_hash_table_destroy(cart_table);
+                        return 0;
+                    }
+                }
+                break;
 
-//             default:
-//                 printf("Invalid action code. Please try again.\n");
-//                 break;
-//         }
-//     }
+            default:
+                printf("Invalid action code. Please try again.\n");
+                break;
+        }
+    }
 
-//     ioopm_hash_table_destroy(merch_table);
-//     ioopm_hash_table_destroy(stock_table);
-//     ioopm_hash_table_destroy(cart_table);
-//     return 0;
-// }
+    ioopm_hash_table_destroy(merch_table);
+    ioopm_hash_table_destroy(stock_table);
+    ioopm_hash_table_destroy(cart_table);
+    return 0;
+}

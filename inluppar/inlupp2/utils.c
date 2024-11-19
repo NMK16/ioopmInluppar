@@ -83,7 +83,6 @@ answer_t ask_question(const char *question, check_func check, convert_func conve
         if (check(buffer)) {
             converted_val = convert(buffer);
             return converted_val;
-        } else {
         }
     }
 }
@@ -103,7 +102,7 @@ answer_t convert_int(const char *str) {
 
 answer_t convert_string(const char *str) {
     answer_t result;
-    result.string_value = strdup(str);
+    result.string_value = strdup(str); 
     return result;
 }
 

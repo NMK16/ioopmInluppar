@@ -130,6 +130,7 @@ void test_calculate_cost(void) {
     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     add_merch(merch_table, 1100, "Vara to calculate", "Vara11");
+    replenish_stock(merch_table, 20, "a25", "Vara11");
     create_cart(cart_table, "Vagn5");
     add_to_cart(cart_table, merch_table, 3, "Vara11", "Vagn5");
     calculate_cost(cart_table, merch_table, "Vagn5");
@@ -146,6 +147,7 @@ void test_checkout(void) {
     add_to_cart(cart_table, merch_table, 5, "Vara12", "Vagn6");
     checkout(cart_table, merch_table, "Vagn6");
     merch_table_destroy(merch_table);
+    cart_table_destroy(cart_table);
 }
 
 void test_empty_checkout(void) {

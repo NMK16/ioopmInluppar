@@ -26,12 +26,7 @@
     }   
 
     int hash_fn(elem_t key) {
-        int hash = 0;
-        char *key_char = (char *)key.p;
-        for (int i = 0; i < strlen(key_char); i++){
-            hash += (int)key_char[i];
-        }
-        return hash;
+        return 2;
     }
 
 
@@ -60,25 +55,39 @@
     }
 
     void cart_table_destroy(ioopm_hash_table_t *cart_table) {
-        if(cart_table == NULL){
-            return;
+        ioopm_list_t *cart_table_key_list = ioopm_hash_table_keys(cart_table);
+        ioopm_list_iterator_t *iterator_list_keys = ioopm_list_iterator_create(cart_table_key_list);
+
+        for(int i = 0; i < ioopm_linked_list_size(cart_table_key_list) && ioopm_iterator_has_current(iterator_list_keys); i++){
+            free(iterator_list_keys->current->value.p);
+            ioopm_iterator_next(iterator_list_keys);
         }
-        if(ioopm_hash_table_is_empty(cart_table)){
-            ioopm_hash_table_destroy(cart_table);
-            return;
-        }
+
+        ioopm_iterator_destroy(iterator_list_keys);
+        ioopm_linked_list_destroy(cart_table_key_list);
+
         ioopm_list_t *cart_table_list = ioopm_hash_table_values(cart_table);
         ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(cart_table_list);
         for(int i = 0; i < ioopm_linked_list_size(cart_table_list) && ioopm_iterator_has_current(iterator_list); i++){
             ioopm_hash_table_destroy(iterator_list->current->value.p);
             ioopm_iterator_next(iterator_list);
         }
+
         ioopm_iterator_destroy(iterator_list);
         ioopm_linked_list_destroy(cart_table_list);
         ioopm_hash_table_destroy(cart_table);
     }
 
     void merch_table_destroy(ioopm_hash_table_t *merch_table) {
+        ioopm_list_t *merch_keys_list = ioopm_hash_table_keys(merch_table);
+        ioopm_list_iterator_t *iterator_list_keys = ioopm_list_iterator_create(merch_keys_list);
+        for(int i = 0; i < ioopm_linked_list_size(merch_keys_list) && ioopm_iterator_has_current(iterator_list_keys); i++){
+            free(iterator_list_keys->current->value.p);
+            ioopm_iterator_next(iterator_list_keys);
+        }
+        ioopm_iterator_destroy(iterator_list_keys);
+        ioopm_linked_list_destroy(merch_keys_list);
+
         ioopm_list_t *merch_value_list = ioopm_hash_table_values(merch_table);
         ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(merch_value_list);
         for(int i = 0; i < ioopm_linked_list_size(merch_value_list) && ioopm_iterator_has_current(iterator_list); i++){
@@ -87,6 +96,8 @@
         }
         ioopm_iterator_destroy(iterator_list);
         ioopm_linked_list_destroy(merch_value_list);
+
+
         ioopm_hash_table_destroy(merch_table);
     }
 
@@ -96,7 +107,7 @@
 
     void add_merch(ioopm_hash_table_t *merch_table, int price, char *desc,  char *merch_name) {
         // char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
-        elem_t key = ptr_elem(merch_name);
+        elem_t key = ptr_elem(strdup(merch_name));
 
         while(ioopm_hash_table_has_key(merch_table, key)){
             printf("Name already exists, enter another name:\n");
@@ -282,8 +293,6 @@
         elem_t *merch_elem = ioopm_hash_table_lookup(merch_table, merch_key);   
         if(merch_elem == NULL){
             printf("Merchandise not found in inventory:\n");
-            free(location);
-            free(name);
             return;
         }
         merch_t *merch = merch_elem->p;
@@ -292,8 +301,6 @@
 
         if(!is_valid_shelf(location)){
             printf("\n Not a valid location, try with a letter followed by two digits \n");
-            free(location);
-            free(name);
             return;
         }
 
@@ -304,8 +311,6 @@
                 stock->quantity += quantity;
                 merch->amountInStock += quantity;
                 printf("Updated %d units of %s at location %s\n", stock->quantity, name, location);
-                free(location);
-                free(name);
                 return;
             }
         }
@@ -323,7 +328,7 @@
     void create_cart(ioopm_hash_table_t *cart_table, char *cart_id) {
         // char *cart_id = ask_question_string("Enter cart ID: ");
         ioopm_hash_table_t *cart = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);  
-        ioopm_hash_table_insert(cart_table, ptr_elem(cart_id), ptr_elem(cart));  
+        ioopm_hash_table_insert(cart_table, ptr_elem(strdup(cart_id)), ptr_elem(cart));
         printf("\nCart %s created successfully.\n", cart_id);
     }
 
@@ -382,7 +387,7 @@
             merch_elem_cart->i += quantity;
         } else {
             // IF Item doesn't exist, add it with the specified quantity
-            ioopm_hash_table_insert(cart, ptr_elem(merch_name), int_elem(quantity));
+            ioopm_hash_table_insert(cart, ptr_elem(strdup(merch_name)), int_elem(quantity));
         }
         printf("Added %d of %s to cart %s.\n", quantity, merch_name, cart_id);
     }
@@ -461,13 +466,11 @@
     void checkout(ioopm_hash_table_t *cart_table, ioopm_hash_table_t *merch_table, char *cart_id) {
         if(ioopm_hash_table_is_empty(cart_table)){
             printf("\nCart is nonexistent. Total cost: 0\n");
-            free(cart_id);
             return;
         }
         elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, ptr_elem(cart_id));
         if (!cart_elem || !cart_elem->p) {
             printf("\nCart is either nonexistent or empty. Total cost: 0\n");
-            free(cart_id);
             return;
         }
 
@@ -495,12 +498,26 @@
                     item_elem->i -= to_deduct;
                     if (stock->quantity == 0) ioopm_linked_list_remove(locations, j);
                 }
+                if (merch->amountInStock == 0){
+                    destroy_merch(merch);
+                }
             }
         }
+        ioopm_list_iterator_t *iterator_list = ioopm_list_iterator_create(cart_list);
+        for(int i = 0; i < ioopm_linked_list_size(cart_list) && ioopm_iterator_has_current(iterator_list); i++){
+            printf("\n\n\n\n%s\n\n\n\n", (char *)iterator_list->current->value.p);
+            free(iterator_list->current->value.p);
+            ioopm_iterator_next(iterator_list);
+        }
+
         ioopm_linked_list_destroy(cart_list);
+        ioopm_iterator_destroy(iterator_list);
+
         ioopm_hash_table_destroy(cart);
         free(ioopm_hash_table_remove(cart_table, ptr_elem(cart_id)));
         printf("\nChecked out cart %s.\n", cart_id);
+        free(cart_id);
+
     }
 
     int main() {
@@ -540,7 +557,6 @@
                         char *name = ask_question_string("Enter merch name: \n");
                         char *confirmation  = ask_question_string("Enter confirmation (Y) to confirm: \n");
                         remove_merch(merch_table, confirmation, name);
-                        free(name);
                         free(confirmation);
                         free(option);
                         break;
@@ -552,10 +568,8 @@
                         char *old_name = ask_question_string("Enter old merch name: \n");
                         char *new_name = ask_question_string("Enter the new name for the merch: \n");
                         char *desc = ask_question_string("Enter the new description for the merch: \n");
-                        edit_merch(merch_table, ask_question_int("Enter the new price of the merch: \n"), desc, new_name, old_name); 
+                        edit_merch(merch_table, ask_question_int("Enter the new price of the merch: \n"), desc, new_name, old_name);
                         free(old_name);
-                        free(new_name);
-                        free(desc);
                         free(option);
                         break;
                     }
@@ -595,8 +609,6 @@
                         char *cart_id = ask_question_string("Enter cart ID: \n");
                         char *confirmation = ask_question_string("Confirm removal of cart (Y):  \n");
                         remove_cart(cart_table, confirmation, cart_id);
-                        free(cart_id);
-                        free(confirmation);
                         free(option);
                         break;
                     }
@@ -606,8 +618,8 @@
                         char *cart_id = ask_question_string("Enter cart ID: \n");
                         char *name = ask_question_string("Enter merchandise name to add to cart  \n");
                         add_to_cart(cart_table, merch_table, ask_question_int("Enter quantity to add:  \n"), name, cart_id);
-                        free(cart_id);
                         free(name);
+                        free(cart_id);
                         free(option);
                         break;
                     }
@@ -617,8 +629,6 @@
                         char *cart_id = ask_question_string("Enter cart ID: \n");
                         char *name = ask_question_string("Enter merchandise name to add to cart  \n");
                         remove_from_cart(cart_table, merch_table, ask_question_int("Enter quantity to remove: \n"), name, cart_id);
-                        free(cart_id);
-                        free(name);
                         free(option);
                         break;
                     }
@@ -627,7 +637,6 @@
                     {
                         char *cart_id = ask_question_string("Enter cart ID to calculate the cost of: \n");
                         calculate_cost(cart_table, merch_table, cart_id);
-                        free(cart_id);
                         free(option);
                         break;
                     }
@@ -636,7 +645,6 @@
                     {
                         char *cart_id = ask_question_string("Enter cart ID that you wish to checkout: \n");
                         checkout(cart_table, merch_table, cart_id);
-                        free(cart_id);
                         free(option);
                         break;
                     }

@@ -12,6 +12,8 @@
 #define int_elem(x) (elem_t) { .i = (x) }
 #define ptr_elem(x) (elem_t) { .p = (x) }
 
+int hash_fn(elem_t key);
+
 typedef struct merch {
     char *name;              ///< Name of the merchandise
     char *description;       ///< Description of the merchandise

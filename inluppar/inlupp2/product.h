@@ -84,7 +84,7 @@ void remove_merch(ioopm_hash_table_t *merch_table, char *confirmation, char *nam
  * @param new_name New name for the merchandise item.
  * @param old_name Current name of the merchandise item.
  */
-void edit_merch(ioopm_hash_table_t *merch_table, int new_price, char *new_description, char *new_name, char *old_name);
+void edit_merch(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *cart_table, int new_price, char *new_description, char *new_name, char *old_name);
 
 /**
  * Destroys a merchandise item, freeing its memory.

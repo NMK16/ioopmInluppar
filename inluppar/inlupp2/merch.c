@@ -222,12 +222,31 @@
 
     }
 
-    static void edit_helper(ioopm_hash_table_t *merch_table, int new_price, char *new_description, char *new_name, char *old_name){
+    static void edit_helper(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *cart_table, int new_price, char *new_description, char *new_name, char *old_name){
         elem_t old_key = ptr_elem(old_name);
         elem_t *existing = ioopm_hash_table_lookup(merch_table, old_key);
 
+        ioopm_list_t *existing_merch_in_carts = ioopm_linked_list_create(eq_fn);
+
         merch_t *merch = existing->p;
 
+        ioopm_list_t *cart_table_keys = ioopm_hash_table_keys(cart_table);
+        ioopm_list_iterator_t *iterator_cart_table_keys = ioopm_list_iterator_create(cart_table_keys);
+        for (int i = 0; i < ioopm_linked_list_size(cart_table_keys) && ioopm_iterator_has_current(iterator_cart_table_keys); i++){
+            elem_t cart_key = iterator_cart_table_keys->current->value;
+            elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, cart_key);  
+
+            ioopm_hash_table_t *cart = cart_elem->p;  
+            
+            elem_t *merch_elem_cart = ioopm_hash_table_lookup(cart, ptr_elem(merch->name));
+            if (merch_elem_cart) {
+                ioopm_linked_list_append(existing_merch_in_carts, cart_key);
+            }
+            ioopm_iterator_next(iterator_cart_table_keys);
+        }
+        ioopm_linked_list_destroy(cart_table_keys);
+        ioopm_iterator_destroy(iterator_cart_table_keys);
+        
         
         free(merch->name);  
         merch->name = strdup(new_name);
@@ -242,11 +261,28 @@
             free(ioopm_hash_table_remove(merch_table, old_key));  
             
             elem_t new_key = ptr_elem(new_name);  
-            ioopm_hash_table_insert(merch_table, new_key, ptr_elem(merch)); 
+            ioopm_hash_table_insert(merch_table, new_key, ptr_elem(merch));
         }
+
+        for(int i = 0; i < ioopm_linked_list_size(existing_merch_in_carts); i++){
+            elem_t cart_key = ioopm_linked_list_get(existing_merch_in_carts, i);
+            elem_t *cart_elem = ioopm_hash_table_lookup(cart_table, cart_key);  
+
+            ioopm_hash_table_t *cart = cart_elem->p;  
+            
+            elem_t *merch_elem_cart = ioopm_hash_table_lookup(cart, ptr_elem(old_name));
+
+            int quantity = merch_elem_cart->i;
+            char *cart_id = cart_key.p;
+
+            add_to_cart(cart_table, merch_table, quantity, merch->name, cart_id);
+        }
+
+        ioopm_linked_list_destroy(existing_merch_in_carts);
+
     }
 
-    void edit_merch(ioopm_hash_table_t *merch_table, int new_price,char *new_description, char *new_name, char *old_name) {
+    void edit_merch(ioopm_hash_table_t *merch_table, ioopm_hash_table_t *cart_table, int new_price,char *new_description, char *new_name, char *old_name) {
     
         // char *old_name = ask_question_string("Enter old name: ");
 
@@ -261,7 +297,7 @@
         // char *new_description = ask_question_string("Enter new description: ");
         // int new_price = ask_question_int("Enter new price: ");
 
-        edit_helper(merch_table, new_price, new_description, strdup(new_name), old_name);
+        edit_helper(merch_table, cart_table, new_price, new_description, strdup(new_name), old_name);
     }
 
     void show_stock(ioopm_hash_table_t *merch_table, char *name) {
@@ -542,8 +578,7 @@
                     }
                 }
                 if (merch->amountInStock == 0){
-                    printf("\n\n\n\nhHAUFAHWNUFA\n\n\n\n");
-                    ioopm_list_t *merch_keys = ioopm_hash_table_keys(merch_table);
+                    ioopm_list_t *merch_keys = ioopm_hash_table_keys(merch_table);  
                     ioopm_list_iterator_t *iterator_keys = ioopm_list_iterator_create(merch_keys);
                     for(int i = 0; i < ioopm_linked_list_size(merch_keys) && ioopm_iterator_has_current(iterator_keys); i++){
                         if(strcmp(iterator_keys->current->value.p, merch_name.p) == 0){
@@ -584,156 +619,158 @@
         printf("\nChecked out cart %s.\n", cart_id);
     }
 
-    int main() {
-        ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
-        ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    // int main() {
+    //     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    //     ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
 
-        printf("Welcome to MAMAZON! \n");
+    //     printf("Welcome to MAMAZON! \n");
 
-        while (1) {
-            char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
+    //     while (1) {
+    //         char *option = ask_question_string("\nEnter input/action:  \nA: Add \nL: List \nD: Remove \nE: Edit \nS: Show Stock \nP: Replenish \nC: Create Cart \nR: Remove Cart \n+: Add to Cart \n-: Remove from Cart \n=: Calculate Cost \nO: Checkout \nQ: Quit\n");
 
-            for(int i = 0; option[i] != '\0'; i++){
-                option[i] = (unsigned char) toupper(option[i]);
-            }
-            switch (*option) {
-                case 'A':
-                    {
-                        char *name = ask_question_string("Enter merch name: \n");
-                        char *desc = ask_question_string("Enter merch description: \n");
-                        add_merch(merch_table, ask_question_int("Enter merch price: \n"), desc, name);
-                        free(name);
-                        free(desc);
-                        free(option);
-                        break;
-                    }
+    //         for(int i = 0; option[i] != '\0'; i++){
+    //             option[i] = (unsigned char) toupper(option[i]);
+    //         }
+    //         switch (*option) {
+    //             case 'A':
+    //                 {
+    //                     char *name = ask_question_string("Enter merch name: \n");
+    //                     char *desc = ask_question_string("Enter merch description: \n");
+    //                     add_merch(merch_table, ask_question_int("Enter merch price: \n"), desc, name);
+    //                     free(name);
+    //                     free(desc);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'L':
-                    {
-                        char *confirmation  = ask_question_string("Enter confirmation or reject (Y/N) to list 20 more items if available: \n");
-                        list_merch(merch_table, confirmation);
-                        free(confirmation);
-                        free(option);
-                        break;
-                    }
-                case 'D':
-                    {
-                        char *name = ask_question_string("Enter merch name: \n");
-                        char *confirmation  = ask_question_string("Enter confirmation (Y) to confirm: \n");
-                        remove_merch(merch_table, confirmation, name);
-                        free(confirmation);
-                        free(option);
-                        break;
-                    }
+    //             case 'L':
+    //                 {
+    //                     char *confirmation  = ask_question_string("Enter confirmation or reject (Y/N) to list 20 more items if available: \n");
+    //                     list_merch(merch_table, confirmation);
+    //                     free(confirmation);
+    //                     free(option);
+    //                     break;
+    //                 }
+    //             case 'D':
+    //                 {
+    //                     char *name = ask_question_string("Enter merch name: \n");
+    //                     char *confirmation  = ask_question_string("Enter confirmation (Y) to confirm: \n");
+    //                     remove_merch(merch_table, confirmation, name);
+    //                     free(confirmation);
+    //                     free(option);
+    //                     break;
+    //                 }
                     
 
-                case 'E':
-                    {
-                        char *old_name = ask_question_string("Enter old merch name: \n");
-                        char *new_name = ask_question_string("Enter the new name for the merch: \n");
-                        char *desc = ask_question_string("Enter the new description for the merch: \n");
-                        edit_merch(merch_table, ask_question_int("Enter the new price of the merch: \n"), desc, new_name, old_name);
-                        free(old_name);
-                        free(option);
-                        break;
-                    }
+    //             case 'E':
+    //                 {
+    //                     char *old_name = ask_question_string("Enter old merch name: \n");
+    //                     char *new_name = ask_question_string("Enter the new name for the merch: \n");
+    //                     char *desc = ask_question_string("Enter the new description for the merch: \n");
+    //                     edit_merch(merch_table, cart_table, ask_question_int("Enter the new price of the merch: \n"), desc, new_name, old_name);
+    //                     free(old_name);
+    //                     free(new_name);
+    //                     free(desc);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'S':
-                    {
-                        char *name = ask_question_string("Enter the merchchandise that you wish to see the stock of: \n");
-                        show_stock(merch_table, name);
-                        free(name);
-                        free(option);
-                        break;
-                    }
+    //             case 'S':
+    //                 {
+    //                     char *name = ask_question_string("Enter the merchchandise that you wish to see the stock of: \n");
+    //                     show_stock(merch_table, name);
+    //                     free(name);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'P':
-                    {
-                        char *name = ask_question_string("Enter the merchandise name that you wish to replenish the stock of: \n");
-                        char *location_to_replenish = ask_question_string("Enter location: \n");
-                        replenish_stock(merch_table, ask_question_int("Enter quanitity: \n"), location_to_replenish, name);
-                        free(name);
-                        free(location_to_replenish);
-                        free(option);
-                        break;                   
-                    }
+    //             case 'P':
+    //                 {
+    //                     char *name = ask_question_string("Enter the merchandise name that you wish to replenish the stock of: \n");
+    //                     char *location_to_replenish = ask_question_string("Enter location: \n");
+    //                     replenish_stock(merch_table, ask_question_int("Enter quanitity: \n"), location_to_replenish, name);
+    //                     free(name);
+    //                     free(location_to_replenish);
+    //                     free(option);
+    //                     break;                   
+    //                 }
 
 
-                case 'C':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID: \n");
-                        create_cart(cart_table, cart_id);
-                        free(cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case 'C':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID: \n");
+    //                     create_cart(cart_table, cart_id);
+    //                     free(cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'R':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID: \n");
-                        char *confirmation = ask_question_string("Confirm removal of cart (Y):  \n");
-                        remove_cart(cart_table, confirmation, cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case 'R':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID: \n");
+    //                     char *confirmation = ask_question_string("Confirm removal of cart (Y):  \n");
+    //                     remove_cart(cart_table, confirmation, cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case '+':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID: \n");
-                        char *name = ask_question_string("Enter merchandise name to add to cart  \n");
-                        add_to_cart(cart_table, merch_table, ask_question_int("Enter quantity to add:  \n"), name, cart_id);
-                        free(name);
-                        free(cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case '+':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID: \n");
+    //                     char *name = ask_question_string("Enter merchandise name to add to cart  \n");
+    //                     add_to_cart(cart_table, merch_table, ask_question_int("Enter quantity to add:  \n"), name, cart_id);
+    //                     free(name);
+    //                     free(cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case '-':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID: \n");
-                        char *name = ask_question_string("Enter merchandise name to add to cart  \n");
-                        remove_from_cart(cart_table, merch_table, ask_question_int("Enter quantity to remove: \n"), name, cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case '-':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID: \n");
+    //                     char *name = ask_question_string("Enter merchandise name to add to cart  \n");
+    //                     remove_from_cart(cart_table, merch_table, ask_question_int("Enter quantity to remove: \n"), name, cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case '=':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID to calculate the cost of: \n");
-                        calculate_cost(cart_table, merch_table, cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case '=':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID to calculate the cost of: \n");
+    //                     calculate_cost(cart_table, merch_table, cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'O':
-                    {
-                        char *cart_id = ask_question_string("Enter cart ID that you wish to checkout: \n");
-                        checkout(cart_table, merch_table, cart_id);
-                        free(cart_id);
-                        free(option);
-                        break;
-                    }
+    //             case 'O':
+    //                 {
+    //                     char *cart_id = ask_question_string("Enter cart ID that you wish to checkout: \n");
+    //                     checkout(cart_table, merch_table, cart_id);
+    //                     free(cart_id);
+    //                     free(option);
+    //                     break;
+    //                 }
 
-                case 'Q':
-                    {
-                        char confirmation[MAX_INPUT];
-                        printf("Are you sure you want to quit? Type 'Y' to confirm: \n");
-                        fgets(confirmation, sizeof(confirmation), stdin);
-                        if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
-                            printf("Exiting...\n");
-                            merch_table_destroy(merch_table);
-                            cart_table_destroy(cart_table);
-                            free(option);
-                            return 0;
-                        }
-                        break;
-                    }
+    //             case 'Q':
+    //                 {
+    //                     char confirmation[MAX_INPUT];
+    //                     printf("Are you sure you want to quit? Type 'Y' to confirm: \n");
+    //                     fgets(confirmation, sizeof(confirmation), stdin);
+    //                     if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
+    //                         printf("Exiting...\n");
+    //                         merch_table_destroy(merch_table);
+    //                         cart_table_destroy(cart_table);
+    //                         free(option);
+    //                         return 0;
+    //                     }
+    //                     break;
+    //                 }
 
-                default:
-                    printf("Invalid action code. Please try again.\n");
-                    break;
+    //             default:
+    //                 printf("Invalid action code. Please try again.\n");
+    //                 break;
                     
-            }
-        }
-        return 0;
-    }
+    //         }
+    //     }
+    //     return 0;
+    // }

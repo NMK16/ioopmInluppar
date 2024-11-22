@@ -56,12 +56,13 @@ void test_list_merch(void) {
 
 void test_edit_merch(void) {
     ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
     char *desc = "Original Vara";
     char *name = "Vara6";
     add_merch(merch_table, 600, desc, name);
     char *new_desc = "Updaterad Vara";
     char *new_name = "TidigareVara6";
-    edit_merch(merch_table, 650, new_desc, new_name, name);
+    edit_merch(merch_table, cart_table, 650, new_desc, new_name, name);
     elem_t *result = ioopm_hash_table_lookup(merch_table, ptr_elem(new_name));
     merch_t *merch = result->p;
     CU_ASSERT_STRING_EQUAL(merch->description, new_desc);
@@ -69,6 +70,7 @@ void test_edit_merch(void) {
     CU_ASSERT_EQUAL(merch->price, 650);
     //ioopm_hash_table_destroy(merch_table);
     merch_table_destroy(merch_table);
+    cart_table_destroy(cart_table);
 }
 
 void test_show_stock(void) {

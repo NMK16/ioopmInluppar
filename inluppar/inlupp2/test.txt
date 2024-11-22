@@ -15,10 +15,13 @@ c
 +
 23
 egg
-30
+40
+e
+egg
+egg2
+egg2
+400
 o
 23
-s
-egg
 q
 y

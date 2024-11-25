@@ -171,6 +171,18 @@ void test_empty_checkout(void) {
     cart_table_destroy(cart_table);
 }
 
+void test_quit(void) {
+    ioopm_hash_table_t *cart_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
+    add_merch(merch_table, 900, "Vara to add to Vagn", "Vara9");
+    create_cart(cart_table, "Vagn3");
+
+    
+    if(quit(merch_table, cart_table, "Y")){ 
+
+    }
+}
+
 int main() {
     CU_initialize_registry();
 
@@ -189,6 +201,7 @@ int main() {
     CU_add_test(suite, "Calculate Cost", test_calculate_cost);
     CU_add_test(suite, "Checkout", test_checkout);
     CU_add_test(suite, "Empty Checkout", test_empty_checkout);
+    CU_add_test(suite, "Quit", test_quit);
 
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();

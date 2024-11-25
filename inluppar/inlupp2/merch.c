@@ -145,7 +145,7 @@
     void add_merch(ioopm_hash_table_t *merch_table, int price, char *desc,  char *merch_name) {
         // char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
 
-        while(ioopm_hash_table_has_key(merch_table, ptr_elem(merch_name))){
+        if(ioopm_hash_table_has_key(merch_table, ptr_elem(merch_name))){
             printf("Name already exists, enter another name:\n");
             // merch_name = ask_question_string("\nEnter name of Merch: ");
             return;
@@ -344,7 +344,7 @@
             }
             elem_t location_elem = ioopm_linked_list_get(locations, i);
             stock_location_t *stock = location_elem.p;
-            printf("Location: %s, Quantity: %d\n", stock->location, stock->quantity);
+            printf("Location: %s, Quantity: %d (Max Amount)\n", stock->location, stock->quantity);
         }
 
         free(location_keys);
@@ -620,6 +620,16 @@
         printf("\nChecked out cart %s.\n", cart_id);
     }
 
+        bool quit(ioopm_hash_table_t *merch_table_to_be_destroyed , ioopm_hash_table_t *cart_table_to_be_destroyed, char *confirmation) {
+ 
+        if (*confirmation == 'Y' || *confirmation == 'y') {
+            merch_table_destroy(merch_table_to_be_destroyed);
+            cart_table_destroy(cart_table_to_be_destroyed);
+            return true;
+        }
+        return false;
+    }
+
 
     int main() {
         ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);
@@ -658,6 +668,7 @@
                         char *name = ask_question_string("Enter merch name: \n");
                         char *confirmation  = ask_question_string("Enter confirmation (Y) to confirm: \n");
                         remove_merch(merch_table, confirmation, name);
+                        free(name);
                         free(confirmation);
                         free(option);
                         break;
@@ -712,6 +723,8 @@
                         char *cart_id = ask_question_string("Enter cart ID: \n");
                         char *confirmation = ask_question_string("Confirm removal of cart (Y):  \n");
                         remove_cart(cart_table, confirmation, cart_id);
+                        free(confirmation);
+                        free(cart_id);
                         free(option);
                         break;
                     }
@@ -732,6 +745,8 @@
                         char *cart_id = ask_question_string("Enter cart ID: \n");
                         char *name = ask_question_string("Enter merchandise name to add to cart  \n");
                         remove_from_cart(cart_table, merch_table, ask_question_int("Enter quantity to remove: \n"), name, cart_id);
+                        free(name);
+                        free(cart_id);
                         free(option);
                         break;
                     }
@@ -753,21 +768,21 @@
                         free(option);
                         break;
                     }
-
                 case 'Q':
                     {
-                        char confirmation[MAX_INPUT];
-                        printf("Are you sure you want to quit? Type 'Y' to confirm: \n");
-                        fgets(confirmation, sizeof(confirmation), stdin);
-                        if (confirmation[0] == 'Y' || confirmation[0] == 'y') {
-                            printf("Exiting...\n");
-                            merch_table_destroy(merch_table);
-                            cart_table_destroy(cart_table);
-                            free(option);
+                        char *confirmation = ask_question_string("Are you sure you want to quit? Type 'Y' to confirm: \n");
+                        if (quit(merch_table, cart_table, confirmation)) {
+                            free(confirmation); 
+                            free(option);       
                             return 0;
                         }
-                        break;
+                        else{
+                            free(confirmation); 
+                            free(option);
+                            break;
+                        }
                     }
+
 
                 default:
                     printf("Invalid action code. Please try again.\n");

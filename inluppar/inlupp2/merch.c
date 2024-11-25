@@ -144,13 +144,14 @@
 
     void add_merch(ioopm_hash_table_t *merch_table, int price, char *desc,  char *merch_name) {
         // char *merch_name = ask_question_string("\nEnter merchandise name to add: ");
-        elem_t key = ptr_elem(strdup(merch_name));
 
-        while(ioopm_hash_table_has_key(merch_table, key)){
+        while(ioopm_hash_table_has_key(merch_table, ptr_elem(merch_name))){
             printf("Name already exists, enter another name:\n");
             // merch_name = ask_question_string("\nEnter name of Merch: ");
-            key = ptr_elem(strdup(merch_name));
+            return;
         }
+        elem_t key = ptr_elem(strdup(merch_name));
+
         // char *desc = ask_question_string("\nEnter description of Merch: ");
         // int price = ask_question_int("\nEnter price of Merch: ");
         merch_t *merch = create_merch(merch_name, desc, price);
@@ -618,6 +619,7 @@
 
         printf("\nChecked out cart %s.\n", cart_id);
     }
+
 
     int main() {
         ioopm_hash_table_t *merch_table = ioopm_hash_table_create(hash_fn, eq_fn, eq_fn);

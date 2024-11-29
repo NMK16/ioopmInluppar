@@ -1,24 +1,28 @@
+
+
 public class Simulation {
     Store store = new Store();
-    int time = 0;
-    int intensity = 100;
-    int maxGroceries = 100;
-    int thresholdForNewRegister = 2;
+    int time;
+    int intensity = 50;
+    int maxGroceries = 5;
+    int thresholdForNewRegister = 3;
 
     public void step(){
 
-        this.store.step();
-        
-        int randomCustomerCreate = (int)Math.random()*100;
-        if(randomCustomerCreate < this.intensity){
-            Customer newCustomer = new Customer();
-            newCustomer.groceries = (int)(Math.random()*this.maxGroceries)+1;
-            this.store.newCustomer(newCustomer);
-        }
-
-        if(this.store.getAverageQueueLength() > this.thresholdForNewRegister){
+        if(this.store.getAverageQueueLength() >= this.thresholdForNewRegister){
             this.store.openNewRegister();
         }
+        
+        int randomCustomerCreate = (int)(Math.random()*100);
+        if(randomCustomerCreate < this.intensity){
+            Customer newCustomer = new Customer();
+            newCustomer.groceries = 3; //(int)((Math.random()*maxGroceries)+1);
+            this.store.newCustomer(newCustomer);
+        }
+        
+        this.store.step();
+
+
         this.time++;
 
     }

@@ -4,6 +4,7 @@ import java.util.Queue;
 public class Register {
     boolean open = false;
     Queue<Customer> queue = new LinkedList<Customer>();
+    int numberOfCustomersServed;
     
     public void open(){
         this.open = true;
@@ -19,7 +20,7 @@ public class Register {
 
     public void step(){
         if(hasCustomers()){
-            this.queue.element().serve();  
+            this.queue.element().serve();
         }
     }
     public boolean hasCustomers(){
@@ -28,7 +29,10 @@ public class Register {
     }
 
     public boolean currentCustomerIsDone(){
-        return this.queue.element().isDone();
+        if(hasCustomers()){
+            return this.queue.element().isDone();
+        }
+        return false;
     }
 
     public void addToQueue(Customer c){

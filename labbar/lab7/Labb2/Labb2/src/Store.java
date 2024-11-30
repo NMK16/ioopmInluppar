@@ -6,11 +6,14 @@ public class Store {
     int numberOfOpenRegisters;
     int numberOfCustomersServed;
     int amountOfCurrentCustomers;
+
     int amountOfCurrentCustomersR1;
     int amountOfCurrentCustomersR2;
     int amountOfCurrentCustomersR3;
     int amountOfCurrentCustomersR4;
     int amountOfCurrentCustomersR5;
+
+    int amountOfRegisteredItems;
 
 
     public Store() {
@@ -39,6 +42,23 @@ public class Store {
             }
         }
         this.registers[counter].queue.add(c);
+        switch(counter){
+            case 0:
+                amountOfCurrentCustomersR1++;
+                break;
+            case 1:
+                amountOfCurrentCustomersR2++;
+                break;
+            case 2:
+                amountOfCurrentCustomersR3++;
+                break;
+            case 3:
+                amountOfCurrentCustomersR4++;
+                break;
+            case 4:
+                amountOfCurrentCustomersR5++;
+                break;
+        }
         amountOfCurrentCustomers++;
     }
 
@@ -46,9 +66,27 @@ public class Store {
     public void step(){
         for(int i = 0; i < numberOfOpenRegisters && this.registers[i].isOpen(); i++){
             this.registers[i].step();
+            amountOfRegisteredItems++;
 
             if(registers[i].currentCustomerIsDone()){
                 registers[i].queue.remove();
+                switch(i){
+                    case 0:
+                        amountOfCurrentCustomersR1--;
+                        break;
+                    case 1:
+                        amountOfCurrentCustomersR2--;
+                        break;
+                    case 2:
+                        amountOfCurrentCustomersR3--;
+                        break;
+                    case 3:
+                        amountOfCurrentCustomersR4--;
+                        break;
+                    case 4:
+                        amountOfCurrentCustomersR5--;
+                        break;
+                }
                 amountOfCurrentCustomers--;
                 numberOfCustomersServed++;
             }
@@ -58,12 +96,6 @@ public class Store {
                 numberOfOpenRegisters--;
             }
         }
-        
-        amountOfCurrentCustomersR1 = registers[0].queue.size();
-        amountOfCurrentCustomersR2 = registers[1].queue.size();
-        amountOfCurrentCustomersR3 = registers[2].queue.size();
-        amountOfCurrentCustomersR4 = registers[3].queue.size();
-        amountOfCurrentCustomersR5 = registers[4].queue.size();
     }
 
     public void openNewRegister(){

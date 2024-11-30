@@ -10,6 +10,8 @@ public class Simulator{
             System.out.println("Customers Served: " + s.store.numberOfCustomersServed);
             System.out.println("Currently Open Registers: " + s.store.numberOfOpenRegisters);
             System.out.println("Amount Of Current Customers: " + s.store.amountOfCurrentCustomers);
+            System.out.println("Amount Of Items Registered: " + s.store.amountOfRegisteredItems);
+            
             System.out.print("\nAmount Of Current Customers R1: " + "[" + s.store.amountOfCurrentCustomersR1 + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR1; j++){
                 System.out.print("@");
@@ -30,8 +32,9 @@ public class Simulator{
             for(int j = 0; j < s.store.amountOfCurrentCustomersR5; j++){
                 System.out.print("@");
             }
+            
 
-            Thread.sleep(500);
+            Thread.sleep(4000);
         }
         System.out.println("");
         System.out.println("Simulation finished!");

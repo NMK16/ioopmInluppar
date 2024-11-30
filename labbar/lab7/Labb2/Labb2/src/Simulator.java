@@ -12,29 +12,29 @@ public class Simulator{
             System.out.println("Amount Of Current Customers: " + s.store.amountOfCurrentCustomers);
             System.out.println("Amount Of Items Registered: " + s.store.amountOfRegisteredItems);
             
-            System.out.print("\nAmount Of Current Customers R1: " + "[" + s.store.amountOfCurrentCustomersR1 + "]" + " ");
+            System.out.print("\nAmount Of Current Customers R1: " + "[" + (!s.store.registers[0].isOpen() ? "X" : s.store.amountOfCurrentCustomersR1) + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR1; j++){
                 System.out.print("@");
             }
-            System.out.print("\nAmount Of Current Customers R2: " + "[" + s.store.amountOfCurrentCustomersR2 + "]" + " ");
+            System.out.print("\nAmount Of Current Customers R2: " + "[" + (!s.store.registers[1].isOpen() ? "X" : s.store.amountOfCurrentCustomersR2) + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR2; j++){
                 System.out.print("@");
             }
-            System.out.print("\nAmount Of Current Customers R3: " + "[" + s.store.amountOfCurrentCustomersR3 + "]" + " ");
+            System.out.print("\nAmount Of Current Customers R3: " + "[" + (!s.store.registers[2].isOpen() ? "X" : s.store.amountOfCurrentCustomersR3) + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR3; j++){
                 System.out.print("@");
             }
-            System.out.print("\nAmount Of Current Customers R4: " + "[" + s.store.amountOfCurrentCustomersR4 + "]" + " ");
+            System.out.print("\nAmount Of Current Customers R4: " + "[" + (!s.store.registers[3].isOpen() ? "X" : s.store.amountOfCurrentCustomersR4) + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR4; j++){
                 System.out.print("@");
             }
-            System.out.print("\nAmount Of Current Customers R5: " + "[" + s.store.amountOfCurrentCustomersR5 + "]" + " ");
+            System.out.print("\nAmount Of Current Customers R5: " + "[" + (!s.store.registers[4].isOpen() ? "X" : s.store.amountOfCurrentCustomersR5) + "]" + " ");
             for(int j = 0; j < s.store.amountOfCurrentCustomersR5; j++){
                 System.out.print("@");
             }
             
 
-            Thread.sleep(4000);
+            Thread.sleep(500);
         }
         System.out.println("");
         System.out.println("Simulation finished!");

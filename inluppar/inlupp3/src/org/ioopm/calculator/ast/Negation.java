@@ -6,11 +6,7 @@ public class Negation extends Unary{
     }
 
     @Override
-    public double evaluate() {
-        return (this.getOperand().evaluate() * -1);
-    }
-    @Override
-    public String toString() {
-        return "-(" + this.getOperand().evaluate() + ")";
+    public String getName() {
+        return "-()";
     }
 }

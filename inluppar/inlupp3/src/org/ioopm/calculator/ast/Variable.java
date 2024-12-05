@@ -6,13 +6,8 @@ public class Variable extends Atom {
         this.identifier = identifier;
     }
 
-    @Override
-    public double evaluate() {
-        throw new UnsupportedOperationException("Variable evaluation requires a context.");
-    }
-
-    @Override
     public String toString() {
         return this.identifier;
     }
+
 }

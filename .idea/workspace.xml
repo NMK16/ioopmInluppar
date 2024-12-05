@@ -5,22 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="i1">
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/.keep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Addition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Assignment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Constant.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Cos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Division.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Exp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Log.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Multiplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Negation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Quit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Sin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Subtraction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Variable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/AST/Vars.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/Parser/CalculatorParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Addition.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Addition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Atom.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Atom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Binary.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Binary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Constant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/SymbolicExpression.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/SymbolicExpression.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Addition.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Addition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Atom.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Atom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Binary.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Binary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Quit.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Quit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/SymbolicExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/SymbolicExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/parser/CalculatorParser.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +67,7 @@
     <setting file="file://$PROJECT_DIR$/inluppar/inlupp3/Parser/Calculator.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -68,7 +82,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Calculator.executor": "Run",
+    "Application.Calculator.executor": "Debug",
     "Makefile Target.all.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -146,7 +160,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733104603077</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="i1">
+      <option name="closed" value="true" />
+      <created>1733272962469</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1733272962469</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

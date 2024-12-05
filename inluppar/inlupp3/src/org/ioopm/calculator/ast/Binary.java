@@ -1,8 +1,8 @@
 package org.ioopm.calculator.ast;
 
 public abstract class Binary extends SymbolicExpression{
-    private SymbolicExpression lhs = null;
-    private SymbolicExpression rhs = null;
+    private SymbolicExpression lhs;
+    private SymbolicExpression rhs;
 
     public Binary(SymbolicExpression lhs, SymbolicExpression rhs) {
         this.lhs = lhs;
@@ -17,6 +17,26 @@ public abstract class Binary extends SymbolicExpression{
         return this.rhs;
     }
 
-    public abstract double evaluate();
+    public String toString() {
+        String left = this.getLhs().toString();
+        String right = this.getRhs().toString();
 
+        if(this.getLhs().isConstant() && this.getLhs().getValue() == (int)this.getLhs().getValue()){
+            left = String.valueOf((int)this.getLhs().getValue());
+        }
+        if(this.getRhs().isConstant() && this.getRhs().getValue() == (int)this.getRhs().getValue()){
+            right = String.valueOf((int)this.getRhs().getValue());
+        }
+
+
+        if (this.getLhs().getPriority() < this.getPriority()) {
+            left = "(" + left + ")";
+        }
+
+        if (this.getRhs().getPriority() < this.getPriority()) {
+            right = "(" + right + ")";
+        }
+
+        return left + " " + this.getName() + " " + right;
+    }
 }

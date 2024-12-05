@@ -6,12 +6,17 @@ public class Subtraction extends Binary{
     }
 
     @Override
-    public double evaluate() {
-        return (this.getLhs().evaluate() - this.getRhs().evaluate());
+    public String getName() {
+        return "-";
     }
 
     @Override
-    public String toString() {
-        return "(" + this.getLhs().evaluate() + " - " + this.getRhs().evaluate() + ")";
+    public int getPriority(){
+        return 50;
     }
+
+    public String toString() {
+        return this.getLhs().toString() + " " + this.getName() + " " + this.getRhs().toString();
+    }
+
 }

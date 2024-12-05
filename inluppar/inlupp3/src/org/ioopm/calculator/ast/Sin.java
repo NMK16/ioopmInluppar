@@ -8,4 +8,14 @@ public class Sin extends Unary{
     public double evaluate() {
         return Math.sin(this.getOperand().evaluate());
     }
+
+    @Override
+    public String toString() {
+        return "";
+    }
+
+    @Override
+    public String getName() {
+        return "sin";
+    }
 }

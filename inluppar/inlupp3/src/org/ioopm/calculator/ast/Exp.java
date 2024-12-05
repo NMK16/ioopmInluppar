@@ -6,7 +6,7 @@ public class Exp extends Unary{
     }
 
     @Override
-    public double evaluate() {
-        return Math.exp(this.getOperand().evaluate());
+    public String getName() {
+        return "exp";
     }
 }

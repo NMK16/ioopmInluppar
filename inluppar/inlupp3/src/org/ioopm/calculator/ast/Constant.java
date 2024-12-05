@@ -7,12 +7,16 @@ public class Constant extends Atom{
     }
 
     @Override
-    public double evaluate() {
-        return this.value;
+    public boolean isConstant() {
+        return true; // Constant objects are always constants
     }
 
     @Override
+    public double getValue(){
+        return this.value;
+    }
+
     public String toString() {
-        return this.value+"";
+        return String.valueOf(this.value);
     }
 }

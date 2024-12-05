@@ -5,13 +5,17 @@ public class Multiplication extends Binary{
         super(lhs, rhs);
     }
 
-    @Override
-    public double evaluate() {
-        return (this.getLhs().evaluate() * this.getRhs().evaluate());
+    public String toString() {
+        return super.toString();
     }
 
     @Override
-    public String toString() {
-        return "(" + this.getLhs().evaluate() + " * " + this.getRhs().evaluate() + ")";
+    public String getName() {
+        return "*";
+    }
+
+    @Override
+    public int getPriority(){
+        return 100;
     }
 }

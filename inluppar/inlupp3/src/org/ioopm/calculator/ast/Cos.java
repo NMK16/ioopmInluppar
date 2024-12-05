@@ -5,12 +5,8 @@ public class Cos extends Unary{
         super(operand);
     }
 
-    public double evaluate() {
-        return Math.cos(this.getOperand().evaluate());
-    }
-
     @Override
-    public String toString() {
-        return "";
+    public String getName() {
+        return "cos";
     }
 }

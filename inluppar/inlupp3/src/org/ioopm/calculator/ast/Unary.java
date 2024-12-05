@@ -9,5 +9,16 @@ public abstract class Unary extends SymbolicExpression{
     public SymbolicExpression getOperand(){
         return this.operand;
     }
-    public abstract double evaluate();
+
+    public String toString() {
+        // Note how the call to toString() is not necessary
+        return this.getName() + " " + this.operand.toString();
+    }
+
+    @Override
+    public int getPriority() {
+        return 200; // Highest priority for unary operators
+    }
+
+
 }

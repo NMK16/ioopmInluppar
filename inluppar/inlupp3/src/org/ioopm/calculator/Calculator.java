@@ -3,18 +3,22 @@ package org.ioopm.calculator;
 import org.ioopm.calculator.ast.*;
 
 public class Calculator {
+
         public static void main(String[] args) {
-            // Create an assignment: x = 5 + 3
-            SymbolicExpression left = new Variable("x");
-            SymbolicExpression right = new Addition(new Constant(5), new Constant(3));
-            SymbolicExpression assignment = new Assignment(left, right);
-            String assignment2 = new Assignment(left, right).toString();
+            Constant c1 = new Constant(5);
+            Constant c2 = new Constant(2);
+            Variable v = new Variable("x");
+            Addition a = new Addition(c1, v);
+            Multiplication m = new Multiplication(a, c2);
+            testPrinting("(5 + x) * 2", m);
 
-            // Evaluate the assignment
-            double result = assignment.evaluate();
 
-            System.out.println(assignment2); // Outputs: x = (5.0 + 3.0)
-            System.out.println("Result: " + result); // Outputs: Result: 8.0
-
+    }
+    public static void testPrinting(String expected, SymbolicExpression e) {
+        if (expected.equals("" + e)) {
+            System.out.println("Passed: " + e);
+        } else {
+            System.out.println("Error: expected '" + expected + "' but got '" + e + "'");
+        }
     }
 }

@@ -6,7 +6,7 @@ public class Log extends Unary{
     }
 
     @Override
-    public double evaluate() {
-        return Math.log(this.getOperand().evaluate());
+    public String getName() {
+        return "log";
     }
 }

@@ -20,5 +20,17 @@ public abstract class Unary extends SymbolicExpression{
         return 200; // Highest priority for unary operators
     }
 
+    public boolean equals(Object other) {
+        if (other instanceof Unary) {
+            return this.equals((Unary) other);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean equals(Unary other) {
+        // access a private field of other!
+        return this.operand == other.operand && this.getName() == other.getName();
+    }
 
 }

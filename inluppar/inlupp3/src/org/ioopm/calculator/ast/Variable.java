@@ -10,6 +10,9 @@ public class Variable extends Atom {
 
     @Override
     public SymbolicExpression eval(Environment vars){
+        if(Constants.namedConstants.containsKey(this.identifier)){
+            return new Constant(Constants.namedConstants.get(this.identifier));
+        }
         SymbolicExpression variable = new Variable(this.identifier);
         if(vars.containsKey(variable)){
             return vars.get(variable);

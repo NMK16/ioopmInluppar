@@ -13,11 +13,11 @@ public class Calculator {
 //            Multiplication m = new Multiplication(a, c2);
 //            testPrinting("(5 + x) * 2", m);
             Environment vars = new Environment();
-            Multiplication m = new Multiplication(new Addition(new Constant(5), new Variable("x")), new Constant(2));
-            testPrinting("(5 + x) * 2", m);
+            Multiplication m = new Multiplication(new Addition(new Constant(5), new Variable("pi")), new Constant(2));
+            testPrinting("(5 + pi) * 2", m);
             Assignment assignment = new Assignment(new Constant(2), new Variable("x"));
             assignment.eval(vars);
-            testEvaluating(new Constant(14), m.eval(vars), vars);
+            testEvaluating(new Constant((5+Math.PI)*2), m.eval(vars), vars);
 
 
     }

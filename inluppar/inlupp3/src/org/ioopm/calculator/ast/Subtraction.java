@@ -1,6 +1,6 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Subtraction extends Binary{
     public Subtraction(SymbolicExpression lhs, SymbolicExpression rhs){
@@ -38,6 +38,6 @@ public class Subtraction extends Binary{
 
     public boolean equals(Subtraction other) {
         // access a private field of other!
-        return this.getLhs() == other.getLhs() && this.getRhs() == other.getRhs() && this.getName() == other.getName();
+        return this.getLhs() == other.getLhs() && this.getRhs() == other.getRhs() && Objects.equals(this.getName(), other.getName());
     }
 }

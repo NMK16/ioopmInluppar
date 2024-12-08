@@ -1,7 +1,5 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
-
 public class Assignment extends Binary{
     public Assignment(SymbolicExpression lhs, SymbolicExpression rhs){
         super(lhs, rhs);
@@ -13,14 +11,11 @@ public class Assignment extends Binary{
     @Override
     public SymbolicExpression eval(Environment vars) {
         SymbolicExpression lhs = this.getLhs().eval(vars);
-        SymbolicExpression rhs = this.getRhs().eval(vars);
-        if (rhs instanceof NamedConstant) {
+        SymbolicExpression rhs = this.getRhs();
+        if (Constants.namedConstants.containsKey(rhs.toString())) {
             throw new IllegalAssignmentException("Error: cannot redefine named constant: " + rhs);
         }
-        if(lhs.isConstant() && !rhs.isConstant()){
-            vars.put((Variable)rhs, lhs);
-            return lhs;
-        }
-        return new Assignment(lhs, rhs);
+        vars.put((Variable) rhs, lhs);
+        return lhs;
     }
 }

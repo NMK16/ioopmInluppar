@@ -1,6 +1,6 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Sin extends Unary{
     public Sin(SymbolicExpression operand) {
@@ -34,6 +34,6 @@ public class Sin extends Unary{
 
     public boolean equals(Sin other) {
         // access a private field of other!
-        return this.getOperand() == other.getOperand() && this.getName() == other.getName();
+        return this.getOperand() == other.getOperand() && Objects.equals(this.getName(), other.getName());
     }
 }

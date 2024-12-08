@@ -1,6 +1,6 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Multiplication extends Binary{
     public Multiplication(SymbolicExpression lhs, SymbolicExpression rhs){
@@ -39,6 +39,6 @@ public class Multiplication extends Binary{
 
     public boolean equals(Multiplication other) {
         // access a private field of other!
-        return (this.getLhs() == other.getLhs() || this.getLhs() == other.getRhs()) && (this.getRhs() == other.getRhs() || this.getRhs() == other.getLhs()) && this.getName() == other.getName();
+        return (this.getLhs() == other.getLhs() || this.getLhs() == other.getRhs()) && (this.getRhs() == other.getRhs() || this.getRhs() == other.getLhs()) && Objects.equals(this.getName(), other.getName());
     }
 }

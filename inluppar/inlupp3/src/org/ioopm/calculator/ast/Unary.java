@@ -1,5 +1,7 @@
 package org.ioopm.calculator.ast;
 
+import java.util.Objects;
+
 public abstract class Unary extends SymbolicExpression{
     private SymbolicExpression operand;
     public Unary(SymbolicExpression operand){
@@ -30,7 +32,7 @@ public abstract class Unary extends SymbolicExpression{
 
     public boolean equals(Unary other) {
         // access a private field of other!
-        return this.operand == other.operand && this.getName() == other.getName();
+        return this.operand == other.operand && Objects.equals(this.getName(), other.getName());
     }
 
 }

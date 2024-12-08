@@ -7,12 +7,20 @@
     <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="efawfga">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/SymbolicExpression.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/SymbolicExpression.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +69,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Calculator.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Test.executor&quot;: &quot;Run&quot;,
     &quot;Makefile Target.all.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -71,7 +80,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.excludes&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -79,13 +88,30 @@
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\ast" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\parser" />
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3" />
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp33" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.ioopm.calculator.parser" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Calculator">
     <configuration name="Calculator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.ioopm.calculator.Calculator" />
+      <module name="inlupp3" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.ioopm.calculator.Test" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.ioopm.calculator.Test" />
       <module name="inlupp3" />
       <extension name="coverage">
         <pattern>
@@ -117,6 +143,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Calculator" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Makefile Target.all" />
       </list>
     </recent_temporary>
@@ -162,7 +189,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733595490015</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="efawfga">
+      <option name="closed" value="true" />
+      <created>1733616314968</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1733616314968</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

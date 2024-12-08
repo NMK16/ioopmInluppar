@@ -1,6 +1,6 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Variable extends Atom {
     private String identifier;
@@ -34,7 +34,7 @@ public class Variable extends Atom {
 
     public boolean equals(Variable other) {
         // access a private field of other!
-        return this.identifier == other.identifier;
+        return Objects.equals(this.identifier, other.identifier);
     }
 
     @Override

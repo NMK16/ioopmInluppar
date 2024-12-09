@@ -7,20 +7,6 @@
     <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="efawfga">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,23 +52,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Calculator.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.Test.executor&quot;: &quot;Run&quot;,
-    &quot;Makefile Target.all.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Users/Hadi/Documents/ioopmInluppar/inluppar/inlupp3/src/org/ioopm/calculator/ast&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.excludes&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Calculator.executor": "Run",
+    "Application.Test.executor": "Run",
+    "Makefile Target.all.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/nk/Inlupp1/ioopmInluppar",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.excludes"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\ast" />
@@ -144,7 +130,6 @@
       <list>
         <item itemvalue="Application.Calculator" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Makefile Target.all" />
       </list>
     </recent_temporary>
   </component>

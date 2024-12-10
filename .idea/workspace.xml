@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="efawfga">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/Calculator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Variable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/Calculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Assignment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Cos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Division.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Exp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Multiplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Negation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Sin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Subtraction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Unary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Variable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/src/org/ioopm/calculator/ast/Vars.java" afterDir="false" />
+    <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="Assignment 3 done">
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,12 +182,22 @@
       <option name="project" value="LOCAL" />
       <updated>1733616314968</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Assignment 3 done">
+      <option name="closed" value="true" />
+      <created>1733701731373</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1733701731373</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="i1" />
     <MESSAGE value="efawfga" />
-    <option name="LAST_COMMIT_MESSAGE" value="efawfga" />
+    <MESSAGE value="efawfgasg" />
+    <MESSAGE value="Assignment 3 done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Assignment 3 done" />
   </component>
 </project>

@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="Assignment 3 done">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Cos.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Cos.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Division.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Division.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Exp.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Exp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Log.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Log.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Multiplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Multiplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Negation.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Negation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Sin.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Sin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Subtraction.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Subtraction.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,8 +82,8 @@
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\ast" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\parser" />
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3" />
+      <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\parser" />
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp33" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -190,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733701731373</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Assignment 3 done">
+      <option name="closed" value="true" />
+      <created>1733841432552</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1733841432552</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

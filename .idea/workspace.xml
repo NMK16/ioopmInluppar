@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a7a5d57-e71f-472e-a600-cb394a30f791" name="Changes" comment="Assignment 3 done">
+      <change afterPath="$PROJECT_DIR$/inluppar/inlupp4/calculator/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Assignment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Cos.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Cos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Division.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Division.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Exp.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Exp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Log.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Log.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Multiplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Multiplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Negation.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Negation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Sin.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Sin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Subtraction.class" beforeDir="false" afterPath="$PROJECT_DIR$/inluppar/inlupp3/classes/org/ioopm/calculator/ast/Subtraction.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,25 +52,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Calculator.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.Test.executor&quot;: &quot;Run&quot;,
-    &quot;Makefile Target.all.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Users/Hadi/Documents/ioopmInluppar/inluppar/inlupp3/src/org/ioopm/calculator/ast&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.excludes&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Calculator.executor": "Debug",
+    "Application.Test.executor": "Run",
+    "Makefile Target.all.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Users/Hadi/Documents/ioopmInluppar/inluppar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.excludes"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp4" />
       <recent name="D:\Users\Hadi\Documents\ioopmInluppar\inluppar\inlupp3\src\org\ioopm\calculator\ast" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -207,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733841432552</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Assignment 3 done">
+      <option name="closed" value="true" />
+      <created>1733843015630</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1733843015630</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

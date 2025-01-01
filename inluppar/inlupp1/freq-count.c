@@ -21,28 +21,40 @@ void sort_keys(char *keys[], size_t no_keys)
 }
 
 void complete_ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
-    if (!ht) {
+    if (!ht) return;
+
+    if (ioopm_hash_table_size(ht) == 0) {
+        ioopm_hash_table_destroy(ht);
         return;
     }
 
     ioopm_list_t *keys_list = ioopm_hash_table_keys(ht);
+    if (!keys_list) {
+        ioopm_hash_table_destroy(ht);
+        return;
+    }
+
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(keys_list);
+    if (!iter) {
+        ioopm_linked_list_destroy(keys_list);
+        ioopm_hash_table_destroy(ht);
+        return;
+    }
 
     while (ioopm_iterator_has_next(iter)) {
-    elem_t key = ioopm_iterator_current(iter);
+        elem_t key = ioopm_iterator_current(iter);
         if (key.p) {
             free(key.p);
         }
         ioopm_iterator_next(iter);
     }
-    if(ioopm_iterator_has_current(iter)){
+
+    if (ioopm_iterator_has_current(iter)) {
         elem_t key = ioopm_iterator_current(iter);
         if (key.p) {
             free(key.p);
         }
-
     }
-   
 
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(keys_list);

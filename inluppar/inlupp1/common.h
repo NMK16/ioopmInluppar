@@ -29,9 +29,11 @@ typedef bool ioopm_equal_function(elem_t a, elem_t b);
 
 // Hash table structure
 typedef struct hash_table {
-    entry_t *buckets[No_Buckets]; 
+    entry_t **buckets; 
     size_t size;
     ioopm_hash_function *hash_fn;
+    size_t capacity;            // Number of buckets
+    float load_factor;          // Load factor threshold
     ioopm_equal_function *key_eq_fn; 
     ioopm_equal_function *value_eq_fn; 
 } ioopm_hash_table_t;

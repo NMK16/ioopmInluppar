@@ -41,6 +41,7 @@ void test_iterator_creation() {
     ioopm_list_t *test_list = ioopm_linked_list_create(eq_fn);
     ioopm_linked_list_append(test_list, int_elem(1));
     ioopm_linked_list_append(test_list, int_elem(3));
+
     ioopm_list_iterator_t *iter = ioopm_list_iterator_create(test_list);
 
 

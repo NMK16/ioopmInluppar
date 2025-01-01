@@ -32,37 +32,39 @@ iterator_tests: iterator_tests.o iterator.o linked_list.o
 
 # Clean command to remove object files and executables
 clean:
-	rm -f *.o myprog unit_tests linked_list_test iterator_tests *.gcno *.gcda
+	rm -f *.o myprog unit_tests linked_list_test iterator_tests *.gcno *.gcda *.gcov
 
 # Run all tests
 run: unit_tests linked_list_test iterator_tests
-	@echo "Running unit tests..."
+	@echo "Running unit tests"
 	./unit_tests
-	@echo "Running linked list tests..."
+	@echo "Running linked list tests"
 	./linked_list_test
-	@echo "Running iterator tests..."
+	@echo "Running iterator tests"
 	./iterator_tests
 
 # Memory testing using Valgrind for all tests
 memtest: unit_tests linked_list_test iterator_tests
-	@echo "Running unit tests with Valgrind..."
+	@echo "Running unit tests with Valgrind"
 	valgrind --leak-check=full ./unit_tests
-	@echo "Running linked list tests with Valgrind..."
+	@echo "Running linked list tests with Valgrind"
 	valgrind --leak-check=full ./linked_list_test
-	@echo "Running iterator tests with Valgrind..."
+	@echo "Running iterator tests with Valgrind"
 	valgrind --leak-check=full ./iterator_tests
 
 # Generate code coverage report
 gcoverage: C_OPTIONS += $(GCOV_OPTIONS)
 gcoverage: unit_tests linked_list_test iterator_tests
-	@echo "Generating coverage for unit tests..."
+	@echo "Creating coverage for unit tests"
 	./unit_tests
-	@echo "Generating coverage for linked list tests..."
+	@echo "Creating coverage for linked list tests..."
 	./linked_list_test
-	@echo "Generating coverage for iterator tests..."
+	@echo "Creating coverage for iterator tests..."
 	./iterator_tests
-	@echo "Generating coverage reports..."
+	@echo "Creating coverage reports..."
+	# Run gcov on each source file and test file
 	gcov $(SRC_FILES) $(TEST_SRC_FILES)
+	@echo "Coverage report generated"
 
 # Pattern rule for object files
 %.o: %.c

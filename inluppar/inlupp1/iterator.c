@@ -17,9 +17,13 @@ ioopm_list_iterator_t *ioopm_list_iterator_create(ioopm_list_t *list) {
 /// @brief Checks if there are more elements to iterate over
 /// @param iter the iterator
 /// @return true if there is at least one more element 
-bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter) { 
+bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter) {
+    if (!iter || !iter->current) {
+        return false;
+    }
     return iter->current->next != NULL;
 }
+
 
 bool ioopm_iterator_has_current(ioopm_list_iterator_t *iter) { 
     return iter->current != NULL;

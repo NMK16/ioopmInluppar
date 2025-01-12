@@ -30,6 +30,6 @@ public class Cos extends Unary{
 
     public boolean equals(Cos other) {
         // access a private field of other!
-        return this.getOperand() == other.getOperand() && Objects.equals(this.getName(), other.getName());
+        return this.getOperand().equals(other.getOperand()) && Objects.equals(this.getName(), other.getName());
     }
 }

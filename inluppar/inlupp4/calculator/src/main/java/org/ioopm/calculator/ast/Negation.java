@@ -17,7 +17,7 @@ public class Negation extends Unary{
 
     @Override
     public String getName() {
-        return "-()";
+        return "-";
     }
 
     public boolean equals(Object other) {
@@ -30,7 +30,7 @@ public class Negation extends Unary{
 
     public boolean equals(Negation other) {
         // access a private field of other!
-        return this.getOperand() == other.getOperand() && Objects.equals(this.getName(), other.getName());
+        return this.getOperand().equals(other.getOperand()) && Objects.equals(this.getName(), other.getName());
     }
 
 }

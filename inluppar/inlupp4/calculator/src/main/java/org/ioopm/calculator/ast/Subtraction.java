@@ -26,7 +26,7 @@ public class Subtraction extends Binary{
     }
 
     public String toString() {
-        return this.getLhs().toString() + " " + this.getName() + " " + this.getRhs().toString();
+        return super.toString();
     }
     public boolean equals(Object other) {
         if (other instanceof Subtraction) {
@@ -38,6 +38,6 @@ public class Subtraction extends Binary{
 
     public boolean equals(Subtraction other) {
         // access a private field of other!
-        return this.getLhs() == other.getLhs() && this.getRhs() == other.getRhs() && Objects.equals(this.getName(), other.getName());
+        return this.getLhs().equals(other.getLhs()) && this.getRhs().equals(other.getRhs()) && Objects.equals(this.getName(), other.getName());
     }
 }

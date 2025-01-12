@@ -39,6 +39,6 @@ public class Multiplication extends Binary{
 
     public boolean equals(Multiplication other) {
         // access a private field of other!
-        return (this.getLhs() == other.getLhs() || this.getLhs() == other.getRhs()) && (this.getRhs() == other.getRhs() || this.getRhs() == other.getLhs()) && Objects.equals(this.getName(), other.getName());
+        return (this.getLhs().equals(other.getLhs()) || this.getLhs().equals(other.getRhs())) && (this.getRhs().equals(other.getRhs()) || this.getRhs().equals(other.getLhs())) && Objects.equals(this.getName(), other.getName());
     }
 }

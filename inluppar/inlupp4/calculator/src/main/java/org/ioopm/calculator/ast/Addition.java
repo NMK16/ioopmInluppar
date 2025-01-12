@@ -38,5 +38,5 @@ public class Addition extends Binary{
 
     public boolean equals(Addition other) {
         // access a private field of other!
-        return (this.getLhs() == other.getLhs() || this.getLhs() == other.getRhs()) && (this.getRhs() == other.getRhs() || this.getRhs() == other.getLhs()) && this.getName() == other.getName();    }
+        return (this.getLhs().equals(other.getLhs()) || this.getLhs().equals(other.getRhs()) && (this.getRhs().equals(other.getRhs()) || this.getRhs().equals(other.getLhs())) && this.getName().equals(other.getName()));    }
 }

@@ -36,7 +36,9 @@ public abstract class Binary extends SymbolicExpression{
         if (this.getRhs().getPriority() < this.getPriority()) {
             right = "(" + right + ")";
         }
-
-        return left + " " + this.getName() + " " + right;
+        if(this.getName() == "+" || this.getName() == "*" || this.getName() == "="){
+            return left + " " + this.getName() + " " + right;
+        }
+        return "(" + left + " " + this.getName() + " " + right + ")";
     }
 }

@@ -13,13 +13,16 @@ public abstract class Unary extends SymbolicExpression{
     }
 
     public String toString() {
-        // Note how the call to toString() is not necessary
-        return this.getName() + " " + this.operand.toString();
+        String operandString = this.getOperand().toString();
+        if(this.getOperand().isConstant() && this.getOperand().getValue() == (int)this.getOperand().getValue()){
+            operandString = String.valueOf((int)this.getOperand().getValue());
+        }
+        return this.getName() + "(" + operandString + ")";
     }
 
     @Override
     public int getPriority() {
-        return 200; // Highest priority for unary operators
+        return 200;
     }
 
     public boolean equals(Object other) {

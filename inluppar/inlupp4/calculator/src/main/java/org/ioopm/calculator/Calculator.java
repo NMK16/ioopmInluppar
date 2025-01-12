@@ -1,5 +1,6 @@
 package org.ioopm.calculator;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.ioopm.calculator.ast.*;
 import org.ioopm.calculator.parser.*;
@@ -12,11 +13,12 @@ public class Calculator {
         int fullyEvaluated = 0;
         final CalculatorParser Parser = new CalculatorParser();
         final Environment vars = new Environment();
-
+        Scanner sc = new Scanner(System.in);
         label:
         while (true){
             System.out.println("Enter expression to evaluate: ");
-            String input = System.console().readLine();
+            String input = sc.nextLine();
+
             try{
                 SymbolicExpression parsed = Parser.parse(input, vars);
                 if(parsed.isCommand()){

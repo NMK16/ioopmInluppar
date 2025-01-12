@@ -1,0 +1,657 @@
+desc: (none)
+cmd: ./freq-count 16k-words.txt
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=2384821
+mem_heap_B=23877
+mem_heap_extra_B=16611
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=3805562
+mem_heap_B=29388
+mem_heap_extra_B=21852
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=6681173
+mem_heap_B=38238
+mem_heap_extra_B=30074
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=8460898
+mem_heap_B=42844
+mem_heap_extra_B=34668
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=10463113
+mem_heap_B=47251
+mem_heap_extra_B=38789
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=12275754
+mem_heap_B=50681
+mem_heap_extra_B=41951
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=15401992
+mem_heap_B=56466
+mem_heap_extra_B=47238
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=17366541
+mem_heap_B=59718
+mem_heap_extra_B=50178
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=20449665
+mem_heap_B=63665
+mem_heap_extra_B=53831
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=23768870
+mem_heap_B=67874
+mem_heap_extra_B=57606
+mem_stacks_B=0
+heap_tree=detailed
+n5: 67874 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 43608 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 43608 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 43608 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 43608 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 43608 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 16722 0x50C334E: strdup (strdup.c:42)
+  n1: 16722 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 16722 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 16722 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=11
+#-----------
+time=27381836
+mem_heap_B=72712
+mem_heap_extra_B=62016
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=29641935
+mem_heap_B=75382
+mem_heap_extra_B=64474
+mem_stacks_B=0
+heap_tree=detailed
+n5: 75382 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 48936 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 48936 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 48936 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 48936 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 48936 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 18902 0x50C334E: strdup (strdup.c:42)
+  n1: 18902 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 18902 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 18902 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=13
+#-----------
+time=31081979
+mem_heap_B=77050
+mem_heap_extra_B=66030
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=33336230
+mem_heap_B=79519
+mem_heap_extra_B=68217
+mem_stacks_B=0
+heap_tree=detailed
+n5: 79519 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 51816 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 51816 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 51816 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 51816 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 51816 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 20159 0x50C334E: strdup (strdup.c:42)
+  n1: 20159 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 20159 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 20159 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=15
+#-----------
+time=37013837
+mem_heap_B=83856
+mem_heap_extra_B=72168
+mem_stacks_B=0
+heap_tree=detailed
+n5: 83856 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 54888 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 54888 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 54888 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 54888 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 54888 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 21424 0x50C334E: strdup (strdup.c:42)
+  n1: 21424 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 21424 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 21424 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=16
+#-----------
+time=38475748
+mem_heap_B=85160
+mem_heap_extra_B=73424
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=40734757
+mem_heap_B=87748
+mem_heap_extra_B=75684
+mem_stacks_B=0
+heap_tree=detailed
+n5: 87748 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 57624 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 57624 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 57624 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 57624 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 57624 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 22580 0x50C334E: strdup (strdup.c:42)
+  n1: 22580 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 22580 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 22580 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=18
+#-----------
+time=44382271
+mem_heap_B=90964
+mem_heap_extra_B=78556
+mem_stacks_B=0
+heap_tree=detailed
+n5: 90964 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 59880 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 59880 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 59880 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 59880 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 59880 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 23540 0x50C334E: strdup (strdup.c:42)
+  n1: 23540 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 23540 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 23540 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=19
+#-----------
+time=47500434
+mem_heap_B=93770
+mem_heap_extra_B=81046
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=49551806
+mem_heap_B=95161
+mem_heap_extra_B=82359
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=51426562
+mem_heap_B=96415
+mem_heap_extra_B=83449
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=53302762
+mem_heap_B=97769
+mem_heap_extra_B=84751
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=55210598
+mem_heap_B=99172
+mem_heap_extra_B=85956
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=57755170
+mem_heap_B=101210
+mem_heap_extra_B=87774
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=59674239
+mem_heap_B=102945
+mem_heap_extra_B=89335
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=62242007
+mem_heap_B=105074
+mem_heap_extra_B=91222
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=65408213
+mem_heap_B=107463
+mem_heap_extra_B=93265
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=67528342
+mem_heap_B=108826
+mem_heap_extra_B=94462
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=70673680
+mem_heap_B=111026
+mem_heap_extra_B=96422
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=72570976
+mem_heap_B=112555
+mem_heap_extra_B=97821
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=75090863
+mem_heap_B=114792
+mem_heap_extra_B=99824
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=78308159
+mem_heap_B=116109
+mem_heap_extra_B=101067
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=80716185
+mem_heap_B=117433
+mem_heap_extra_B=102287
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=84281872
+mem_heap_B=118905
+mem_heap_extra_B=103663
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=86782876
+mem_heap_B=120739
+mem_heap_extra_B=105381
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=88417439
+mem_heap_B=121807
+mem_heap_extra_B=106393
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=90842034
+mem_heap_B=123179
+mem_heap_extra_B=107701
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=92436602
+mem_heap_B=124692
+mem_heap_extra_B=109276
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=94830552
+mem_heap_B=126689
+mem_heap_extra_B=111311
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=98048315
+mem_heap_B=128368
+mem_heap_extra_B=113064
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=99745090
+mem_heap_B=129293
+mem_heap_extra_B=113995
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=102348213
+mem_heap_B=130721
+mem_heap_extra_B=115423
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=104202716
+mem_heap_B=131282
+mem_heap_extra_B=115974
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=106650105
+mem_heap_B=132408
+mem_heap_extra_B=117088
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=108257028
+mem_heap_B=133394
+mem_heap_extra_B=118150
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=111685116
+mem_heap_B=134813
+mem_heap_extra_B=119523
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=114111947
+mem_heap_B=136159
+mem_heap_extra_B=120825
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=115735888
+mem_heap_B=136764
+mem_heap_extra_B=121412
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=118483481
+mem_heap_B=138129
+mem_heap_extra_B=122711
+mem_stacks_B=0
+heap_tree=detailed
+n5: 138129 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 93792 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 93792 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 93792 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 93792 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 93792 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 36793 0x50C334E: strdup (strdup.c:42)
+  n1: 36793 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 36793 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 36793 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=50
+#-----------
+time=119921065
+mem_heap_B=138979
+mem_heap_extra_B=123589
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=121351096
+mem_heap_B=139809
+mem_heap_extra_B=124399
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=122958483
+mem_heap_B=140750
+mem_heap_extra_B=125402
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=124389886
+mem_heap_B=141485
+mem_heap_extra_B=126179
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=125825731
+mem_heap_B=142234
+mem_heap_extra_B=126926
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=127266299
+mem_heap_B=143105
+mem_heap_extra_B=127783
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=128707695
+mem_heap_B=143670
+mem_heap_extra_B=128370
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=129588008
+mem_heap_B=144009
+mem_heap_extra_B=128711
+mem_stacks_B=0
+heap_tree=detailed
+n5: 144009 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 98256 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 98256 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 98256 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 98256 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 98256 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 38209 0x50C334E: strdup (strdup.c:42)
+  n1: 38209 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 38209 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 38209 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 4096 0x50941A4: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50A4513: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x50A1873: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+    n1: 4096 0x5095DFF: getdelim (iogetdelim.c:77)
+     n1: 4096 0x10AC70: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+      n0: 4096 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 2856 0x10934F: ioopm_hash_table_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 2856 0x10AD4C: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 592 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=58
+#-----------
+time=130219374
+mem_heap_B=237617
+mem_heap_extra_B=161455
+mem_stacks_B=0
+heap_tree=peak
+n5: 237617 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 98256 0x1093EE: entry_create (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n1: 98256 0x109590: ioopm_hash_table_insert (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 98256 0x10AB69: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n1: 98256 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+     n0: 98256 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 65504 0x109974: ioopm_hash_table_keys (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+  n0: 65504 0x10ADA1: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n1: 38209 0x50C334E: strdup (strdup.c:42)
+  n1: 38209 0x10AB54: process_word (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+   n1: 38209 0x10AC2F: process_file (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+    n0: 38209 0x10AD89: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 32752 0x10AE1D: main (in /home/nk/Inlupp1/ioopmInluppar/inluppar/inlupp1/freq-count)
+ n0: 2896 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=59
+#-----------
+time=133191365
+mem_heap_B=172073
+mem_heap_extra_B=128679
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=174547040
+mem_heap_B=140345
+mem_heap_extra_B=128679
+mem_stacks_B=0
+heap_tree=empty

@@ -6,7 +6,10 @@ public class Negation extends Unary{
     public Negation(SymbolicExpression operand){
         super(operand);
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public SymbolicExpression eval(Environment vars){
         if(this.getOperand().eval(vars).isConstant()){

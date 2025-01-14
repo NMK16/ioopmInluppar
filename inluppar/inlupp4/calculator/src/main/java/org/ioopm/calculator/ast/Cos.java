@@ -14,7 +14,10 @@ public class Cos extends Unary{
         }
         return new Cos(this.getOperand().eval(vars));
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public String getName() {
         return "cos";

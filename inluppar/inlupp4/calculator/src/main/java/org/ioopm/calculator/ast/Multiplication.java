@@ -28,7 +28,10 @@ public class Multiplication extends Binary{
     public int getPriority(){
         return 100;
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     public boolean equals(Object other) {
         if (other instanceof Multiplication) {
             return this.equals((Multiplication) other);

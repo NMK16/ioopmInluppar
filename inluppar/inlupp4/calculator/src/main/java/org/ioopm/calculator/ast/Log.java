@@ -10,11 +10,14 @@ public class Log extends Unary{
     @Override
     public SymbolicExpression eval(Environment vars){
         if(this.getOperand().eval(vars).isConstant()){
-            return new Constant(Math.log(this.getOperand().eval(vars).getValue()));
+            return new Constant(Math.log10(this.getOperand().eval(vars).getValue()));
         }
         return new Log(this.getOperand().eval(vars));
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public String getName() {
         return "log";

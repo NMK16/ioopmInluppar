@@ -8,6 +8,11 @@ public class Addition extends Binary{
     }
 
     @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
+
+    @Override
     public SymbolicExpression eval(Environment vars){
         if(this.getLhs().eval(vars).isConstant() && this.getRhs().eval(vars).isConstant()){
             return new Constant(this.getLhs().eval(vars).getValue() + this.getRhs().eval(vars).getValue());

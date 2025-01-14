@@ -6,7 +6,10 @@ public class Subtraction extends Binary{
     public Subtraction(SymbolicExpression lhs, SymbolicExpression rhs){
         super(lhs, rhs);
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public SymbolicExpression eval(Environment vars){
         if(this.getLhs().eval(vars).isConstant() && this.getRhs().eval(vars).isConstant()){

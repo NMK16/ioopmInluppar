@@ -7,7 +7,10 @@ public class Constant extends Atom{
     public Constant(double value){
         this.value = value;
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public SymbolicExpression eval(Environment vars){
         return new Constant(this.value);

@@ -8,7 +8,10 @@ public class Assignment extends Binary{
     public String getName() {
         return "=";
     }
-
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
     @Override
     public SymbolicExpression eval(Environment vars) {
         if(this.getRhs() == null){

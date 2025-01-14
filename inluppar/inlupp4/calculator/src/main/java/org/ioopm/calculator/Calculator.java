@@ -14,6 +14,10 @@ public class Calculator {
         final CalculatorParser Parser = new CalculatorParser();
         final Environment vars = new Environment();
         Scanner sc = new Scanner(System.in);
+        final NamedConstantChecker namedConstantChecker = new NamedConstantChecker();
+        final ReassignmentChecker reAssignmentChecker = new ReassignmentChecker();
+
+
         label:
         while (true){
             System.out.println("Enter expression to evaluate: ");
@@ -21,6 +25,7 @@ public class Calculator {
 
             try{
                 SymbolicExpression parsed = Parser.parse(input, vars);
+
                 if(parsed.isCommand()){
                     switch (parsed) {
                         case Quit ignored:
@@ -29,7 +34,7 @@ public class Calculator {
                             System.out.println("Expressions Fully Evaluated: " + fullyEvaluated);
                             break label;
                         case Vars ignored:
-                            System.out.println(vars.entrySet());
+                            System.out.println(vars);
                             break;
                         case Clear ignored:
                             vars.clear();
@@ -39,9 +44,24 @@ public class Calculator {
                     }
                 }
                 else{
-                    SymbolicExpression ans = parsed.eval(vars);
-                    System.out.println("Answer: " + ans);
-                    if(ans.isConstant()){
+                    if (!namedConstantChecker.check(parsed)) {
+                        System.out.println("\nError, assignments to named constants:");
+                        for (String illegalAssignment : namedConstantChecker.getIllegalAssignments()) {
+                            System.out.println(illegalAssignment);
+                        }
+                        System.out.println();
+                        errors++;
+                        continue;
+                    }
+                    if(!reAssignmentChecker.check(parsed)){
+                        System.out.println("\nError, the variable " + reAssignmentChecker.getIdentifier() + " is reassigned.\n");
+                        errors++;
+                        continue;
+                    }
+                    final EvaluationVisitor evaluator = new EvaluationVisitor();
+                    final SymbolicExpression evaluationResult = evaluator.evaluate(parsed, vars);
+                    System.out.println("Answer: " + evaluationResult);
+                    if(parsed.isConstant()){
                         fullyEvaluated++;
                     }
                     expressionsCounter++;

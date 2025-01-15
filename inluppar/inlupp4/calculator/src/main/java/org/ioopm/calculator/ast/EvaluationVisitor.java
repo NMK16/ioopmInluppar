@@ -171,10 +171,10 @@ public class EvaluationVisitor implements Visitor {
         SymbolicExpression body = n.getBody();
         ScopeHandler scopeHandler = new ScopeHandler();
 
-        scopeHandler.pushEnvironment();
+        scopeHandler.pushEnvironment(this.env);
+
         SymbolicExpression result = body.accept(this);
         scopeHandler.popEnvironment();
-
         return result;
     }
 

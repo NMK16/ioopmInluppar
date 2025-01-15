@@ -12,25 +12,6 @@ public class Assignment extends Binary{
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }
-    @Override
-    public SymbolicExpression eval(Environment vars) {
-        if(this.getRhs() == null){
-            throw new IllegalAssignmentException("Error: cannot assign value to \"null\"");
-        }
-        if(this.getLhs() == null){
-            vars.remove((Variable)this.getRhs());
-            return this.getLhs();
-        }
-        SymbolicExpression lhs = this.getLhs().eval(vars);
-        SymbolicExpression rhs = this.getRhs();
-
-        if (Constants.namedConstants.containsKey(rhs.toString())) {
-            throw new IllegalAssignmentException("Error: cannot redefine named constant: " + rhs);
-        }
-
-        vars.put((Variable) rhs, lhs);
-        return lhs;
-    }
 
     public boolean equals(Object other) {
         if (other instanceof Assignment) {

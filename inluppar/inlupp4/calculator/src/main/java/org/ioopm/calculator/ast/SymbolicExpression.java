@@ -1,10 +1,6 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
-
 public abstract class SymbolicExpression {
-    public abstract SymbolicExpression eval(Environment vars);
-
     public boolean isConstant(){
         return false;
     }

@@ -11,14 +11,6 @@ public class Sin extends Unary{
         return v.visit(this);
     }
     @Override
-    public SymbolicExpression eval(Environment vars){
-        if(this.getOperand().eval(vars).isConstant()){
-            return new Constant(Math.sin(this.getOperand().eval(vars).getValue()));
-        }
-        return new Sin(this.getOperand().eval(vars));
-    }
-
-    @Override
     public String getName() {
         return "sin";
     }

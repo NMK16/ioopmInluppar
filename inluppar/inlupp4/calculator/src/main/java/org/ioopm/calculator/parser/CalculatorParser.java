@@ -45,7 +45,6 @@ public class CalculatorParser {
     public SymbolicExpression parse(String inputString, Environment vars) throws IOException {
         this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via stringreader.
         this.vars = vars;
-        this.scopeHandler = new ScopeHandler();
         this.st.ordinaryChar('-');
         this.st.ordinaryChar('/');
         this.st.eolIsSignificant(true);
@@ -138,12 +137,12 @@ public class CalculatorParser {
     }
 
     private SymbolicExpression handleScope() throws IOException {
-        ScopeHandler currentScope = scopeHandler; // Cast vars to ScopeHandler
+        ScopeHandler currentScope = new ScopeHandler();
 
-        currentScope.pushEnvironment();
+        currentScope.pushEnvironment(vars);
         SymbolicExpression result = expression();
         currentScope.popEnvironment();
-        return new Scope(result); // Return the result of the scope's evaluation
+        return new Scope(result);
     }
 
     /**
@@ -237,7 +236,6 @@ public class CalculatorParser {
                 throw new SyntaxErrorException("expected ')'");
             }
         }else if(this.st.ttype == '{'){
-            System.out.println("YADFBOA");
             this.st.nextToken();
             result = assignment();
             if (this.st.nextToken() != '}') {

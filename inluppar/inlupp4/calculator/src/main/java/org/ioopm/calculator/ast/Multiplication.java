@@ -7,14 +7,6 @@ public class Multiplication extends Binary{
         super(lhs, rhs);
     }
 
-    @Override
-    public SymbolicExpression eval(Environment vars){
-        if(this.getLhs().eval(vars).isConstant() && this.getRhs().eval(vars).isConstant()){
-            return new Constant(this.getLhs().eval(vars).getValue() * this.getRhs().eval(vars).getValue());
-        }
-        return new Multiplication(this.getLhs().eval(vars), this.getRhs().eval(vars));
-    }
-
     public String toString() {
         return super.toString();
     }

@@ -8,13 +8,6 @@ public class Cos extends Unary{
     }
 
     @Override
-    public SymbolicExpression eval(Environment vars){
-        if(this.getOperand().eval(vars).isConstant()){
-            return new Constant(Math.cos(this.getOperand().eval(vars).getValue()));
-        }
-        return new Cos(this.getOperand().eval(vars));
-    }
-    @Override
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }

@@ -30,8 +30,8 @@ public class ScopeHandler extends Environment {
         return var;
     }
 
-    public void pushEnvironment() {
-        environmentStack.push(new Environment());
+    public void pushEnvironment(Environment env) {
+        environmentStack.push(env);
     }
 
     public void popEnvironment() {

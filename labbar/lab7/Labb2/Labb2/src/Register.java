@@ -1,9 +1,7 @@
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Register {
     boolean open = false;
-    Queue<Customer> queue = new LinkedList<Customer>();
+    Queue<Customer> queue = new Queue<>();
     int numberOfCustomersServed;
     
     public void open(){
@@ -20,22 +18,21 @@ public class Register {
 
     public void step(){
         if(hasCustomers()){
-            this.queue.element().serve();
+            this.queue.first().serve();
         }
     }
     public boolean hasCustomers(){
-
-        return !this.queue.isEmpty();
+        return this.queue.length() != 0;
     }
 
     public boolean currentCustomerIsDone(){
         if(hasCustomers()){
-            return this.queue.element().isDone();
+            return this.queue.first().isDone();
         }
         return false;
     }
 
     public void addToQueue(Customer c){
-        this.queue.add(c);
+        this.queue.enqueue(c);
     }
 }

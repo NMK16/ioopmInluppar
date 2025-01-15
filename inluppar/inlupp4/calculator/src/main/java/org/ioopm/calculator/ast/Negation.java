@@ -10,13 +10,6 @@ public class Negation extends Unary{
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }
-    @Override
-    public SymbolicExpression eval(Environment vars){
-        if(this.getOperand().eval(vars).isConstant()){
-            return new Constant(-1*this.getOperand().eval(vars).getValue());
-        }
-        return new Negation(this.getOperand().eval(vars));
-    }
 
     @Override
     public String getName() {

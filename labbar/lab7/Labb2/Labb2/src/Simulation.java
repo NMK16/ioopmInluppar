@@ -9,7 +9,7 @@ public class Simulation {
 
     private boolean nonFullRegisterExists(){
         for(int i = 0; i < this.store.registers.length; i++){
-            if(this.store.registers[i].queue.size() < thresholdForNewRegister){
+            if(this.store.registers[i].queue.length() < thresholdForNewRegister){
                 return true;
             }
         }

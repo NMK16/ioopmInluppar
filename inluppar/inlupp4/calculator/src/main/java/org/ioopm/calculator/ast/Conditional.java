@@ -37,46 +37,6 @@ public class Conditional extends SymbolicExpression {
     }
 
     @Override
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression lhsEval = lhs.eval(vars);
-        SymbolicExpression rhsEval = rhs.eval(vars);
-
-        if (!lhsEval.isConstant() || !rhsEval.isConstant()) {
-            throw new RuntimeException("Condition must compare constants");
-        }
-
-        double lhsValue = lhsEval.getValue();
-        double rhsValue = rhsEval.getValue();
-        boolean conditionResult;
-
-        switch (operator) {
-            case "<":
-                conditionResult = lhsValue < rhsValue;
-                break;
-            case ">":
-                conditionResult = lhsValue > rhsValue;
-                break;
-            case "<=":
-                conditionResult = lhsValue <= rhsValue;
-                break;
-            case ">=":
-                conditionResult = lhsValue >= rhsValue;
-                break;
-            case "==":
-                conditionResult = lhsValue == rhsValue;
-                break;
-            default:
-                throw new RuntimeException("Unsupported operator in condition: " + operator);
-        }
-
-        if (conditionResult) {
-            return trueBranch.eval(vars);
-        } else {
-            return falseBranch.eval(vars);
-        }
-    }
-
-    @Override
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }

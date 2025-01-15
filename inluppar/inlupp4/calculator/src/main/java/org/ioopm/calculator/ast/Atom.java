@@ -7,10 +7,6 @@ public abstract class Atom extends SymbolicExpression{
         return this.atom;
     }
 
-    @Override
-    public SymbolicExpression eval(Environment env) {
-        return this.atom;
-    }
 
     public boolean equals(Object other) {
         if (other instanceof Atom) {

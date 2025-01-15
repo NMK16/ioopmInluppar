@@ -1,12 +1,11 @@
-import java.util.LinkedList;
-import java.util.Queue;
+
 
 public class Store {
     Register[] registers;
     int numberOfOpenRegisters;
     int numberOfCustomersServed;
     int amountOfCurrentCustomers;
-
+    
     int amountOfCurrentCustomersR1;
     int amountOfCurrentCustomersR2;
     int amountOfCurrentCustomersR3;
@@ -17,7 +16,7 @@ public class Store {
 
 
     public Store() {
-        this.registers = new Register[5]; // Initial size
+        this.registers = new Register[5];
         for (int i = 0; i < registers.length; i++) {
             registers[i] = new Register();
         }
@@ -26,7 +25,7 @@ public class Store {
     public int getAverageQueueLength(){
         int counter = 0;
         for (int i = 0; i < registers.length; i++){
-            counter += this.registers[i].queue.size();
+            counter += this.registers[i].queue.length();
         }
         return numberOfOpenRegisters == 0 ? 0 : (counter/numberOfOpenRegisters);
     }
@@ -37,11 +36,11 @@ public class Store {
         }
         int counter = 0;
         for (int i = 0; i < numberOfOpenRegisters; i++){
-            if(!(this.registers[counter].queue.size() == Math.min(this.registers[counter].queue.size(), this.registers[i].queue.size()))){
+            if(!(this.registers[counter].queue.length() == Math.min(this.registers[counter].queue.length(), this.registers[i].queue.length()))){
                 counter = i;
             }
         }
-        this.registers[counter].queue.add(c);
+        this.registers[counter].addToQueue(c);
         switch(counter){
             case 0:
                 amountOfCurrentCustomersR1++;
@@ -69,7 +68,7 @@ public class Store {
             amountOfRegisteredItems++;
 
             if(registers[i].currentCustomerIsDone()){
-                registers[i].queue.remove();
+                registers[i].queue.dequeue();
                 switch(i){
                     case 0:
                         amountOfCurrentCustomersR1--;
@@ -109,10 +108,10 @@ public class Store {
     }
 
     public Queue getDoneCustomers(){
-        Queue<Customer> customersDone = new LinkedList<>();
+        Queue<Customer> customersDone = new Queue<>();
         for (int i = 0; i < this.registers.length; i++){
             if(this.registers[i].currentCustomerIsDone()){
-                customersDone.add(this.registers[i].queue.element());
+                customersDone.enqueue(this.registers[i].queue.first());
             }
         }
         return customersDone;

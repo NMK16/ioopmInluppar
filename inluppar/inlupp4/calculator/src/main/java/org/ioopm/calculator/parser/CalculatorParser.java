@@ -14,6 +14,7 @@ import java.util.*;
 public class CalculatorParser {
     private StreamTokenizer st;
     private Environment vars;
+    private ScopeHandler scopeHandler;
     private static char MULTIPLY = '*';
     private static char ADDITION = '+';
     private static char SUBTRACTION = '-';
@@ -25,6 +26,7 @@ public class CalculatorParser {
     private static String LOG = "Log";
     private static String EXP = "Exp";
     private static char ASSIGNMENT = '=';
+    private static char SCOPE = '{';
 
     // unallowerdVars is used to check if variabel name that we
     // want to assign new meaning to is a valid name eg 3 = Quit
@@ -43,6 +45,7 @@ public class CalculatorParser {
     public SymbolicExpression parse(String inputString, Environment vars) throws IOException {
         this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via stringreader.
         this.vars = vars;
+        this.scopeHandler = new ScopeHandler();
         this.st.ordinaryChar('-');
         this.st.ordinaryChar('/');
         this.st.eolIsSignificant(true);
@@ -135,19 +138,12 @@ public class CalculatorParser {
     }
 
     private SymbolicExpression handleScope() throws IOException {
-        // When a scope starts, push a new environment
-        ScopeHandler currentScope = (ScopeHandler) vars; // assuming vars is an instance of Scope or extends it
-        currentScope.pushEnvironment(); // Push new environment for the scope
+        ScopeHandler currentScope = scopeHandler; // Cast vars to ScopeHandler
 
-        SymbolicExpression result = statement(); // Process the statement within the scope
-
-        // Look for the closing brace for the scope
-        if (this.st.ttype != '}') {
-            throw new SyntaxErrorException("Error: Expected '}' to close scope");
-        }
-
-        currentScope.popEnvironment(); // Pop the scope once the block ends
-        return result; // Return the result of the scope's evaluation
+        currentScope.pushEnvironment();
+        SymbolicExpression result = expression();
+        currentScope.popEnvironment();
+        return new Scope(result); // Return the result of the scope's evaluation
     }
 
     /**
@@ -240,6 +236,13 @@ public class CalculatorParser {
             if (this.st.nextToken() != ')') {
                 throw new SyntaxErrorException("expected ')'");
             }
+        }else if(this.st.ttype == '{'){
+            System.out.println("YADFBOA");
+            this.st.nextToken();
+            result = assignment();
+            if (this.st.nextToken() != '}') {
+                throw new SyntaxErrorException("expected '}'");
+            }
         } else if (this.st.ttype == NEGATION) {
             result = unary();
         } else if (this.st.ttype == this.st.TT_WORD) {
@@ -250,7 +253,10 @@ public class CalculatorParser {
                     st.sval.equals(LOG)) {
 
                 result = unary();
-            } else {
+            } else if (this.st.sval.equals("if")) {
+                result = handleConditional(); // Handle conditional expressions
+            }
+            else {
                 result = identifier();
             }
         } else {
@@ -259,6 +265,53 @@ public class CalculatorParser {
         }
         return result;
     }
+
+    private SymbolicExpression handleConditional() throws IOException {
+        this.st.nextToken();
+        SymbolicExpression lhs = expression();
+
+        if (this.st.ttype != this.st.TT_WORD ||
+                !(this.st.sval.equals("<") || this.st.sval.equals(">") ||
+                        this.st.sval.equals("<=") || this.st.sval.equals(">=") ||
+                        this.st.sval.equals("=="))) {
+            throw new SyntaxErrorException("Error: Expected a relational operator in condition");
+        }
+        String operator = this.st.sval;
+
+        this.st.nextToken();
+        SymbolicExpression rhs = expression();
+
+        if (this.st.ttype != '{') {
+            throw new SyntaxErrorException("Error: Expected '{' after condition in if-statement");
+        }
+        this.st.nextToken();
+        SymbolicExpression trueBranch = statement();
+
+        if (this.st.ttype != '}') {
+            throw new SyntaxErrorException("Error: Expected '}' to close true branch of if-statement");
+        }
+
+        this.st.nextToken();
+        if (!this.st.sval.equals("else")) {
+            throw new SyntaxErrorException("Error: Expected 'else' in if-statement");
+        }
+
+        this.st.nextToken();
+        if (this.st.ttype != '{') {
+            throw new SyntaxErrorException("Error: Expected '{' after else in if-statement");
+        }
+
+        this.st.nextToken();
+        SymbolicExpression falseBranch = statement();
+
+        if (this.st.ttype != '}') {
+            throw new SyntaxErrorException("Error: Expected '}' to close false branch of if-statement");
+        }
+
+        return new Conditional(lhs, operator, rhs, trueBranch, falseBranch);
+    }
+
+
 
     /**
      * Checks what type of Unary operation the token read is and

@@ -25,10 +25,9 @@ public class ScopeHandler extends Environment {
 
     @Override
     public SymbolicExpression put(Variable var, SymbolicExpression value) {
-        // Always put the variable in the top environment (current ScopeHandler)
         Environment currentEnv = environmentStack.peek();
-        currentEnv.put(var, value);  // Use inherited put() method
-        return new Constant(2);
+        currentEnv.put(var, value);
+        return var;
     }
 
     public void pushEnvironment() {

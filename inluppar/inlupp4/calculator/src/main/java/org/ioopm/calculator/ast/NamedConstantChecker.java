@@ -7,7 +7,6 @@ public class NamedConstantChecker implements Visitor {
 
     private List<String> illegalAssignments = new ArrayList<>();
 
-    // Method to check for assignments to named constants
     public boolean check(SymbolicExpression expression) {
         illegalAssignments.clear();  // Clear previous errors
         expression.accept(this);  // Start the traversal from the root expression
@@ -18,7 +17,6 @@ public class NamedConstantChecker implements Visitor {
         return this.illegalAssignments;
     }
 
-    // Recursive visit method for Addition (example, repeat for other operations)
     @Override
     public SymbolicExpression visit(Addition a) {
         a.getLhs().accept(this);
@@ -26,7 +24,6 @@ public class NamedConstantChecker implements Visitor {
         return null;
     }
 
-    // Visit the Assignment and check for named constants
     @Override
     public SymbolicExpression visit(Assignment a) {
         SymbolicExpression left = a.getLhs().accept(this);
@@ -115,6 +112,16 @@ public class NamedConstantChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Vars n) {
         n.accept(this);
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Scope n) {
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Conditional n) {
         return null;
     }
 

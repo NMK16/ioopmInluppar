@@ -127,4 +127,14 @@ public class ReassignmentChecker implements Visitor {
         return null;
     }
 
+    @Override
+    public SymbolicExpression visit(Scope n) {
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Conditional n) {
+        return null;
+    }
+
 }

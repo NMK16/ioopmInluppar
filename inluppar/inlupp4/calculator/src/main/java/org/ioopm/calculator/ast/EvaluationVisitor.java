@@ -166,4 +166,58 @@ public class EvaluationVisitor implements Visitor {
         return n.accept(this);
     }
 
+    @Override
+    public SymbolicExpression visit(Scope n) {
+        SymbolicExpression body = n.getBody();
+        ScopeHandler scopeHandler = new ScopeHandler();
+
+        scopeHandler.pushEnvironment();
+        SymbolicExpression result = body.accept(this);
+        scopeHandler.popEnvironment();
+
+        return result;
+    }
+
+    @Override
+    public SymbolicExpression visit(Conditional n) {
+        SymbolicExpression left = n.getLhs().accept(this);
+        SymbolicExpression right = n.getRhs().accept(this);
+        String operator = n.getOperator();
+        SymbolicExpression trueBranch = n.getTrueBranch();
+        SymbolicExpression falseBranch = n.getFalseBranch();
+
+        if (!left.isConstant() || !right.isConstant()) {
+            throw new RuntimeException("Condition must compare constants");
+        }
+
+        double lhsValue = left.getValue();
+        double rhsValue = right.getValue();
+        boolean conditionResult;
+
+        switch (operator) {
+            case "<":
+                conditionResult = lhsValue < rhsValue;
+                break;
+            case ">":
+                conditionResult = lhsValue > rhsValue;
+                break;
+            case "<=":
+                conditionResult = lhsValue <= rhsValue;
+                break;
+            case ">=":
+                conditionResult = lhsValue >= rhsValue;
+                break;
+            case "==":
+                conditionResult = lhsValue == rhsValue;
+                break;
+            default:
+                throw new RuntimeException("Unsupported operator in condition: " + operator);
+        }
+
+        if (conditionResult) {
+            return trueBranch.accept(this);
+        } else {
+            return falseBranch.accept(this);
+        }    }
+
 }

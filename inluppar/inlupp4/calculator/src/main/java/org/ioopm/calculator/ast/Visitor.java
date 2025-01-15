@@ -16,4 +16,5 @@ public interface Visitor {
     SymbolicExpression visit(Subtraction n);
     SymbolicExpression visit(Variable n);
     SymbolicExpression visit(Vars n);
+    SymbolicExpression Scope(Vars n);
 }

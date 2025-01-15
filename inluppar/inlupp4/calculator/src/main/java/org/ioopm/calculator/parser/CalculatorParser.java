@@ -66,9 +66,13 @@ public class CalculatorParser {
         if (this.st.ttype == this.st.TT_WORD) { // vilken typ det senaste tecken vi lÃ¤ste in hade.
             if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) { // sval = string Variable
                 result = command();
-            } else {
+            }
+             else {
                 result = assignment(); // gÃ¥r vidare med uttrycket.
             }
+        }
+        else if (this.st.ttype == '{') {
+            result = handleScope(); // Handle scope start
         } else {
             result = assignment(); // om inte == word, gÃ¥ till assignment Ã¤ndÃ¥ (kan vara tt_number)
         }
@@ -128,6 +132,22 @@ public class CalculatorParser {
         }
         this.st.pushBack();
         return result;
+    }
+
+    private SymbolicExpression handleScope() throws IOException {
+        // When a scope starts, push a new environment
+        ScopeHandler currentScope = (ScopeHandler) vars; // assuming vars is an instance of Scope or extends it
+        currentScope.pushEnvironment(); // Push new environment for the scope
+
+        SymbolicExpression result = statement(); // Process the statement within the scope
+
+        // Look for the closing brace for the scope
+        if (this.st.ttype != '}') {
+            throw new SyntaxErrorException("Error: Expected '}' to close scope");
+        }
+
+        currentScope.popEnvironment(); // Pop the scope once the block ends
+        return result; // Return the result of the scope's evaluation
     }
 
     /**

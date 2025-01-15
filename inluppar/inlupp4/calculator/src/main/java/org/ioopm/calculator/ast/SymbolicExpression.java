@@ -5,7 +5,7 @@ public abstract class SymbolicExpression {
         return false;
     }
     public SymbolicExpression accept(Visitor v) {
-        throw new RuntimeException("Sorry");
+        throw new RuntimeException("accept called on Expression");
     }
     public String getName(){
         throw new RuntimeException("getName() called on expression with no operator");

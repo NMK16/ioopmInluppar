@@ -2,9 +2,11 @@ package org.ioopm.calculator.ast;
 
 public class EvaluationVisitor implements Visitor {
     private Environment env = null;
+    private ScopeHandler scopeHandler = null;
 
     public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
         this.env = env;
+        this.scopeHandler = new ScopeHandler();
         return topLevel.accept(this);
     }
 
@@ -39,11 +41,11 @@ public class EvaluationVisitor implements Visitor {
             throw new IllegalAssignmentException("Error: cannot assign value to \"null\"");
         }
         if(left == null){
-            env.remove((Variable) right);
+            scopeHandler.topEnv().remove((Variable) right);
             return left;
         }
 
-        env.put((Variable) right, left);
+        scopeHandler.topEnv().put((Variable) right, left);
         return left;
     }
 

@@ -22,7 +22,9 @@ public class ScopeHandler extends Environment {
         return null;
     }
 
-
+    public Environment topEnv(){
+        return environmentStack.getFirst();
+    }
     @Override
     public SymbolicExpression put(Variable var, SymbolicExpression value) {
         Environment currentEnv = environmentStack.peek();

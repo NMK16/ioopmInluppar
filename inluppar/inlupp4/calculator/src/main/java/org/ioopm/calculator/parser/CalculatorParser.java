@@ -267,47 +267,54 @@ public class CalculatorParser {
     private SymbolicExpression handleConditional() throws IOException {
         this.st.nextToken();
         SymbolicExpression lhs = expression();
-
-        if (this.st.ttype != this.st.TT_WORD ||
-                !(this.st.sval.equals("<") || this.st.sval.equals(">") ||
-                        this.st.sval.equals("<=") || this.st.sval.equals(">=") ||
-                        this.st.sval.equals("=="))) {
+    
+        // Read the relational operator
+        String operator;
+        if (this.st.ttype == '<' || this.st.ttype == '>' || this.st.ttype == '=') {
+            operator = String.valueOf((char) this.st.ttype);
+            this.st.nextToken();
+            if (this.st.ttype == '=') { 
+                operator += "=";
+            } else {
+                this.st.pushBack();
+            }
+        } else {
             throw new SyntaxErrorException("Error: Expected a relational operator in condition");
         }
-        String operator = this.st.sval;
-
+    
         this.st.nextToken();
         SymbolicExpression rhs = expression();
-
+    
         if (this.st.ttype != '{') {
             throw new SyntaxErrorException("Error: Expected '{' after condition in if-statement");
         }
         this.st.nextToken();
         SymbolicExpression trueBranch = statement();
-
+    
         if (this.st.ttype != '}') {
             throw new SyntaxErrorException("Error: Expected '}' to close true branch of if-statement");
         }
-
+    
         this.st.nextToken();
         if (!this.st.sval.equals("else")) {
             throw new SyntaxErrorException("Error: Expected 'else' in if-statement");
         }
-
+    
         this.st.nextToken();
         if (this.st.ttype != '{') {
             throw new SyntaxErrorException("Error: Expected '{' after else in if-statement");
         }
-
+    
         this.st.nextToken();
         SymbolicExpression falseBranch = statement();
-
+    
         if (this.st.ttype != '}') {
             throw new SyntaxErrorException("Error: Expected '}' to close false branch of if-statement");
         }
-
+    
         return new Conditional(lhs, operator, rhs, trueBranch, falseBranch);
     }
+    
 
 
 

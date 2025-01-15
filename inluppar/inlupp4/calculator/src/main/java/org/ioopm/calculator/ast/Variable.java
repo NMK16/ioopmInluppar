@@ -7,6 +7,7 @@ public class Variable extends Atom implements Comparable<Variable> {
     public Variable(String identifier){
         this.identifier = identifier;
     }
+    
     @Override
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);

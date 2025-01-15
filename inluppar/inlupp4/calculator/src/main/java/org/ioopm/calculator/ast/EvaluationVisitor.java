@@ -7,6 +7,7 @@ public class EvaluationVisitor implements Visitor {
     public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
         this.env = env;
         this.scopeHandler = new ScopeHandler();
+        this.scopeHandler.pushEnvironment(env);
         return topLevel.accept(this);
     }
 
@@ -41,11 +42,10 @@ public class EvaluationVisitor implements Visitor {
             throw new IllegalAssignmentException("Error: cannot assign value to \"null\"");
         }
         if(left == null){
-            scopeHandler.topEnv().remove((Variable) right);
+            this.scopeHandler.getEnvironmentStack().peek().remove((Variable) right);
             return left;
         }
-
-        scopeHandler.topEnv().put((Variable) right, left);
+        this.scopeHandler.getEnvironmentStack().peek().put((Variable) right, left);
         return left;
     }
 
@@ -154,9 +154,9 @@ public class EvaluationVisitor implements Visitor {
         }
 
         // Fallback: check the environment
-        SymbolicExpression variable = new Variable(identifier);
-        if (env.containsKey(variable)) {
-            return env.get(variable);
+        Variable variable = new Variable(identifier);
+        if (this.scopeHandler.getEnvironmentStack().peek().containsKey(variable)) {
+            return this.scopeHandler.getEnvironmentStack().peek().get(variable);
         }
 
         return variable;

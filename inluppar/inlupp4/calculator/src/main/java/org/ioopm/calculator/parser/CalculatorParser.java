@@ -14,7 +14,6 @@ import java.util.*;
 public class CalculatorParser {
     private StreamTokenizer st;
     private Environment vars;
-    private ScopeHandler scopeHandler;
     private static char MULTIPLY = '*';
     private static char ADDITION = '+';
     private static char SUBTRACTION = '-';
@@ -138,7 +137,6 @@ public class CalculatorParser {
 
     private SymbolicExpression handleScope() throws IOException {
         ScopeHandler currentScope = new ScopeHandler();
-
         currentScope.pushEnvironment(vars);
         SymbolicExpression result = expression();
         currentScope.popEnvironment();

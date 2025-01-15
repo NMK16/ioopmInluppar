@@ -1,30 +1,23 @@
 package org.ioopm.calculator.ast;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Stack;
 
 public class ScopeHandler extends Environment {
-    private final Deque<Environment> environmentStack;
+    private final Stack<Environment> environmentStack;
 
     public ScopeHandler() {
-        this.environmentStack = new LinkedList<>();
-        this.environmentStack.push(new Environment());
+        this.environmentStack = new Stack<>();
+    }
+
+    public Stack<Environment> getEnvironmentStack(){
+        return this.environmentStack;
     }
 
     @Override
     public SymbolicExpression get(Object var) {
-        for (Environment env : environmentStack) {
-            SymbolicExpression value = env.get(var);
-            if (value != null) {
-                return value;
-            }
-        }
-        return null;
+        return this.environmentStack.peek().get(var);
     }
 
-    public Environment topEnv(){
-        return environmentStack.getFirst();
-    }
     @Override
     public SymbolicExpression put(Variable var, SymbolicExpression value) {
         Environment currentEnv = environmentStack.peek();

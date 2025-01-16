@@ -1,47 +1,46 @@
 package org.ioopm.calculator.ast;
 
-import java.util.Objects;
+public class Variable extends SymbolicExpression {
+    private final String identifier;
 
-public class Variable extends Atom implements Comparable<Variable> {
-    private String identifier;
-    public Variable(String identifier){
+    public Variable(String identifier) {
+        super();
+        if (identifier == null) {
+            throw new IllegalArgumentException("Variable identifier cannot be null");
+        }
         this.identifier = identifier;
-    }
-    
-    @Override
-    public SymbolicExpression accept(Visitor v) {
-        return v.visit(this);
     }
 
     public String getIdentifier() {
-        return identifier;
-    }
-
-    public String toString() {
         return this.identifier;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other instanceof Variable) {
-            return this.equals((Variable) other);
+            return this.identifier.equals(((Variable) other).identifier);
         } else {
             return false;
         }
     }
 
-    public boolean equals(Variable other) {
-        // access a private field of other!
-        return Objects.equals(this.identifier, other.identifier);
-    }
-
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.identifier.hashCode();
     }
 
     @Override
-    public int compareTo(Variable other) {
-        // Compare identifiers alphabetically
-        return this.identifier.compareTo(other.identifier);
+    public String toString() {
+        return this.identifier;
+    }
+
+    @Override
+    public boolean isConstant() {
+        return false;
+    }
+
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

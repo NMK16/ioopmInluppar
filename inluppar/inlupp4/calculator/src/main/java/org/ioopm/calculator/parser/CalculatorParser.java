@@ -68,6 +68,8 @@ public class CalculatorParser {
         if (this.st.ttype == this.st.TT_WORD) {
             if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) {
                 result = command();
+            } else if (this.st.sval.equals("function")) {
+                result = functionDeclaration();
             } else {
                 result = assignment();
             }
@@ -133,11 +135,21 @@ public class CalculatorParser {
     }
 
     private SymbolicExpression handleScope() throws IOException {
-        scopeHandler.pushEnvironment(this.vars);
-        SymbolicExpression result = assignment();
-        scopeHandler.popEnvironment();
-
-        return new Scope(result);
+        // Skip the opening brace - it's already been consumed in primary()
+        Environment scopeEnv = new Environment();
+        scopeEnv.putAll(this.vars);
+        this.scopeHandler.pushEnvironment(scopeEnv);
+    
+        this.st.nextToken();  // Get the next token after '{'
+        SymbolicExpression body = assignment();
+        
+        this.st.nextToken();  // Get the closing brace
+        if (this.st.ttype != '}') {
+            throw new SyntaxErrorException("Error: Expected '}'");
+        }
+        
+        this.scopeHandler.popEnvironment();
+        return new Scope(body);
     }
 
     /**
@@ -147,18 +159,10 @@ public class CalculatorParser {
      * @throws IllegalExpressionException if you try to redefine a string that isn't allowed
      */
     private SymbolicExpression identifier() throws IOException {
-        SymbolicExpression result;
-
-        if (this.unallowedVars.contains(this.st.sval)) {
-            throw new IllegalExpressionException("Error: cannot redefine " + this.st.sval);
+        if (this.st.ttype != this.st.TT_WORD) {
+            throw new SyntaxErrorException("Error: Invalid identifier");
         }
-
-        if (Constants.namedConstants.containsKey(this.st.sval)) {
-            result = new NamedConstant(st.sval, Constants.namedConstants.get(st.sval));
-        } else {
-            result = new Variable(this.st.sval);
-        }
-        return result;
+        return new Variable(this.st.sval);
     }
 
 
@@ -223,34 +227,40 @@ public class CalculatorParser {
      */
     private SymbolicExpression primary() throws IOException {
         SymbolicExpression result;
+        
         if (this.st.ttype == '(') {
             this.st.nextToken();
-            result = assignment();
-            /// This captures unbalanced parentheses!
-            if (this.st.nextToken() != ')') {
-                throw new SyntaxErrorException("expected ')'");
+            result = expression();
+            if (this.st.ttype != ')') {
+                throw new SyntaxErrorException("Error: Expected ')'");
             }
-        }else if(this.st.ttype == '{'){
-            this.st.nextToken();
+        } else if (this.st.ttype == '{') {
             result = handleScope();
-            if (this.st.nextToken() != '}') {
-                throw new SyntaxErrorException("expected '}'");
-            }
-        } else if (this.st.ttype == NEGATION) {
-            result = unary();
         } else if (this.st.ttype == this.st.TT_WORD) {
-            if (st.sval.equals(SIN) ||
-                    st.sval.equals(COS) ||
-                    st.sval.equals(EXP) ||
-                    st.sval.equals(NEG) ||
-                    st.sval.equals(LOG)) {
-
+            String word = this.st.sval;
+            if (word.equals(SIN) || word.equals(COS) || 
+                word.equals(EXP) || word.equals(NEG) || 
+                word.equals(LOG)) {
                 result = unary();
-            } else if (this.st.sval.equals("if")) {
-                result = handleConditional(); // Handle conditional expressions
-            }
-            else {
-                result = identifier();
+            } else if (word.equals("if")) {
+                result = handleConditional();
+            } else if (word.equals("function")) {
+                result = functionDeclaration();
+            } else {
+                // Look ahead for function call
+                this.st.nextToken();
+                if (this.st.ttype == '(') {
+                    result = functionCall(word);
+                    // Now check for the closing parenthesis
+                    if (this.st.ttype != ')') {
+                        throw new SyntaxErrorException("Error: Expected ')'");
+                    }
+                    this.st.nextToken(); // Consume the closing parenthesis
+                } else {
+                    // Not a function call - push back and treat as variable
+                    this.st.pushBack();
+                    result = new Variable(word);
+                }
             }
         } else {
             this.st.pushBack();
@@ -262,30 +272,28 @@ public class CalculatorParser {
     private SymbolicExpression handleConditional() throws IOException {
         this.st.nextToken();
         SymbolicExpression lhs = expression();
-    
-        // Read the relational operator
+
         String operator;
+
         if (this.st.ttype == '<' || this.st.ttype == '>' || this.st.ttype == '=') {
             operator = String.valueOf((char) this.st.ttype);
             this.st.nextToken();
             if (this.st.ttype == '=') { 
                 operator += "=";
-            } else {
-                this.st.pushBack();
-            }
+            } 
         } else {
             throw new SyntaxErrorException("Error: Expected a relational operator in condition");
         }
-    
+
         this.st.nextToken();
         SymbolicExpression rhs = expression();
-    
+
         if (this.st.ttype != '{') {
             throw new SyntaxErrorException("Error: Expected '{' after condition in if-statement");
         }
         this.st.nextToken();
-        SymbolicExpression trueBranch = statement();
-    
+        SymbolicExpression trueBranch = primary();
+
         if (this.st.ttype != '}') {
             throw new SyntaxErrorException("Error: Expected '}' to close true branch of if-statement");
         }
@@ -300,9 +308,8 @@ public class CalculatorParser {
             throw new SyntaxErrorException("Error: Expected '{' after else in if-statement");
         }
     
-        this.st.nextToken();
-        SymbolicExpression falseBranch = statement();
-    
+        SymbolicExpression falseBranch = primary();
+
         if (this.st.ttype != '}') {
             throw new SyntaxErrorException("Error: Expected '}' to close false branch of if-statement");
         }
@@ -352,5 +359,64 @@ public class CalculatorParser {
         } else {
             throw new SyntaxErrorException("Error: Expected number");
         }
+    }
+
+    private SymbolicExpression functionDeclaration() throws IOException {
+        this.st.nextToken();
+        if (this.st.ttype != this.st.TT_WORD) {
+            throw new SyntaxErrorException("Error: Expected function name");
+        }
+        String functionName = this.st.sval;
+
+        this.st.nextToken();
+        if (this.st.ttype != '(') {
+            throw new SyntaxErrorException("Error: Expected '(' after function name");
+        }
+
+        List<String> parameters = new ArrayList<>();
+        
+        this.st.nextToken();
+        while (this.st.ttype != ')') {
+            if (this.st.ttype != this.st.TT_WORD) {
+                throw new SyntaxErrorException("Error: Expected parameter name");
+            }
+            parameters.add(this.st.sval);
+            
+            this.st.nextToken();
+            if (this.st.ttype == ',') {
+                this.st.nextToken();
+            } else if (this.st.ttype != ')') {
+                throw new SyntaxErrorException("Error: Expected ',' or ')'");
+            }
+        }
+
+        this.st.nextToken();
+        SymbolicExpression body = expression();
+
+        this.st.nextToken();
+        if (this.st.ttype != this.st.TT_WORD || !this.st.sval.equals("end")) {
+            throw new SyntaxErrorException("Error: Expected 'end' to close function declaration");
+        }
+
+        return new FunctionDeclaration(functionName, parameters, body);
+    }
+
+    private SymbolicExpression functionCall(String functionName) throws IOException {
+        List<SymbolicExpression> arguments = new ArrayList<>();
+        
+        // Skip the opening parenthesis that was already consumed
+        this.st.nextToken();
+        while (this.st.ttype != ')') {
+            arguments.add(expression());
+            
+            if (this.st.ttype == ',') {
+                this.st.nextToken();
+            } else if (this.st.ttype != ')') {
+                throw new SyntaxErrorException("Error: Expected ',' or ')'");
+            }
+        }
+        
+        // Don't consume any more tokens - let the calling method handle the closing parenthesis
+        return new FunctionCall(functionName, arguments);
     }
 }

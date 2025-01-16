@@ -18,4 +18,8 @@ public interface Visitor {
     SymbolicExpression visit(Vars n);
     SymbolicExpression visit(Scope scope);
     SymbolicExpression visit(Conditional conditional);
+    SymbolicExpression visit(FunctionCall n);
+    SymbolicExpression visit(FunctionDeclaration n);
+
+
 }

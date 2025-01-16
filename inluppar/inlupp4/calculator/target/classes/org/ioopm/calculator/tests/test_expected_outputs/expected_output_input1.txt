@@ -1,0 +1,8 @@
+Enter expression to evaluate:
+Answer: 42.0
+Enter expression to evaluate:
+Answer: 50.0
+Enter expression to evaluate:
+Expressions Entered: 2
+Expressions Successfully Evaluated: 2
+Expressions Fully Evaluated: 2

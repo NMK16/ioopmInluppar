@@ -1,5 +1,8 @@
 package org.ioopm.calculator.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EvaluationVisitor implements Visitor {
     private Environment env = null;
     private ScopeHandler scopeHandler = new ScopeHandler();
@@ -148,18 +151,20 @@ public class EvaluationVisitor implements Visitor {
     @Override
     public SymbolicExpression visit(Variable n) {
         String identifier = n.getIdentifier();
-        // Check if the identifier exists in the namedConstants map
+        
+        // Check named constants first
         if (Constants.namedConstants.containsKey(identifier)) {
             return new Constant(Constants.namedConstants.get(identifier));
         }
 
-        // Fallback: check the environment
-        Variable variable = new Variable(identifier);
-        if (this.scopeHandler.getEnvironmentStack().peek().containsKey(variable)) {
-            return this.scopeHandler.getEnvironmentStack().peek().get(variable);
+        // Check current environment
+        Environment currentEnv = this.scopeHandler.getEnvironmentStack().peek();
+        if (currentEnv.containsKey(n)) {
+            return currentEnv.get(n);
         }
 
-        return variable;  // Ensure the variable itself is returned if not found
+        // If not found, return the variable itself
+        return n;
     }
 
 
@@ -228,5 +233,68 @@ public class EvaluationVisitor implements Visitor {
         } else {
             return falseBranch.accept(this);
         }    }
+
+        @Override
+        public SymbolicExpression visit(FunctionCall n) {
+            String functionName = n.getName();
+            Variable functionVar = new Variable(functionName);
+            Environment currentEnv = this.scopeHandler.getEnvironmentStack().peek();
+
+            // Check if function exists
+            if (!currentEnv.containsKey(functionVar)) {
+                throw new RuntimeException("Function '" + functionName + "' is not defined");
+            }
+
+            SymbolicExpression functionExpr = currentEnv.get(functionVar);
+            if (!(functionExpr instanceof FunctionDeclaration)) {
+                throw new RuntimeException("'" + functionName + "' is not a callable function");
+            }
+
+            FunctionDeclaration function = (FunctionDeclaration) functionExpr;
+            List<String> parameters = function.getParameters();
+            List<SymbolicExpression> arguments = n.getArguments();
+
+            // Check argument count
+            if (parameters.size() != arguments.size()) {
+                throw new RuntimeException("Function '" + functionName + "' expects " + 
+                    parameters.size() + " arguments, but got " + arguments.size());
+            }
+
+            // Create new scope for function execution
+            Environment functionEnv = new Environment();
+            
+            // First bind the arguments to parameters
+            for (int i = 0; i < parameters.size(); i++) {
+                SymbolicExpression argValue = arguments.get(i).accept(this);  // Evaluate argument first
+                Variable paramVar = new Variable(parameters.get(i));  // Create Variable object from parameter name
+                functionEnv.put(paramVar, argValue);  // Now putting Variable object, not String
+            }
+
+            // Then copy the rest of the environment
+            for (Variable var : currentEnv.keySet()) {
+                if (!functionEnv.containsKey(var)) {
+                    functionEnv.put(var, currentEnv.get(var));
+                }
+            }
+
+            // Push function scope
+            this.scopeHandler.pushEnvironment(functionEnv);
+            
+            try {
+                // Evaluate body in function scope
+                return function.getBody().accept(this);
+            } finally {
+                // Pop function scope
+                this.scopeHandler.popEnvironment();
+            }
+        }
+        
+
+        @Override
+    public SymbolicExpression visit(FunctionDeclaration n) {
+        Variable functionName = new Variable(n.getName());
+        this.scopeHandler.getEnvironmentStack().peek().put(functionName, n);
+        return n;
+    }
 
 }

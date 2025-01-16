@@ -125,5 +125,18 @@ public class NamedConstantChecker implements Visitor {
         return null;
     }
 
+    @Override
+    public SymbolicExpression visit(FunctionCall n) {
+        // TODO Auto-generated method stub
+        return n;
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionDeclaration n) {
+     
+        return n;
+        
+    }
+
 }
 

@@ -14,6 +14,7 @@ import java.util.*;
 public class CalculatorParser {
     private StreamTokenizer st;
     private Environment vars;
+    private ScopeHandler scopeHandler;
     private static char MULTIPLY = '*';
     private static char ADDITION = '+';
     private static char SUBTRACTION = '-';
@@ -25,7 +26,6 @@ public class CalculatorParser {
     private static String LOG = "Log";
     private static String EXP = "Exp";
     private static char ASSIGNMENT = '=';
-    private static char SCOPE = '{';
 
     // unallowerdVars is used to check if variabel name that we
     // want to assign new meaning to is a valid name eg 3 = Quit
@@ -47,6 +47,7 @@ public class CalculatorParser {
         this.st.ordinaryChar('-');
         this.st.ordinaryChar('/');
         this.st.eolIsSignificant(true);
+        this.scopeHandler = new ScopeHandler();
         SymbolicExpression result = statement(); // calls to statement
         return result; // the final result
     }
@@ -59,26 +60,22 @@ public class CalculatorParser {
      */
     private SymbolicExpression statement() throws IOException {
         SymbolicExpression result;
-        this.st.nextToken(); //kollar pÃ¥ nÃ¤sta token som ligger pÃ¥ strÃ¶mmen
+        this.st.nextToken();
         if (this.st.ttype == this.st.TT_EOF) {
             throw new SyntaxErrorException("Error: Expected an expression");
         }
 
-        if (this.st.ttype == this.st.TT_WORD) { // vilken typ det senaste tecken vi lÃ¤ste in hade.
-            if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) { // sval = string Variable
+        if (this.st.ttype == this.st.TT_WORD) {
+            if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) {
                 result = command();
+            } else {
+                result = assignment();
             }
-             else {
-                result = assignment(); // gÃ¥r vidare med uttrycket.
-            }
-        }
-        else if (this.st.ttype == '{') {
-            result = handleScope(); // Handle scope start
         } else {
-            result = assignment(); // om inte == word, gÃ¥ till assignment Ã¤ndÃ¥ (kan vara tt_number)
+            result = assignment();
         }
 
-        if (this.st.nextToken() != this.st.TT_EOF) { // token should be an end of stream token if we are done
+        if (this.st.nextToken() != this.st.TT_EOF) {
             if (this.st.ttype == this.st.TT_WORD) {
                 throw new SyntaxErrorException("Error: Unexpected '" + this.st.sval + "'");
             } else {
@@ -136,10 +133,10 @@ public class CalculatorParser {
     }
 
     private SymbolicExpression handleScope() throws IOException {
-        ScopeHandler currentScope = new ScopeHandler();
-        currentScope.pushEnvironment(vars);
-        SymbolicExpression result = expression();
-        currentScope.popEnvironment();
+        scopeHandler.pushEnvironment(this.vars);
+        SymbolicExpression result = assignment();
+        scopeHandler.popEnvironment();
+
         return new Scope(result);
     }
 
@@ -235,7 +232,7 @@ public class CalculatorParser {
             }
         }else if(this.st.ttype == '{'){
             this.st.nextToken();
-            result = assignment();
+            result = handleScope();
             if (this.st.nextToken() != '}') {
                 throw new SyntaxErrorException("expected '}'");
             }

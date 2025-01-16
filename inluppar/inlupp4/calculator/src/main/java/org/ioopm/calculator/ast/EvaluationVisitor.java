@@ -2,12 +2,11 @@ package org.ioopm.calculator.ast;
 
 public class EvaluationVisitor implements Visitor {
     private Environment env = null;
-    private ScopeHandler scopeHandler = null;
+    private ScopeHandler scopeHandler = new ScopeHandler();
 
     public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
         this.env = env;
-        this.scopeHandler = new ScopeHandler();
-        this.scopeHandler.pushEnvironment(env);
+        scopeHandler.pushEnvironment(env);
         return topLevel.accept(this);
     }
 
@@ -24,7 +23,7 @@ public class EvaluationVisitor implements Visitor {
 
         // If subexpressions are fully evaluated, replace them in
         // the tree with a constant whose value is the sub of the
-        // subexpressions, if not, simply construct a new addition
+        // subexpressions, if not, simply    construct a new addition
         // node from the new subexpressions
         if (left.isConstant() && right.isConstant()) {
             return new Constant(left.getValue() + right.getValue());
@@ -38,16 +37,17 @@ public class EvaluationVisitor implements Visitor {
         SymbolicExpression left = n.getLhs().accept(this);
         SymbolicExpression right = n.getRhs();
 
-        if(right == null){
+        if (right == null) {
             throw new IllegalAssignmentException("Error: cannot assign value to \"null\"");
         }
-        if(left == null){
+        if (left == null) {
             this.scopeHandler.getEnvironmentStack().peek().remove((Variable) right);
             return left;
         }
         this.scopeHandler.getEnvironmentStack().peek().put((Variable) right, left);
         return left;
     }
+
 
     @Override
     public SymbolicExpression visit(Clear n) {
@@ -159,8 +159,9 @@ public class EvaluationVisitor implements Visitor {
             return this.scopeHandler.getEnvironmentStack().peek().get(variable);
         }
 
-        return variable;
+        return variable;  // Ensure the variable itself is returned if not found
     }
+
 
 
     @Override
@@ -170,13 +171,19 @@ public class EvaluationVisitor implements Visitor {
 
     @Override
     public SymbolicExpression visit(Scope n) {
-        SymbolicExpression body = n.getBody();
-        ScopeHandler scopeHandler = new ScopeHandler();
+        // Create a new environment for this scope, inheriting from the current one
+        Environment newEnv = new Environment();
+        newEnv.putAll(this.scopeHandler.getEnvironmentStack().peek());  // Copy current environment
 
-        scopeHandler.pushEnvironment(this.env);
+        // Push the new environment
+        this.scopeHandler.pushEnvironment(newEnv);
 
-        SymbolicExpression result = body.accept(this);
-        scopeHandler.popEnvironment();
+        // Evaluate the body in the new scope
+        SymbolicExpression result = n.getBody().accept(this);
+
+        // Pop the environment before returning
+        this.scopeHandler.popEnvironment();
+
         return result;
     }
 

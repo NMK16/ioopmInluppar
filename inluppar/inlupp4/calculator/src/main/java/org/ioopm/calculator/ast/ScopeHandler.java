@@ -30,7 +30,7 @@ public class ScopeHandler extends Environment {
     }
 
     public void popEnvironment() {
-        if (environmentStack.size() > 1) {
+        if (!environmentStack.isEmpty()) {
             environmentStack.pop();
         }
     }

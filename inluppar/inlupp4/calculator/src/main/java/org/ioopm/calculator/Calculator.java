@@ -2,15 +2,7 @@ package org.ioopm.calculator;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.ioopm.calculator.ast.Clear;
-import org.ioopm.calculator.ast.Environment;
-import org.ioopm.calculator.ast.EvaluationVisitor;
-import org.ioopm.calculator.ast.IllegalAssignmentException;
-import org.ioopm.calculator.ast.NamedConstantChecker;
-import org.ioopm.calculator.ast.Quit;
-import org.ioopm.calculator.ast.ReassignmentChecker;
-import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.Vars;
+import org.ioopm.calculator.ast.*;
 import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.IllegalExpressionException;
 import org.ioopm.calculator.parser.SyntaxErrorException;
@@ -68,8 +60,10 @@ public class Calculator {
                         errors++;
                         continue;
                     }
+                    SymbolicExpression correct = new Addition(new Scope(new Assignment(new Constant(1), new Variable("x"))), new Scope(new Variable("x")));
                     final SymbolicExpression evaluationResult = evaluator.evaluate(parsed, vars);
                     System.out.println("Answer: " + evaluationResult);
+
                     if(parsed.isConstant()){
                         fullyEvaluated++;
                     }
